@@ -149,3 +149,20 @@ def evaluation(model, dataloader, device):
         "val_recall": results.get("recall_macro"),
         "val_precision": results.get("precision_macro")
     }, (predicts, targets, imgs)
+
+
+def format_metrics(metrics: dict) -> str:
+    lines = []
+    for metric, values in metrics.items():
+        mean = float(values["mean"])
+        std = float(values["std"])
+        ci_5 = float(values["ci_5"])
+        ci_95 = float(values["ci_95"])
+
+        lines.append(
+            f"{metric.upper():<12} "
+            f"Mean: {mean:.2f} | "
+            f"Std: {std:.2f} | "
+            f"95% CI: [{ci_5:.2f}, {ci_95:.2f}]"
+        )
+    return "\n".join(lines)
