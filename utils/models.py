@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import efficientnet_pytorch as efficientnet_model
+from torch.utils.data import Dataset
 
 class EfficientNet(nn.Module):
     pre_trained_model = {
