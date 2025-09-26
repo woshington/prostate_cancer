@@ -4,27 +4,6 @@ import torch.nn.functional as F
 import numpy as np
 from torch.distributions.categorical import Categorical
 from tqdm import tqdm
-from torchmetrics import BootStrapper, CohenKappa
-from torchmetrics.classification import (
-    MulticlassF1Score,
-    MulticlassRecall,
-    MulticlassPrecision,
-    CohenKappa
-)
-
-# def calculate_metrics(preds, targets):
-#     accuracy = (preds == targets).mean() * 100.
-#     kappa = cohen_kappa_score(preds, targets, weights='quadratic')
-#     quantis = torch.tensor([0.05, 0.95])
-#     bootstrap = BootStrapper(
-#         CohenKappa(task='multiclass', num_classes=6, weights='quadratic'),
-#         num_bootstraps=1000,
-#         quantile=quantis,
-#         # sampling_strategy='multinomial'
-#     )
-#     bootstrap.update(torch.tensor(preds), torch.tensor(targets))
-#     output = bootstrap.compute()
-#     return accuracy, kappa, output
 
 import torch
 import numpy as np
@@ -33,7 +12,6 @@ from torchmetrics.classification import (
     MulticlassF1Score,
     MulticlassRecall,
     MulticlassPrecision,
-    CohenKappa
 )
 
 def calculate_metrics(preds, targets, num_bootstraps=1000, seed=42):
@@ -66,7 +44,6 @@ def calculate_metrics(preds, targets, num_bootstraps=1000, seed=42):
         precisions.append(precision(p_sample, t_sample).item())
 
     def summarize_metric(values):
-        # print(values)
         mean = np.mean(values)
         std = np.std(values)
         lower = np.percentile(values, 5)

@@ -1,4 +1,4 @@
-from locale import normalize
+import kornia.color as kc
 from typing import Any
 
 from torch.utils.data import Dataset
@@ -8,7 +8,13 @@ import torch
 from albumentations.core.transforms_interface import ImageOnlyTransform
 
 class PandasDataset(Dataset):
-    def __init__(self, image_dir, dataframe, transforms=None, normalize=False):
+    def __init__(
+        self,
+        image_dir,
+        dataframe,
+        transforms=None,
+        normalize=False
+    ):
         self.image_dir = image_dir
         self.dataframe = dataframe
         self.transforms = transforms
@@ -86,7 +92,8 @@ class RGB2XYZTransform(ImageOnlyTransform):
     def apply(self, image, **params):
         img = image.astype(np.float32) / 255.0
         image = color.rgb2xyz(img)
-        return image.astype(np.float32)
+        return image
+        # return image.astype(np.float32)
 
 
 class RGB2HedTransform(ImageOnlyTransform):
@@ -348,3 +355,73 @@ class RGB2Fusion(ImageOnlyTransform):
         fused_uint8 = (fused * 255.0).astype(np.uint8)
 
         return fused_uint8
+
+
+class RGB2FusionTorch(ImageOnlyTransform):
+    def __init__(self, mode="sum", p=1.0, space_colors=None, normalize_input=True):
+        super().__init__(p=p)
+        if space_colors is None:
+            space_colors = ["rgb", "xyz"]
+        self.space_colors = space_colors
+        self.mode = mode
+        self.normalize_input = normalize_input
+
+    def normalize_color_space(self, img, space_name):
+        """img: tensor [B,C,H,W]"""
+        if space_name == "lab":
+            # LAB: L[0,100], a,b[-128,127]
+            L, a, b = img[:, 0], img[:, 1], img[:, 2]
+            L = L / 100.0
+            a = (a + 128) / 255.0
+            b = (b + 128) / 255.0
+            return torch.stack([L, a, b], dim=1)
+        elif space_name == "hsv":
+            H, S, V = img[:, 0], img[:, 1], img[:, 2]
+            H = H / 360.0
+            return torch.stack([H, S, V], dim=1)
+        else:
+            # min-max normalização por canal
+            min_val = img.amin(dim=(2, 3), keepdim=True)
+            max_val = img.amax(dim=(2, 3), keepdim=True)
+            range_val = torch.where((max_val - min_val) > 1e-6, max_val - min_val, torch.tensor(1.0, device=img.device))
+            return (img - min_val) / range_val
+
+    def apply(self, image, **params):
+        # numpy -> torch -> cuda
+        img_rgb = torch.from_numpy(image.astype("float32")).permute(2, 0, 1).unsqueeze(0).cuda()
+
+        if self.normalize_input:
+            img_rgb = img_rgb / 255.0
+
+        # gerar mapas de cor
+        color_map = {
+            "rgb": img_rgb,
+            "xyz": kc.rgb_to_xyz(img_rgb),
+            "lab": kc.rgb_to_lab(img_rgb),
+            # "hsv": kc.rgb_to_hsv(img_rgb),  # se precisar
+        }
+
+        normalized_spaces = []
+        for space_color in self.space_colors:
+            if space_color not in color_map:
+                raise ValueError(f"Espaço de cor '{space_color}' não suportado")
+            space_img = self.normalize_color_space(color_map[space_color], space_color)
+            normalized_spaces.append(space_img)
+
+        # stack e fusão
+        stacked = torch.stack(normalized_spaces, dim=0)  # [N, B, C, H, W]
+
+        if self.mode == "sum":
+            fused = stacked.sum(dim=0) / len(normalized_spaces)
+        elif self.mode == "mean":
+            fused = stacked.mean(dim=0)
+        elif self.mode == "max":
+            fused = stacked.max(dim=0).values
+        else:
+            raise ValueError(f"Modo inválido: {self.mode}")
+
+        fused = torch.clamp(fused, 0.0, 1.0)  # já no GPU
+        fused = fused[0].permute(1, 2, 0)  # [H,W,C]
+
+        # volta para numpy se a lib albumentations exigir
+        return fused.cpu().numpy()

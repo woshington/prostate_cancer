@@ -1,8 +1,7 @@
 from tqdm import tqdm
 import torch
 import numpy as np
-import torch.nn.functional as F
-from work.utils.metrics import calculate_metrics, calculate_entropy
+from utils.metrics import calculate_metrics, calculate_entropy
 
 def training_step(model, dataset_loader, optimizer, epoch, device, loss_function):
     model= model.to(device)
@@ -113,7 +112,6 @@ def train_model(
         else:
             epochs_without_improvement += 1
 
-        # Early stopping
         if epochs_without_improvement >= patience:
             print(f'\nEarly stopping at epoch {epoch}. No improvement for {patience} epochs.')
             print(f'Best epoch: {best_epoch} with kappa: {best_metric_criteria:.4f}')
