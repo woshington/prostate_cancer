@@ -1,12 +1,18 @@
 from tqdm import tqdm
 import torch
 import numpy as np
-from utils.metrics import calculate_metrics, calculate_entropy
+from utils.metrics import calculate_metrics, calculate_entropy, format_metrics
+from utils.layer import MixUp, CutMix
+import random
 
-def training_step(model, dataset_loader, optimizer, epoch, device, loss_function):
+
+def training_step(model, dataset_loader, optimizer, epoch, device, loss_function, use_mixup=True):
     model= model.to(device)
     model.train()
     train_loss = []
+
+    mixup = MixUp(alpha=0.2)
+    cutmix = CutMix(alpha=1.0)
 
     bar_progress = tqdm(dataset_loader)
 
@@ -15,8 +21,17 @@ def training_step(model, dataset_loader, optimizer, epoch, device, loss_function
 
         optimizer.zero_grad()
 
+        # Apply MixUp or CutMix randomly
+        # if use_mixup and random.random() > 0.5:
+        #     if random.random() > 0.5:
+        #         batch_data, targets_a, targets_b, lam = mixup(batch_data, batch_targets)
+        #     else:
+        #         batch_data, targets_a, targets_b, lam = cutmix(batch_data, batch_targets)
+        #
+        #     logits = model(batch_data)
+        #     loss = lam * loss_function(logits, targets_a) + (1 - lam) * loss_function(logits, targets_b)
+        # else:
         logits = model(batch_data)
-
         loss = loss_function(logits, batch_targets)
 
         loss.backward()
@@ -98,7 +113,9 @@ def train_model(
 
         train_loss = training_step(model, train_dataloader, optimizer, epoch, device, loss_function)
         metrics = validation_step(model, valid_dataloader, device, loss_function)
-        print("metrics", metrics)
+        result = format_metrics(metrics)
+        print(result)
+
 
         log_epoch = f'epoch: {epoch} | lr: {optimizer.param_groups[0]["lr"]:.7f} | Train loss: {np.mean(train_loss)} | Validation loss: {metrics["val_loss"]} | Validation accuracy: {metrics["val_acc"]["mean"]} | QWKappa: {metrics["val_kappa"]["mean"]}'
         with open(path_to_save_metrics, 'a') as f:

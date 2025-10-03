@@ -41,7 +41,66 @@ class SEBlock(nn.Module):
 
 class Flatten(nn.Module):
     def forward(self, input):
-        return input.view(input.size(0), -1)
+        batch_size = input.values.size(0)
+        return input.values.view(batch_size, -1)
+
+
+class MixUp:
+    """MixUp data augmentation"""
+    def __init__(self, alpha=0.2):
+        self.alpha = alpha
+
+    def __call__(self, data, targets):
+        if self.alpha > 0:
+            lam = torch.distributions.Beta(self.alpha, self.alpha).sample()
+        else:
+            lam = 1
+
+        batch_size = data.size(0)
+        index = torch.randperm(batch_size).to(data.device)
+
+        mixed_data = lam * data + (1 - lam) * data[index, :]
+        targets_a, targets_b = targets, targets[index]
+
+        return mixed_data, targets_a, targets_b, lam
+
+
+class CutMix:
+    """CutMix data augmentation"""
+    def __init__(self, alpha=1.0):
+        self.alpha = alpha
+
+    def __call__(self, data, targets):
+        if self.alpha > 0:
+            lam = torch.distributions.Beta(self.alpha, self.alpha).sample()
+        else:
+            lam = 1
+
+        batch_size = data.size(0)
+        index = torch.randperm(batch_size).to(data.device)
+
+        _, _, h, w = data.size()
+        cut_rat = torch.sqrt(1. - lam)
+        cut_w = (w * cut_rat).long()
+        cut_h = (h * cut_rat).long()
+
+        # uniform
+        cx = torch.randint(w, (1,)).item()
+        cy = torch.randint(h, (1,)).item()
+
+        bbx1 = torch.clamp(cx - cut_w // 2, 0, w)
+        bby1 = torch.clamp(cy - cut_h // 2, 0, h)
+        bbx2 = torch.clamp(cx + cut_w // 2, 0, w)
+        bby2 = torch.clamp(cy + cut_h // 2, 0, h)
+
+        data[:, :, bby1:bby2, bbx1:bbx2] = data[index, :, bby1:bby2, bbx1:bbx2]
+
+        # adjust lambda to exactly match pixel ratio
+        lam = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (w * h))
+        targets_a, targets_b = targets, targets[index]
+
+        return data, targets_a, targets_b, lam
+
 
 
 class SelfAttentionLayer(nn.Module):
@@ -72,5 +131,4 @@ class SelfAttentionLayer(nn.Module):
 
         # Multiply weights by V to get the output
         output = torch.matmul(attention_weights, V)
-
         return output

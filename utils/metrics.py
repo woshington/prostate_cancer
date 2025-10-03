@@ -131,15 +131,19 @@ def evaluation(model, dataloader, device):
 def format_metrics(metrics: dict) -> str:
     lines = []
     for metric, values in metrics.items():
-        mean = float(values["mean"])
-        std = float(values["std"])
-        ci_5 = float(values["ci_5"])
-        ci_95 = float(values["ci_95"])
+        if isinstance(values, dict):
+            mean = float(values["mean"])
+            std = float(values["std"])
+            ci_5 = float(values["ci_5"])
+            ci_95 = float(values["ci_95"])
 
-        lines.append(
-            f"{metric.upper():<12} "
-            f"Mean: {mean:.2f} | "
-            f"Std: {std:.2f} | "
-            f"95% CI: [{ci_5:.2f}, {ci_95:.2f}]"
-        )
+            lines.append(
+                f"{metric.upper():<12} "
+                f"Mean: {mean:.3f} | "
+                f"Std: {std:.3f} | "
+                f"95% CI: [{ci_5:.3f}, {ci_95:.3f}]"
+            )
+        else:
+            lines.append(f"{metric.upper():<12} {values:.3f}")
+
     return "\n".join(lines)
