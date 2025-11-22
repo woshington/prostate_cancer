@@ -13,12 +13,16 @@ class PandasDataset(Dataset):
         image_dir,
         dataframe,
         transforms=None,
-        normalize=False
+        normalize=False,
+        format="jpg",
+        num_classes=5
     ):
         self.image_dir = image_dir
         self.dataframe = dataframe
         self.transforms = transforms
         self.normalize = normalize
+        self.format = format
+        self.num_classes = num_classes
 
     def __len__(self):
         return self.dataframe.shape[0]
@@ -27,20 +31,23 @@ class PandasDataset(Dataset):
         row = self.dataframe.iloc[index]
         img_id = row.image_id.strip()
 
-        file_path = f"{self.image_dir}/{img_id}.jpg"
-        image = skio.imread(file_path)
+        file_path = f"{self.image_dir}/{img_id}.{self.format}"
+        try:
+            image = skio.imread(file_path)
 
-        if self.transforms is not None:
-            image = self.transforms(image=image)['image']
+            if self.transforms is not None:
+                image = self.transforms(image=image)['image']
 
-        if self.normalize:
-            image = image.astype(np.float32) / 255.0
-        image = np.transpose(image, (2, 0, 1))
+            if self.normalize:
+                image = image.astype(np.float32) / 255.0
+            image = np.transpose(image, (2, 0, 1))
 
-        label = np.zeros(5).astype(np.float32)
-        label[:row.isup_grade] = 1.
+            label = np.zeros(self.num_classes).astype(np.float32)
+            label[:row.isup_grade] = 1.
 
-        return torch.tensor(image, dtype=torch.float32), torch.tensor(label, dtype=torch.float32), img_id
+            return torch.tensor(image, dtype=torch.float32), torch.tensor(label, dtype=torch.float32), img_id
+        except:
+            pass
 
 
 class RemovePenMarkAlbumentations(ImageOnlyTransform):
@@ -86,14 +93,38 @@ class RemovePenMarkAlbumentations(ImageOnlyTransform):
 
 
 class RGB2XYZTransform(ImageOnlyTransform):
-    def __init__(self, p=1.0):
+    """
+    Convert an RGB image to CIE XYZ color space.
+
+    Args:
+        scale (bool): Whether to scale the output back to [0, 255]. Default: False.
+        p (float): Probability of applying the transform. Default: 1.0.
+    """
+
+    def __init__(self, scale: bool = False, p: float = 1.0):
         super().__init__(p=p)
+        self.scale = scale
 
     def apply(self, image, **params):
-        img = image.astype(np.float32) / 255.0
-        image = color.rgb2xyz(img)
-        return image
-        # return image.astype(np.float32)
+        if image.ndim != 3 or image.shape[2] != 3:
+            raise ValueError(f"Expected RGB image with 3 channels, got shape {image.shape}")
+
+        # Convert to float32 range [0, 1] if needed
+        if image.dtype != np.float32:
+            img = image.astype(np.float32) / 255.0
+        else:
+            img = np.clip(image, 0.0, 1.0)
+
+        # Convert to XYZ
+        xyz = color.rgb2xyz(img)
+
+        # Optionally scale back to [0, 255]
+        if self.scale:
+            xyz = np.clip(xyz * 255.0, 0, 255).astype(np.uint8)
+        else:
+            xyz = xyz.astype(np.float32)
+
+        return xyz
 
 
 class RGB2HedTransform(ImageOnlyTransform):
@@ -425,3 +456,31 @@ class RGB2FusionTorch(ImageOnlyTransform):
 
         # volta para numpy se a lib albumentations exigir
         return fused.cpu().numpy()
+
+
+class PandasDatasetSimple(Dataset):
+    """
+    Dataset simplificado que retorna apenas imagem e label (não o image_id).
+    """
+    def __init__(self, image_dir, dataframe, transforms=None):
+        self.image_dir = image_dir
+        self.dataframe = dataframe
+        self.transforms = transforms
+
+    def __len__(self):
+        return len(self.dataframe)
+
+    def __getitem__(self, index):
+        row = self.dataframe.iloc[index]
+        img_id = row.image_id.strip()
+
+        file_path = f"{self.image_dir}/{img_id}.jpg"
+        image = skio.imread(file_path)
+
+        if self.transforms is not None:
+            transformed = self.transforms(image=image)
+            image = transformed['image']
+
+        label = row.isup_grade
+
+        return image, label

@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.parameter import Parameter
+from torchvision.ops import DeformConv2d as TorchDeformConv2d
 
 class AdaptiveConcatPool2d(nn.Module):
     def __init__(self, sz=None):
@@ -41,7 +42,66 @@ class SEBlock(nn.Module):
 
 class Flatten(nn.Module):
     def forward(self, input):
-        return input.view(input.size(0), -1)
+        batch_size = input.values.size(0)
+        return input.values.view(batch_size, -1)
+
+
+class MixUp:
+    """MixUp data augmentation"""
+    def __init__(self, alpha=0.2):
+        self.alpha = alpha
+
+    def __call__(self, data, targets):
+        if self.alpha > 0:
+            lam = torch.distributions.Beta(self.alpha, self.alpha).sample()
+        else:
+            lam = 1
+
+        batch_size = data.size(0)
+        index = torch.randperm(batch_size).to(data.device)
+
+        mixed_data = lam * data + (1 - lam) * data[index, :]
+        targets_a, targets_b = targets, targets[index]
+
+        return mixed_data, targets_a, targets_b, lam
+
+
+class CutMix:
+    """CutMix data augmentation"""
+    def __init__(self, alpha=1.0):
+        self.alpha = alpha
+
+    def __call__(self, data, targets):
+        if self.alpha > 0:
+            lam = torch.distributions.Beta(self.alpha, self.alpha).sample()
+        else:
+            lam = 1
+
+        batch_size = data.size(0)
+        index = torch.randperm(batch_size).to(data.device)
+
+        _, _, h, w = data.size()
+        cut_rat = torch.sqrt(1. - lam)
+        cut_w = (w * cut_rat).long()
+        cut_h = (h * cut_rat).long()
+
+        # uniform
+        cx = torch.randint(w, (1,)).item()
+        cy = torch.randint(h, (1,)).item()
+
+        bbx1 = torch.clamp(cx - cut_w // 2, 0, w)
+        bby1 = torch.clamp(cy - cut_h // 2, 0, h)
+        bbx2 = torch.clamp(cx + cut_w // 2, 0, w)
+        bby2 = torch.clamp(cy + cut_h // 2, 0, h)
+
+        data[:, :, bby1:bby2, bbx1:bbx2] = data[index, :, bby1:bby2, bbx1:bbx2]
+
+        # adjust lambda to exactly match pixel ratio
+        lam = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (w * h))
+        targets_a, targets_b = targets, targets[index]
+
+        return data, targets_a, targets_b, lam
+
 
 
 class SelfAttentionLayer(nn.Module):
@@ -72,5 +132,38 @@ class SelfAttentionLayer(nn.Module):
 
         # Multiply weights by V to get the output
         output = torch.matmul(attention_weights, V)
-
         return output
+
+
+class DeformableConv2d(nn.Module):
+    """
+    Bloco que substitui uma conv normal por uma deformável + offset learnable.
+    """
+
+    def __init__(self, in_channels, out_channels, kernel_size=3, stride=1, padding=1):
+        super().__init__()
+        # Offset conv: gera 2 offsets (x,y) para cada posição do kernel
+        self.offset_conv = nn.Conv2d(
+            in_channels,
+            2 * kernel_size * kernel_size,
+            kernel_size=3,
+            padding=1
+        )
+
+        self.deform_conv = TorchDeformConv2d(
+            in_channels=in_channels,
+            out_channels=out_channels,
+            kernel_size=kernel_size,
+            stride=stride,
+            padding=padding
+        )
+
+        self.bn = nn.BatchNorm2d(out_channels)
+        self.act = nn.SiLU(inplace=True)
+
+    def forward(self, x):
+        offset = self.offset_conv(x)
+        x = self.deform_conv(x, offset)
+        x = self.bn(x)
+        x = self.act(x)
+        return x

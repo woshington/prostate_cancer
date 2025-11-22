@@ -1,0 +1,14 @@
+============================================================
+Hierarchical Multi-Task Learning - Summary
+============================================================
+
+test_accuracy: 58.0935
+test_kappa: 0.7922
+test_f1: 0.4885
+mean_rgb_weight: 0.2395
+mean_xyz_weight: 0.4870
+mean_lab_weight: 0.2735
+mean_entropy_correct: 0.6339
+mean_entropy_incorrect: 0.6369
+best_epoch: 10.0000
+best_kappa: 0.8059

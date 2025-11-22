@@ -1,0 +1,9 @@
+epoch: 1 | lr: 0.0003000 | train_loss: 0.02899 | val_loss: 0.02125 | val_acc: 0.5388 | val_kappa: 0.7673
+epoch: 1 | lr: 0.0003000 | train_loss: 0.02889 | val_loss: 0.02181 | val_acc: 0.4980 | val_kappa: 0.7628
+epoch: 2 | lr: 0.0003003 | train_loss: 0.02980 | val_loss: 0.03392 | val_acc: 0.3271 | val_kappa: 0.4461
+epoch: 3 | lr: 0.0003000 | train_loss: 0.02884 | val_loss: 0.02209 | val_acc: 0.5065 | val_kappa: 0.7539
+epoch: 4 | lr: 0.0002991 | train_loss: 0.02840 | val_loss: 0.02298 | val_acc: 0.4312 | val_kappa: 0.7388
+epoch: 5 | lr: 0.0002975 | train_loss: 0.03085 | val_loss: 0.02840 | val_acc: 0.3424 | val_kappa: 0.5518
+epoch: 6 | lr: 0.0002954 | train_loss: 0.03234 | val_loss: 0.02883 | val_acc: 0.3181 | val_kappa: 0.5839
+epoch: 7 | lr: 0.0002927 | train_loss: 0.03103 | val_loss: 0.02746 | val_acc: 0.3531 | val_kappa: 0.6513
+epoch: 8 | lr: 0.0002893 | train_loss: 0.03158 | val_loss: 0.04143 | val_acc: 0.3130 | val_kappa: 0.5758

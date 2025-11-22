@@ -1,0 +1,29 @@
+EfficientNet-B0: Ordinal Loss + Balanceamento de Classes
+================================================================================
+
+Test Accuracy: 67.30%
+Test Quadratic Weighted Kappa: 0.8511
+Test Macro F1 Score: 0.6262
+Test Weighted F1 Score: 0.6699
+
+Classification Report:
+              precision    recall  f1-score   support
+
+      ISUP 0     0.7981    0.9470    0.8662       434
+      ISUP 1     0.7967    0.5975    0.6829       400
+      ISUP 2     0.4896    0.4700    0.4796       200
+      ISUP 3     0.4676    0.5459    0.5037       185
+      ISUP 4     0.5400    0.5775    0.5581       187
+      ISUP 5     0.7006    0.6359    0.6667       184
+
+    accuracy                         0.6730      1590
+   macro avg     0.6321    0.6290    0.6262      1590
+weighted avg     0.6788    0.6730    0.6699      1590
+
+Confusion Matrix:
+[[411   9   2   6   6   0]
+ [ 69 239  73  16   3   0]
+ [  7  40  94  48   6   5]
+ [ 10   5  19 101  35  15]
+ [ 10   6   2  31 108  30]
+ [  8   1   2  14  42 117]]

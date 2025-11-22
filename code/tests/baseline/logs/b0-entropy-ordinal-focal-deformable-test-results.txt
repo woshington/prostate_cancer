@@ -1,0 +1,28 @@
+EfficientNet-B0 with Entropy, Ordinal, Focal Loss, and Deformable Convolutions
+================================================================================
+
+Test Accuracy: 47.74%
+Test Quadratic Weighted Kappa: 0.7508
+Test Macro F1 Score: 0.4138
+
+Classification Report:
+              precision    recall  f1-score   support
+
+      ISUP 0     0.7252    0.5899    0.6506       434
+      ISUP 1     0.4600    0.6325    0.5326       400
+      ISUP 2     0.3291    0.2600    0.2905       200
+      ISUP 3     0.3000    0.1784    0.2237       185
+      ISUP 4     0.2671    0.2086    0.2342       187
+      ISUP 5     0.4615    0.6848    0.5514       184
+
+    accuracy                         0.4774      1590
+   macro avg     0.4238    0.4257    0.4138      1590
+weighted avg     0.4748    0.4774    0.4655      1590
+
+Confusion Matrix:
+[[256 148  12   7   8   3]
+ [ 73 253  52  15   6   1]
+ [ 12  75  52  28  17  16]
+ [  5  23  24  33  51  49]
+ [  3  37  13  17  39  78]
+ [  4  14   5  10  25 126]]

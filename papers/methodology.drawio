@@ -1,0 +1,61 @@
+<mxfile host="65bd71144e">
+    <diagram id="metodologia" name="Metodologia">
+        <mxGraphModel dx="759" dy="785" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="1">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="dados" value="Aquisição dos Dados&#10;Dataset PANDA" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="300" y="60" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="split" value="Split: Treinamento/Validação e Teste" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="160" width="260" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="pre" value="Pré-processamento" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;" vertex="1" parent="1">
+                    <mxGeometry x="300" y="260" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="entropia" value="Filtragem por Entropia" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="360" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="baseline" value="Criação do Baseline&#10;EfficientNet-B0" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;" vertex="1" parent="1">
+                    <mxGeometry x="300" y="460" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="b3" value="Treinamento do Modelo&#10;EfficientNet-B3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="560" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="b7" value="Treinamento do Modelo&#10;EfficientNet-B7" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="660" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="ensemble" value="Criação do Ensemble&#10;B0 + B3 + B7" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="760" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="avaliacao" value="Avaliação Final" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cdeb8b;strokeColor=#8dc63f;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="860" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge1" style="rounded=1;" parent="1" source="dados" target="split" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge2" style="rounded=1;" parent="1" source="split" target="pre" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge3" style="rounded=1;" parent="1" source="pre" target="entropia" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge4" style="rounded=1;" parent="1" source="entropia" target="baseline" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge5" style="rounded=1;" parent="1" source="baseline" target="b3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge6" style="rounded=1;" parent="1" source="b3" target="b7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge7" style="rounded=1;" parent="1" source="b7" target="ensemble" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge8" style="rounded=1;" parent="1" source="ensemble" target="avaliacao" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
