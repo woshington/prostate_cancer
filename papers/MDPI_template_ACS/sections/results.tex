@@ -1,0 +1,20 @@
+\begin{table}[!htb]
+	\centering
+	\caption{Comparação de desempenho entre modelos individuais e estratégias de ensemble ordenados por Kappa médio.}
+	\label{tab:ensemble_results}
+	\begin{tabular}{lcccc}
+		\toprule
+		\textbf{Model} & \textbf{Kappa} & \textbf{Std} & \textbf{IC 95\%} \\
+		\midrule
+		Ensemble-Mean              & \textbf{0,8796} & 0,0102 & [0,8581; 0,8983] \\
+		Ensemble-Weighted          & 0,8787          & 0,0096 & [0,8581; 0,8957] \\
+		Ensemble-Vote              & 0,8598          & 0,0119 & [0,8358; 0,8829] \\
+		\midrule
+		B0-Entropy-Ordinal-Focal   & 0,8564          & 0,0112 & [0,8334; 0,8768] \\
+		B3-Entropy-Ordinal-Focal   & 0,8483          & 0,0121 & [0,8241; 0,8707] \\
+		B7-Entropy-Ordinal-Focal   & 0,8443          & 0,0114 & [0,8210; 0,8655] \\
+		\midrule
+		Ensemble-Max               & 0,8391          & 0,0111 & [0,8159; 0,8594] \\
+		\bottomrule
+	\end{tabular}
+\end{table}
