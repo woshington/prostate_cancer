@@ -1,20 +1,24 @@
-\begin{table}[!htb]
+\begin{table}[H]
 	\centering
-	\caption{Comparação de desempenho entre modelos individuais e estratégias de ensemble ordenados por Kappa médio.}
-	\label{tab:ensemble_results}
-	\begin{tabular}{lcccc}
-		\toprule
-		\textbf{Model} & \textbf{Kappa} & \textbf{Std} & \textbf{IC 95\%} \\
-		\midrule
-		Ensemble-Mean              & \textbf{0,8796} & 0,0102 & [0,8581; 0,8983] \\
-		Ensemble-Weighted          & 0,8787          & 0,0096 & [0,8581; 0,8957] \\
-		Ensemble-Vote              & 0,8598          & 0,0119 & [0,8358; 0,8829] \\
-		\midrule
-		B0-Entropy-Ordinal-Focal   & 0,8564          & 0,0112 & [0,8334; 0,8768] \\
-		B3-Entropy-Ordinal-Focal   & 0,8483          & 0,0121 & [0,8241; 0,8707] \\
-		B7-Entropy-Ordinal-Focal   & 0,8443          & 0,0114 & [0,8210; 0,8655] \\
-		\midrule
-		Ensemble-Max               & 0,8391          & 0,0111 & [0,8159; 0,8594] \\
-		\bottomrule
-	\end{tabular}
+	\caption{Comparação de desempenho: Kappa e Acurácia (com Desvio Padrão e Intervalo de Confiança).}
+	\label{tab:ensemble_results_expanded}
+	\resizebox{\textwidth}{!}{
+		\begin{tabular}{lcccccc}
+			\toprule
+			& \multicolumn{3}{c}{\textbf{Kappa}} & \multicolumn{3}{c}{\textbf{Acurácia}} \\
+			\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+			\textbf{Model} & \textbf{Resultado} & \textbf{Std} & \textbf{IC 95\%} & \textbf{Resultado} & \textbf{Std} & \textbf{IC 95\%} \\
+			\midrule
+			Ensemble-Mean              & \textbf{0,8796} & 0,0102 & [0,8581; 0,8983] & 0,6980 & 0,0114 & [0,6767; 0,7214] \\
+			Ensemble-Weighted          & 0,8787          & 0,0096 & [0,8581; 0,8957] & 0,6927 & 0,0117 & [0,6692; 0,7145] \\
+			Ensemble-Vote              & 0,8598          & 0,0119 & [0,8358; 0,8829] & 0,6922 & 0,0115 & [0,6686; 0,7151] \\
+			\midrule
+			B0-Entropy-Ordinal-Focal   & 0,8564          & 0,0112 & [0,8334; 0,8768] & 0,6602 & 0,0120 & [0,6358; 0,6830] \\
+			B3-Entropy-Ordinal-Focal   & 0,8483          & 0,0121 & [0,8241; 0,8707] & 0,6603 & 0,0119 & [0,6384; 0,6837] \\
+			B7-Entropy-Ordinal-Focal   & 0,8443          & 0,0114 & [0,8210; 0,8655] & 0,6028 & 0,0123 & [0,5786; 0,6283] \\
+			\midrule
+			Ensemble-Max               & 0,8391          & 0,0111 & [0,8159; 0,8594] & 0,5828 & 0,0120 & [0,5597; 0,6050] \\
+			\bottomrule
+		\end{tabular}%
+	}
 \end{table}
