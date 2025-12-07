@@ -1,6 +1,7 @@
 \documentclass[journal,article,submit,pdftex,moreauthors]{Definitions/mdpi} 
 \usepackage{comment}
 \usepackage{float}
+\usepackage{tabularx}
 
 \firstpage{1} 
 \makeatletter 
@@ -18,38 +19,43 @@
 
 \hreflink{https://doi.org/}
 
-\Title{Title}
+\Title{Efficient-EF-OFL: An Entropy-Based Filtering and Ordinal Focal Loss Approach with EfficientNet for Prostate Lesion Classification}
 
-\TitleCitation{Title}
+\TitleCitation{Efficient-EF-OFL: An Entropy-Based Filtering and Ordinal Focal Loss Approach with EfficientNet for Prostate Lesion Classification}
 
 % Author Orchid ID: enter ID or remove command
 \newcommand{\orcidauthorA}{0009-0005-7569-2237}
-\newcommand{\orcidauthorB}{0000-0002-9955-7401}
-\newcommand{\orcidauthorC}{0000-0002-1416-9013}
+\newcommand{\orcidauthorB}{0000-0002-1416-9013}
+\newcommand{\orcidauthorC}{0000-0000-0000-0000}
+\newcommand{\orcidauthorD}{0000-0002-9955-7401}
 
-% Authors, for the paper (add full first names)
-\Author{Firstname Lastname $^{1}$\orcidA{}, Firstname Lastname $^{2}$ and Firstname Lastname $^{2,}$*}
 
-%\longauthorlist{yes}
+\Author{
+	Woshington V S Rodrigues$^{1}$\orcidA{}, 
+	José D. L. Araújo $^{2}$\orcidB{}, 
+	Antonio O. C. Filho $^{3}$ and 
+	Armando Luz Borges $^{4}$\orcidD{}
+}
 
-% MDPI internal command: Authors, for metadata in PDF
-\AuthorNames{Woshington Valdeci, Armando Luz, José Denes}
+\AuthorNames{Woshington Valdeci, José Denes, Antonio Filho}
 
 % Author citation:  
 \AuthorCitation{Lastname, F.; Lastname, F.; Lastname, F.}
 
-% Affiliations / Addresses (Add [1] after \address if there is only one affiliation.)
+
 \address{%
-$^{1}$ \quad Affiliation 1; e-mail@e-mail.com\\
-$^{2}$ \quad Affiliation 2; e-mail@e-mail.com}
+$^{1}$ \quad Federal University of Piauí (UFPI), Brazil; woshington@ifpi.edu.br\\
+$^{2}$ \quad Federal University of Piauí (UFPI), Brazil; jose.denes@ufpi.edu.br\\
+$^{3}$ \quad Federal University of Piauí (UFPI), Brazil; antoniooseas@gmail.com\\
+$^{4}$ \quad Federal University of Piauí (UFPI), Brazil; armandoluzborges@ufpi.edu.br\\
+}
 
-% Contact information of the corresponding author
-\corres{Correspondence: e-mail@e-mail.com; Tel.: (optional; include country code; if there are multiple corresponding authors, add author initials) +xx-xxxx-xxx-xxxx (F.L.)}
+\corres{Correspondence: woshington@ifpi.edu.br}
 
-\abstract{A single paragraph of about 200 words maximum. For research articles, abstracts should give a pertinent overview of the work. We strongly encourage authors to use the following style of structured abstracts, but without headings: (1) Background: place the question addressed in a broad context and highlight the purpose of the study; (2) Methods: describe briefly the main methods or treatments applied; (3) Results: summarize the article's main findings; (4) Conclusions: indicate the main conclusions or interpretations. The abstract should be an objective representation of the article, it must not contain results which are not presented and substantiated in the main text and should not exaggerate the main conclusions.}
+\abstract{Automated ISUP grade classification in prostate biopsy whole-slide images remains challenging due to high morphological variability, label noise, and inter-institutional heterogeneity. This study proposes an efficient pipeline combining entropy-based noise filtering, systematic patch extraction, ordinal regression, and focal loss to enhance robustness in learning from large-scale data. Variants of the EfficientNet architecture (B0, B3, and B7) were trained using a unified strategy, and their outputs were aggregated through ensemble methods. Experiments were conducted on the multicentric PANDA dataset, comprising 10,616 WSIs. The best individual model (EfficientNet-B0 with ordinal focal loss) achieved a QWK of 0.856, while deeper variants did not yield further improvements. The simple-average ensemble surpassed all single models, reaching a QWK of 0.879 and producing the most clinically coherent confusion matrix, with misclassifications largely restricted to adjacent ISUP grades. These results demonstrate that combining ordinal modeling, noise filtering, and lightweight architectures provides an advantageous balance between accuracy, stability, and computational efficiency. Although competitive with state-of-the-art approaches, the method requires validation on external datasets to further assess generalizability. Future directions include specialized models for intermediate grades and the exploration of transformer-based architectures.}
 
 % Keywords
-\keyword{keyword 1; keyword 2; keyword 3 (List three to ten pertinent keywords specific to the article; yet reasonably common within the subject discipline.)} 
+\keyword{Prostate cancer; ISUP grading; EfficientNet; Ordinal Regression, Ensemble Learning; Noise Filtering} 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -58,21 +64,24 @@ $^{2}$ \quad Affiliation 2; e-mail@e-mail.com}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \setcounter{section}{0}
 \section{Introduction}
+\label{sec:introduction}
 \input{sections/introduction.tex}
 
 
 \section{Related Works}
+\label{sec:related_works}
 \input{sections/related_works.tex}
 
 \section{Materials and Methods}
-
+\label{sec:materials_methods}
 \input{sections/materials_methods.tex}
 
-
 \section{Results}
+\label{sec:results}
 \input{sections/results.tex}
 \section{Conclusion}
-
+\label{sec:conclusion}
+\input{sections/conclusion.tex}
 
 \begin{adjustwidth}{-\extralength}{0cm}
 

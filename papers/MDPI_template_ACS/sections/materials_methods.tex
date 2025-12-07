@@ -14,7 +14,7 @@ Utilizamos o conjunto de dados do Prostate cANcer graDe Assessment (PANDA)~\cite
 
 A Tabela~\ref{tab:dist_classes} apresenta a distribuição das classes do conjunto de dados. Observa-se um desbalanceamento significativo entre os rótulos, com predominância da classe 0 (aproximadamente 27\%). Em contraste, as classes associadas a graus clínicos mais avançados (ISUP 4 e 5) representam, cada uma, menos de 12\% do total.
 
-As imagens do PANDA são provenientes de dois centros médicos distintos: Radboud University Medical Center e Karolinska Institutet. Segundo os autores~\cite{ref-panda2020}, as lâminas do Radboud foram anotadas por estudantes treinados, enquanto as do Karolinska foram rotuladas por patologistas experientes. Essa heterogeneidade introduz variabilidade interinstitucional nas anotações. Além disso, o conjunto público apresenta diferentes formas de ruído, incluindo anotações excessivamente inclusivas e marcas de caneta próximas a regiões tumorais, o que pode afetar a qualidade do treinamento dos modelos.
+As imagens do PANDA são provenientes de dois centros médicos distintos: Radboud University Medical Center e Karolinska Institutet. Segundo os autores~\cite{ref-panda2020}, as lâminas do Radboud foram anotadas por estudantes treinados, enquanto as do Karolinska foram rotuladas por patologistas experientes. Essa heterogeneidade introduz variabilidade interinstitucional nas anotações. Além disso, o conjunto público apresenta diferentes formas de ruído, incluindo anotações inclusivas e marcas de caneta próximas a regiões tumorais, o que pode afetar a qualidade do treinamento dos modelos.
 
 \begin{table*}[!ht]
 	\centering
@@ -63,22 +63,29 @@ O pipeline de pré-processamento foi estruturado sequencialmente para garantir a
 
 \subsubsection{Data Partitioning and Noise Filtering}
 \label{subsubsec:partitioning-filtering}
+Inicialmente, realizou-se uma divisão estratificada do conjunto de dados, de modo a preservar a distribuição original das classes. Do total de imagens, 15\% foram reservadas para o conjunto de teste final, enquanto os 85\% restantes compuseram o conjunto de desenvolvimento.
 
-Inicialmente, aplicou-se uma divisão estratificada do dataset, preservando a distribuição das classes. Um subconjunto de 15\% das imagens foi reservado como hold-out set para a avaliação final, enquanto os 85\% restantes compuseram o conjunto de desenvolvimento.
+Considerando a presença de rótulos ruidosos, como ilustrado na Figura~\ref{fig:noise}, que apresenta uma imagem com marcas visíveis de caneta, e a elevada complexidade na discriminação de determinadas amostras (Seção~\ref{subsec:data-acquisition}), foi implementado um mecanismo de filtragem baseado na \textit{Entropia de Shannon}. Essa métrica, amplamente utilizada na Teoria da Informação e em aplicações de Inteligência Artificial, permite quantificar o grau de incerteza associado às predições do modelo~\cite{ali2023entropy}.
 
-Dada a presença de rótulos ruidosos e a complexidade de discriminação de certas amostras (Seção \ref{subsec:data-acquisition}), implementou-se uma filtragem baseada na Entropia de Shannon. Na Teoria da Informação aplicada à Inteligência Artificial, a entropia quantifica o nível de incerteza e desordem associado às predições \cite{ali2023entropy}. Valores elevados dessa métrica indicam uma distribuição de probabilidade uniforme entre as classes, sinalizando a incapacidade do modelo em caracterizar a instância com segurança. Dessa forma, utilizou-se a entropia como um indicador de dificuldade, permitindo a identificação e remoção sistemática de amostras ruidosas.
-
-A filtragem ocorreu em três passos:
-
-\begin{itemize}
-	\item \textbf{Cálculo da entropia}: treinou-se um modelo EfficientNet-B0 pré-treinado no ImageNet e calculou-se a entropia para todas as amostras do conjunto de desenvolvimento.
-	\item \textbf{Definição de limiar}: avaliou-se a remoção dos 10\%, 5\% e 2\% das instâncias com maior entropia.	
-	\item \textbf{Seleção final}: o limiar de 2\% apresentou o melhor compromisso entre redução de ruído e preservação de dados.
-	
-\end{itemize}
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.20\textwidth, height=0.24\textheight]{images/slide_thumbnail.png}
+	\caption{Exemplo de imagem contendo ruído.}
+	\label{fig:noise}
+\end{figure}
 
 
-Após a remoção das amostras ruidosas, o conjunto de desenvolvimento (8.844 instâncias) foi subdividido estratificadamente em 80\% para treinamento e 20\% para validação. A Tabela \ref{tab:dataset-filter} apresenta a distribuição final utilizada no estudo.
+Para cada instância, o modelo gera uma distribuição de probabilidades sobre as $K$ classes, representada por $p = [p_1, \ldots, p_K]$. A entropia é então definida por:
+
+\begin{equation}
+	H(p) = -\sum_{i=1}^{K} p_i \log(p_i),
+\end{equation}
+
+\noindent na qual valores baixos indicam maior confiança do modelo, pois a distribuição de probabilidades se encontra concentrada em poucas classes. Em contrapartida, valores mais elevados estão associados a distribuições mais uniformes, refletindo maior incerteza nas predições e sugerindo que a amostra pode ser ambígua, ruidosa ou de baixa qualidade. Dessa forma, a entropia foi adotada como um indicador sistemático da dificuldade das amostras, sendo aplicada exclusivamente ao conjunto de desenvolvimento.
+
+O processo de filtragem foi conduzido em três etapas. Inicialmente, foi utilizado um modelo EfficientNet-B0 pré-treinado no ImageNet~\cite{russakovsky2015imagenet} para estimar a distribuição de probabilidades de todas as amostras do conjunto de desenvolvimento, a partir das quais se calculou a entropia. Em seguida, avaliou-se o impacto da remoção das instâncias com maiores valores de entropia, testando-se limiares correspondentes à exclusão dos 10\%, 5\% e 2\% dos exemplos mais incertos. Por fim, o limiar de 2\% foi selecionado por apresentar o melhor equilíbrio entre a redução de ruído e a preservação do volume de dados disponível.
+
+Após a remoção das amostras ruidosas, o conjunto de desenvolvimento foi subdividido estratificadamente em 80\% para treinamento e 20\% para validação. A Tabela \ref{tab:dataset-filter} apresenta a distribuição dos dados antes e depois da filtragem.
 
 \begin{table}[h]
 	\centering
@@ -86,13 +93,15 @@ Após a remoção das amostras ruidosas, o conjunto de desenvolvimento (8.844 in
 	\label{tab:dataset-filter}
 	\begin{tabular}{@{}lrrr@{}}
 		\toprule
-		\textbf{Subset} & \textbf{\% of Total} & \textbf{Action} & \textbf{No. of Images} \\ \midrule
-		Test  & 15\% & Preserved & 1,590 \\
+		\textbf{Subset} & \textbf{\% of Total} & \textbf{No. of Images} \\ \midrule
+		Test  & 15\% & 1,590 \\
 		\midrule
-		\multicolumn{4}{l}{\textit{Development Set (Post-Filtering)}} \\
-		Training & $\approx$68\% & Augmentation & 7,075 \\
-		Validation & $\approx$17\% & Evaluation & 1,769 \\ \midrule
-		\textbf{Total Used} & \textbf{100\%} & - & \textbf{10,434} \\ \bottomrule
+		\multicolumn{2}{l}{\textit{Development Set (Pre-Filtering)}} & \textit{9,024}\\
+		\midrule
+		\multicolumn{2}{l}{\textit{Development Set (Post-Filtering)}} & \textit{8,844}\\
+		Training & $\approx$68\%  & 7,075 \\
+		Validation & $\approx$17\% & 1,769 \\ \midrule
+		\textbf{Total Used} & \textbf{100\%} & \textbf{10,434} \\ \bottomrule
 	\end{tabular}
 \end{table}
 
@@ -101,9 +110,9 @@ Considerando o tamanho das WSIs e a presença de áreas não informativas, foi a
 
 \begin{figure}[!htb]
 	\centering
-	\subfloat[\centering Original]{{\includegraphics[width=0.1\textwidth, height=0.24\textheight]{images/original.png} }}%
+	\subfloat[\centering Original]{{\includegraphics[width=0.15\textwidth, height=0.24\textheight]{images/original.png} }}%
 	\qquad
-	\subfloat[\centering Patched image]{{\includegraphics[width=0.33\textwidth,height=0.24\textheight]{images/tiles.png} }}%
+	\subfloat[\centering Patched image]{{\includegraphics[width=0.4\textwidth,height=0.24\textheight]{images/tiles.png} }}%
 	\caption{Original histopathological image (a) and composite image after patch extraction and rearrangement (b).}
 	\label{fig:origin-tiles}
 \end{figure}
@@ -112,7 +121,7 @@ Para cada lâmina, foram extraídos 36 patches, número definido por meio de exp
 
 \begin{figure}[!htb]
 	\centering
-	\includegraphics[width=0.5\textwidth]{images/tiles-original.png}
+	\includegraphics[width=0.9\textwidth]{images/tiles-original.png}
 	%
 	\caption{Representation of patch extraction with different quantities. The image shows three examples: (a) with 25 patches, (b) with 36 patches, and (c) with 49 patches, displayed from left to right.}
 	\label{fig:tiles-original}%
@@ -124,7 +133,7 @@ Assim, a configuração intermediária com 36 patches equilibra adequadamente a 
 
 \subsection{Single Classifiers}
 
-Na fase inicial dos experimentos, adotou-se o modelo EfficientNet-B0 como referência para a otimização dos hiperparâmetros. Inicialmente, estabeleceu-se um baseline utilizando a função de perda Binary Cross-Entropy (BCE). Esta escolha baseou-se na natureza do problema, considerando que, embora uma lâmina possa apresentar múltiplos graus de lesão, a graduação final da biópsia é determinada pelo padrão de Gleason primário (mais frequente) e secundário, conforme estabelecido pelo sistema ISUP~\cite{ref-epstein2016}.
+Na fase inicial dos experimentos, adotamos o modelo EfficientNet-B0 como referência para a otimização dos hiperparâmetros. Inicialmente, estabeleceu-se um baseline utilizando a função de perda Binary Cross-Entropy (BCE). Esta escolha baseou-se na natureza do problema, considerando que, embora uma lâmina possa apresentar múltiplos graus de lesão, a graduação final da biópsia é determinada pelo padrão de Gleason primário (mais frequente) e secundário, conforme estabelecido pelo sistema ISUP~\cite{ref-epstein2016}.
 
 Durante o treinamento deste baseline, foram avaliadas diversas estratégias, incluindo Stochastic Weight Averaging (SWA), Test Time Augmentation (TTA), além de variações na taxa de aprendizado, número de épocas, otimizadores e espaços de cores. Em todos os experimentos, o modelo apresentou convergência prematura (entre as épocas 7 e 10), seguida de overfitting, conforme ilustrado na Figura \ref{fig:loss_BCE}.
 
@@ -138,14 +147,20 @@ A hipótese principal para esse comportamento reside no fato de a BCE Loss trata
 
 A arquitetura proposta utiliza a Regressão Ordinal para modelar a natureza contínua e hierárquica do sistema de graduação ISUP. O problema de $K$ classes é transformado em $K-1$ tarefas de classificação binária, onde a $k$-ésima saída representa a probabilidade condicional $P(y > k)$. Os rótulos de destino ($y$) são mapeados para vetores ordinais $V = [v_0, ..., v_{K-2}]$, definidos formalmente como: $$v_k = \begin{cases} 1, & \text{se } y > k \\ 0, & \text{caso contrário} \end{cases}$$Desta forma, um grau ISUP 3 é codificado como $[1, 1, 1, 0, 0]$. 
 
-Esta estrutura impõe uma restrição de monotonicidade aos rótulos, impedindo configurações logicamente inconsistentes e permitindo que o modelo apreenda as relações hierárquicas entre os graus de severidade do câncer. A implementação da Ordinal Loss elevou o desempenho do modelo, superando o resultado anterior de 0.838 para 0.851 de Kappa. Subsequentemente, integrou-se a técnica de Focal Loss~\cite{lin2017focal} à abordagem ordinal. Projetada para mitigar o desbalanceamento de classes, a Focal Loss remodela a entropia cruzada padrão adicionando um fator de modulação $(1 - p_t)^\gamma$ que reduz o peso relativo de exemplos fáceis (bem classificados), forçando o modelo a focar o treinamento em exemplos difíceis e mal classificados1111. Com essa integração, atingiu-se um Kappa de 0.857, considerada a configuração ótima para a arquitetura B0.  Finalmente, esta mesma estrutura de pipeline (taxa de aprendizado, épocas, otimizador e função de perda) foi aplicada a modelos de maior capacidade (EfficientNet-B3 e B7). Os resultados obtidos foram de 0.848 e 0.844, respectivamente, indicando que o aumento da complexidade do modelo sem ajustes adicionais não resultou em ganho de desempenho neste cenário.
+Esta estrutura impõe uma restrição de monotonicidade aos rótulos, impedindo configurações logicamente inconsistentes e permitindo que o modelo apreenda as relações hierárquicas entre os graus de severidade do câncer. A implementação da Ordinal Loss elevou o desempenho do modelo, superando o resultado anterior de 0.838 para 0.851 de Kappa. Subsequentemente, integrou-se a técnica de Focal Loss~\cite{lin2017focal} à abordagem ordinal.
+
+Projetada para mitigar o desbalanceamento de classes, a Focal Loss remodela a entropia cruzada padrão adicionando um fator de modulação $(1 - p_t)^\gamma$ que reduz o peso relativo de exemplos fáceis (bem classificados), forçando o modelo a focar o treinamento em exemplos difíceis e mal classificados. Com essa integração, obtivemos um coeficiente Kappa de 0.857, caracterizando essa configuração como a melhor combinação de hiperparâmetros para a arquitetura EfficientNet-B0. Na Figura \ref{fig:loss_kappa_focal}, observamos que a perda no conjunto de validação manteve-se estável ao longo do treinamento, enquanto o valor do Kappa apresentou uma evolução contínua e consistente, atingindo aproximadamente 0.860 em seu ponto máximo. Esse comportamento indica que o modelo conseguiu melhorar sua capacidade discriminativa sem incorrer em sobreajuste significativo.  Finalmente, esta mesma estrutura de pipeline (taxa de aprendizado, épocas, otimizador e função de perda) foi aplicada a modelos de maior profundidade (EfficientNet-B3 e B7). Os resultados obtidos foram de 0.848 e 0.844, respectivamente, indicando que o aumento da complexidade do modelo sem ajustes adicionais não resultou em ganho de desempenho neste cenário.
 
 
 \begin{figure}[!htb]
 	\centering\includegraphics[width=1\textwidth]{images/loss_kappa_b0_focal_loss.png}
 	\caption{Loss e Kappa para o melhor modelo individual de classificação.}
-	\label{fig:loss_BCE}
+	\label{fig:loss_kappa_focal}
 \end{figure}
 
 \subsection{Ensemble}
-Visando maximizar o desempenho preditivo, implementou-se um ensemble dos modelos EfficientNet-B0, B3 e B7. A literatura respalda essa abordagem pela sua superioridade em robustez e generalização frente a modelos isolados\cite{mian2024ensemble}. Entre as estratégias de combinação avaliadas (média simples, ponderada, máximo e voto majoritário), a média simples obteve o melhor desempenho, com $k=0,8796$ (IC 95\%: 0,8581–0,8983). Este resultado superou os modelos individuais B0 $k=0,856$, B3 $k=0,848$ e B7 $k=0,844$.
+Visando maximizar o desempenho preditivo, implementou-se um ensemble dos modelos EfficientNet-B0, B3 e B7. A literatura respalda essa abordagem pela sua superioridade em robustez e generalização frente a modelos isolados\cite{mian2024ensemble}. Entre as estratégias de combinação avaliadas (média simples, ponderada, máximo e voto majoritário), a média simples obteve o melhor desempenho, com $k=0,879$ (IC 95\%: 0,8581–0,8983). Este resultado superou os modelos individuais B0 $k=0,856$, B3 $k=0,848$ e B7 $k=0,844$.
+
+\subsubsection{Evaluation Metrics}
+
+A avaliação dos modelos utilizou a acurácia para mensurar o desempenho global e o coeficiente Kappa de Cohen com ponderação quadrática~\cite{ref-cohen1968}. A adoção do Kappa visa considerar a natureza ordinal da graduação de Gleason, penalizando erros maiores de forma mais severa.
