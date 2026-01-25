@@ -1,0 +1,181 @@
+TABELA DE HIPERPARÂMETROS DOS MODELOS BASELINE
+===============================================
+
+\begin{table}[htbp]
+\centering
+\caption{Hiperparâmetros utilizados no treinamento dos modelos baseline.}
+\label{tab:hyperparameters}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lcccccccccc@{}}
+\toprule
+\textbf{Modelo} & \textbf{Backbone} & \textbf{LR} & \textbf{Épocas} & \textbf{Batch} & \textbf{Dropout} & \textbf{Focal $\alpha$} & \textbf{Focal $\gamma$} & \textbf{SWA} & \textbf{Camadas} & \textbf{Observações} \\
+\midrule
+B0-Entropy-Ordinal & EfficientNet-B0 & 3e-4 & 50 & 3 & 0.6 & - & - & Não & Todas & Ordinal loss \\
+B0-Entropy-Ordinal-Focal & EfficientNet-B0 & 3e-4 & 50 & 3 & 0.6 & 0.25 & 2.0 & Não & Todas & Focal + Ordinal \\
+B0-Entropy-Ordinal-Focal-2 & EfficientNet-B0 & 3e-4 & 50 & 3 & 0.6 & [0.25--0.90] & 2.0 & Não & Todas & $\alpha$ variável \\
+B0-Entropy-Ordinal-Weighted & EfficientNet-B0 & 3e-4 & 50 & 3 & 0.6 & - & - & Não & Todas & Weighted sampler \\
+B0-Entropy-Ordinal-SWA & EfficientNet-B0 & 3e-4 & 50 & 3 & 0.6 & - & - & Sim (ep. 30) & Todas & SWA LR: 1e-4 \\
+B0-Entropy-Ordinal-Focal-Def & EfficientNet-B0 & 3e-4 & 50 & 3 & 0.6 & 0.25 & 2.0 & Não & Todas & Deformable conv \\
+B0-Entropy-Ordinal-Focal-C2-5 & EfficientNet-B0 & 3e-4 & 50 & 3 & 0.6 & 0.25 & 2.0 & Não & Todas & Classes 2--5 \\
+B3-Entropy-Ordinal-Focal & EfficientNet-B3 & 3e-4 & 50 & 3 & 0.6 & [0.25--0.90] & 2.0 & Não & Todas & - \\
+B7-Entropy-Ordinal-Focal & EfficientNet-B7 & 3e-4 & 50 & 3 & 0.6 & 0.25 & 2.0 & Não & Todas & - \\
+B0-TTA & EfficientNet-B0 & 3e-4 & 50 & 6 & 0.6 & - & - & Não & Todas & TTA: 5 aug. \\
+Ensemble-Mean & B0/B3/B7 & - & - & 3 & - & - & - & - & - & Média simples \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+PARÂMETROS COMUNS A TODOS OS MODELOS:
+======================================
+- Seed: 42
+- Workers: 4
+- Output classes: 5 (thresholds ordinais, exceto C2-5 com 3 e TTA com 5 direto)
+- Warmup: 1 época com fator 2
+- Scheduler: CosineAnnealingLR após warmup
+- Optimizer: Adam
+- Patience (Early stopping): 7 épocas (exceto TTA com 5)
+- Data augmentation: Transpose, VerticalFlip, HorizontalFlip (p=0.5)
+- Entropy filtering: Remoção dos top 20% amostras de maior dificuldade (exceto TTA)
+
+OBSERVAÇÕES IMPORTANTES:
+========================
+- B0-TTA é o ÚNICO modelo que NÃO usa ordinal loss (usa BCEWithLogitsLoss)
+- B0-TTA é o ÚNICO modelo que NÃO usa entropy filtering
+- B0-TTA usa batch size 6 (todos os outros usam batch size 3)
+- TTA é aplicado apenas durante inferência/teste, não durante treinamento
+
+DETALHES ADICIONAIS POR MODELO:
+================================
+
+1. B0-Entropy-Ordinal:
+   - Loss: OrdinalRegressionLoss (BCE ordinal)
+   - Sem focal loss nem balanceamento
+
+2. B0-Entropy-Ordinal-Focal:
+   - Loss: OrdinalFocalLoss
+   - Focal alpha: 0.25 (constante)
+   - Focal gamma: 2.0
+
+3. B0-Entropy-Ordinal-Focal-2:
+   - Loss: OrdinalFocalLoss com alpha variável
+   - Focal alpha: [0.25, 0.35, 0.50, 0.70, 0.90] (por threshold)
+   - Focal gamma: 2.0
+
+4. B0-Entropy-Ordinal-Weighted:
+   - Loss: OrdinalRegressionLoss
+   - Sampler: WeightedRandomSampler (balanced)
+   - Class weights: [0.6036, 0.6542, 1.3113, 1.4272, 1.4169, 1.5491]
+
+5. B0-Entropy-Ordinal-SWA:
+   - Loss: OrdinalRegressionLoss
+   - SWA start: época 30
+   - SWA learning rate: 1e-4
+   - Update BN statistics após cada época SWA
+
+6. B0-Entropy-Ordinal-Focal-Deformable:
+   - Loss: OrdinalFocalLoss
+   - Deformable convolutions: Habilitadas nas últimas camadas
+   - Total params: 18,970,771
+   - Trainable params: 18,905,121
+
+7. B0-Entropy-Ordinal-Focal-Classes-2-5:
+   - Loss: OrdinalFocalLoss
+   - Classes: Apenas ISUP 2, 3, 4, 5
+   - Remapeamento: 2→0, 3→1, 4→2, 5→3
+   - Output classes: 3 thresholds
+
+8. B3-Entropy-Ordinal-Focal:
+   - Backbone: EfficientNet-B3
+   - Loss: OrdinalFocalLoss com alpha variável
+   - Focal alpha: [0.25, 0.35, 0.50, 0.70, 0.90]
+
+9. B7-Entropy-Ordinal-Focal:
+   - Backbone: EfficientNet-B7
+   - Loss: OrdinalFocalLoss
+   - Focal alpha: 0.25 (constante)
+
+10. B0-TTA (Test-Time Augmentation):
+    - Loss: BCEWithLogitsLoss (NÃO ordinal)
+    - Batch size: 6 (maior que outros modelos)
+    - Patience: 5 épocas
+    - SEM entropy filtering (treina com dataset completo)
+    - TTA com 5 transformações durante inferência:
+      1. Imagem original
+      2. Horizontal flip
+      3. Vertical flip
+      4. Horizontal + Vertical flip
+      5. Transpose
+    - Predição final: Média das 5 predições
+    - Output: 5 classes (não ordinal, classificação direta)
+
+11. Ensemble-Mean:
+    - Modelos: B0-Focal, B3-Focal, B7-Focal
+    - Método: Média simples das probabilidades
+    - Pesos: [0.27, 0.45, 0.27] (weighted variant)
+    - Outros métodos testados: max, majority vote
+
+
+TABELA COMPACTA ALTERNATIVA (para texto principal):
+====================================================
+
+\begin{table}[htbp]
+\centering
+\caption{Configuração dos experimentos baseline.}
+\label{tab:baseline_config}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Configuração} & \textbf{Parâmetro} & \textbf{Valor} \\
+\midrule
+Treinamento & Taxa de aprendizagem inicial & $3 \times 10^{-4}$ \\
+            & Épocas máximas & 50 \\
+            & Tamanho do batch & 3 \\
+            & Early stopping (patience) & 7 \\
+            & Warmup & 1 época (fator 2) \\
+            & Scheduler & Cosine Annealing \\
+            & Otimizador & Adam \\
+\midrule
+Regularização & Dropout & 0.6 \\
+              & Data augmentation & Flip/Transpose (p=0.5) \\
+              & Entropy filtering & Top 20\% removidos \\
+\midrule
+Focal Loss & $\alpha$ (padrão) & 0.25 \\
+           & $\alpha$ (variável) & [0.25, 0.35, 0.50, 0.70, 0.90] \\
+           & $\gamma$ & 2.0 \\
+\midrule
+SWA & Início & Época 30 \\
+    & Taxa de aprendizagem & $1 \times 10^{-4}$ \\
+\midrule
+Arquiteturas & Backbones testados & EfficientNet-B0/B3/B7 \\
+             & Output classes & 5 (ordinal thresholds) \\
+\midrule
+TTA & Transformações & 5 (original, H-flip, V-flip, HV-flip, transpose) \\
+    & Agregação & Média das predições \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+TABELA DE RESULTADOS (extraída do ensemble notebook):
+======================================================
+
+\begin{table}[htbp]
+\centering
+\caption{Desempenho dos modelos baseline no conjunto de teste.}
+\label{tab:baseline_results}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Modelo} & \textbf{Acurácia (\%)} & \textbf{Kappa} & \textbf{F1-Score} & \textbf{IC 95\% (Kappa)} \\
+\midrule
+Ensemble-Mean & 69.81 & 0.8800 & 0.6539 & [0.8581, 0.8983] \\
+Ensemble-Weighted & 69.25 & 0.8792 & 0.6468 & [0.8581, 0.8957] \\
+Ensemble-Vote & 69.25 & 0.8598 & 0.6459 & [0.8358, 0.8829] \\
+B0-Entropy-Ordinal-Focal & 66.04 & 0.8570 & 0.6124 & [0.8334, 0.8768] \\
+B3-Entropy-Ordinal-Focal & 65.97 & 0.8484 & 0.6188 & [0.8241, 0.8707] \\
+B7-Entropy-Ordinal-Focal & 60.25 & 0.8440 & 0.5564 & [0.8210, 0.8655] \\
+Ensemble-Max & 58.30 & 0.8396 & 0.5583 & [0.8159, 0.8594] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Nota: Intervalos de confiança calculados via bootstrap com 1000 iterações.

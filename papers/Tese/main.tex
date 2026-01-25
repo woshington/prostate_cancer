@@ -1,0 +1,566 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%
+%%%%  Modelo para Qualificação, Proposta de Tese e Tese de Doutorado
+%%%%  Doutorado em Ciência da Computação Associação UFMA/UFPI DCCMAPI
+%%%%
+%%%%  Baseado em Modelo de Dissertação PPGCC-UFMA Desenvolvido por Geraldo Braz Júnior
+%%%%
+%%%%  Modificado por: Anselmo Paiva and Luana Cruz - Junho/2022
+%%%%
+
+\RequirePackage{setspace}
+
+\documentclass[
+	12pt,				% tamanho da fonte
+	% openright,		% capítulos começam em pág ímpar (insere página vazia caso preciso)
+	oneside,			% para impressão somente no verso 
+	a4paper,			% tamanho do papel. 
+	english,			% idioma adicional para hifenização
+	french,				% idioma adicional para hifenização
+	spanish,			% idioma adicional para hifenização
+	brazil				% o último idioma é o principal do documento
+	]{abntex2}
+	
+	
+\usepackage{lmodern}				% Usa a fonte Latin Modern			
+\usepackage[T1]{fontenc}			% Selecao de codigos de fonte.
+\usepackage[utf8]{inputenc}			% Codificacao do documento (conversão automática dos acentos)
+\usepackage[protrusion=true, expansion=true, shrink=55, stretch=55, 
+tracking=true, kerning=true, spacing=true, final]{microtype}
+\usepackage{lastpage}				% Usado pela Ficha catalográfica
+\usepackage{indentfirst}			% Indenta o primeiro parágrafo de cada seção.
+\usepackage{color}					% Controle das cores
+\usepackage{graphicx}				% Inclusão de gráficos e imagens
+\usepackage{microtype} 				% para melhorias de justificação
+\usepackage{mathtools}				% Matemática
+\usepackage{multirow}				% Tabelas
+\usepackage[table,xcdraw]{xcolor}	% Tabelas (cores)
+\usepackage{pdfpages}
+\usepackage{lscape}
+\usepackage{float}
+\usepackage{makeidx}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{array}
+\usepackage{float}
+\usepackage{amsfonts}
+\usepackage[table,xcdraw]{xcolor}	% Tabelas (cores)
+\usepackage{calc, xcolor, amssymb} % para inserir fórmulas matemáticas
+\usepackage[clearempty, compact]{titlesec} % Section titles
+%\usepackage{setspace}    % line spacing
+\usepackage{indentfirst} % indent first line of sections and chapters
+
+% Add code support for many programming languages
+\usepackage{caption} %change listings caption
+\usepackage{listings}
+\usepackage{listingsutf8}
+\usepackage{booktabs}     % better tables
+\usepackage[]{helvet}
+\usepackage{placeins}
+
+% ---
+%  Packages específicos para Tese de Luana
+% ---
+\usepackage{setspace}
+
+% ---
+% Pacotes de citações
+% ---
+\usepackage[alf, abnt-etal-list=0, bibjustif, abnt-emphasize=bf]{abntex2cite}	% Citações padrão ABNT
+%\usepackage[alf,bibjustif,abnt-emphasize=bf]{abntex2cite}
+%\usepackage{cite}
+\usepackage{lipsum}				% para geração de dummy text
+\usepackage[brazilian,hyperpageref]{backref}	 % Paginas com as citações na bibl
+\renewcommand{\backrefpagesname}{Citado na(s) página(s):~}
+\renewcommand{\backref}{}
+\renewcommand*{\backrefalt}[4]{
+	\ifcase #1 %
+		Nenhuma citação no texto.%
+	\or
+		Citado na página #2.%
+	\else
+		Citado #1 vezes nas páginas #2.%
+	\fi}%
+%---- Parenteses nas citacoes
+%\renewcommand\citeleft{(}
+%\renewcommand\citeright{)}
+
+
+%----- Definições Adicionais DCCMAPI
+\renewcommand{\familydefault}{\sfdefault}
+\newcommand{\subtitulo}[1]{\subtitle{#1}}
+\newcommand{\cidade}[1]{\city{#1}}
+\newcommand{\dccmapi}[1]{\program{{Doutorado em Ciência da Computação Associação UFMA/UFPI}}}
+\newcommand{\universidades}[1]{\university{UNIVERSIDADE FEDERAL DO MARANHÃO} \\    \university{UNIVERSIDADE FEDERAL DO PIAUÍ} }
+
+\newcommand{\alinhadoesq}[1]{\noindent\begin{minipage}[top]{\textwidth}#1\end{minipage}}
+\newcommand{\alinhadodir}[1]{\alinhadoesq{\begin{flushright}#1\end{flushright}}}
+\newcommand{\myyear}{}
+\renewcommand{\year}[1]{\renewcommand{\myyear}{#1}}
+\newcommand{\mymonth}{}
+\renewcommand{\month}[1]{\renewcommand{\mymonth}{#1}}
+\newcommand{\myday}{}
+\renewcommand{\day}[1]{\renewcommand{\myday}{#1}}
+\newcommand{\mes}[1]{\month{#1}}
+\newcommand{\ano}[1]{\year{#1}}
+\newcommand{\dia}[1]{\day{#1}}
+
+
+
+% ---
+% Informações de dados para CAPA e FOLHA DE ROSTO
+% ---
+
+\titulo{Titulo da Tese}
+%\subtitulo{subtitulo da tese caso necessário}
+\autor{Nome da Candidata}
+%%% Ajustar para uma das opções
+% \local{Teresina - PI}
+\local{São Luís - MA}
+
+%% Ajustar a data
+\dia{20}
+\mes{Outubro}
+\ano{2022}
+
+\data{\mes, \ano}
+
+% incluir nome do orientador
+\orientador{Prof. Dr. Orientador Principal}
+
+% incluir nome do Co-orientador caso exista
+\coorientador{Prof. Dr. Co-Orientador} %se houver
+
+\instituicao{ \universidades}
+
+\tipotrabalho{Tese}
+
+
+
+%------
+% Utilizar o preâmbulo adequado para cada tipo de documento
+
+
+% Exame de Qualificação 
+%\preambulo{Artigo de Qualificação apresentado como requisito parcial para obtenção do título de Doutor em Ciência da Computação, ao Doutorado em Ciência da Computação, Associação UFMA/UFPI.}
+
+% Proposta de Tese
+%\preambulo{Proposta de Tese apresentada como requisito parcial para obtenção do título de Doutor em Ciência da Computação, ao Doutorado em Ciência da Computação, Associação UFMA/UFPI.}
+
+% Tese
+\preambulo{Tese apresentada como requisito parcial para obtenção do título de Doutor em Ciência da Computação, ao Doutorado em Ciência da Computação, Associação UFMA/UFPI.}
+
+\newcommand{\txtaprovada}{Aprovada pela banca examinadora:}
+
+% alterando o aspecto da cor azul
+\definecolor{blue}{RGB}{41,5,195}
+
+% informações do PDF
+\makeatletter
+\hypersetup{
+     	%pagebackref=true,
+		pdftitle={\@title}, 
+		pdfauthor={\@author},
+    	pdfsubject={\imprimirpreambulo},
+	    pdfcreator={LaTeX with abnTeX2},
+		pdfkeywords={Doutorado}{Ciência da Computação}{DCCMAPI}{UFMA}{UFPI}, 
+		colorlinks=true,       		% false: boxed links; true: colored links
+    	linkcolor=blue,          	% color of internal links
+    	citecolor=blue,        		% color of links to bibliography
+    	filecolor=magenta,      		% color of file links
+		urlcolor=blue,
+		bookmarksdepth=4
+}
+
+% O tamanho do parágrafo é dado por:
+\setlength{\parindent}{1.3cm}
+
+% Controle do espaçamento entre um parágrafo e outro:
+\setlength{\parskip}{0.2cm}  % tente também \onelineskip
+
+\makeindex
+
+\begin{document}
+
+\selectlanguage{brazil}
+
+\frenchspacing 
+
+%----
+% Capa, Folha de Rosto, Folha de Aprovação
+
+%\hyphenpenalty=10000
+
+% ---
+% Capa
+% ---
+\renewcommand{\imprimircapa}{%
+\begin{capa}%
+  \center
+  \renewcommand{\baselinestretch}{1.3}%
+
+  \includegraphics[scale=0.25]{figuras/DuasLogos.png} 
+  
+\vspace{0.5cm}
+\alinhadodir{\Large  \textbf{UNIVERSIDADE FEDERAL DO MARANHÃO} \\
+                     \textbf{UNIVERSIDADE FEDERAL DO PIAUÍ} \\ 
+                     \textbf{Doutorado em Ciência da Computação Associação UFMA/UFPI}
+             
+%\alinhadodir{\Large  \textbf{Doutorado em Ciência da Computação Associação UFMA/UFPI}
+\normalsize}
+\vspace{\stretch{0.4}}%
+
+
+\alinhadodir{ \Large  \textbf{\imprimirautor} \normalsize }
+
+\vspace{3cm}
+\alinhadodir{ \Large  \textbf{\imprimirtitulo\relax} \normalsize }
+
+\vspace{2cm}
+\alinhadodir{ \bfseries\Large Orientador: \imprimirorientador \\
+                             Co-orientador: \imprimircoorientador
+                             \relax}
+
+\vfill
+\alinhadodir{ \Large  \textbf{\imprimirlocal\relax} \normalsize } \\
+\vspace{0.1cm}
+\alinhadodir{ \Large  \textbf{\mymonth, \myyear \relax} \normalsize }
+\vspace{1cm}
+
+
+\end{capa}
+}	
+
+% ---
+% Folha de Rosto
+% ---
+
+\renewcommand{\imprimirfolhaderosto}{%
+ \begin{folhaderosto}
+   \renewcommand{\baselinestretch}{1.2}%
+   \alinhadodir{\Large  \imprimirautor \normalsize}
+   \vspace*{\stretch{0.5}}%
+   
+   % \alinhadodir{ \Large  \textbf{\imprimirtitulo\relax} \normalsize }
+   \alinhadodir{ \bfseries\Large\imprimirtitulo}
+   \vspace*{\stretch{0.5}}%
+   
+   
+   \alinhadodir{  \textbf{TESE DE DOUTORADO} }
+   \vspace{1.5cm}
+   
+   
+   \hspace{.40\textwidth}
+    \begin{minipage}{.5\textwidth}
+        \imprimirpreambulo
+    \end{minipage}%
+    \vspace*{\fill}
+   \vspace{1cm}
+  
+  
+   \alinhadodir{ \large  Orientador: \imprimirorientador \\
+                             Co-orientador: \imprimircoorientador
+                             \relax \normalsize}
+   \vfill
+   \alinhadodir{ \large  {\imprimirlocal\relax} \normalsize} \\
+   \alinhadodir{ \large  {\mymonth, \myyear \relax} \normalsize}
+   \vspace{1cm}
+
+ \end{folhaderosto}
+}	
+
+
+
+%----
+%  Na tese gerar o pdf da capa conforme instruções.
+%\includepdf[pages={1}]{imagens/CapaGrafica.pdf}
+
+
+% Capa e Folha de rosto
+\imprimircapa
+
+\imprimirfolhaderosto
+
+%---
+% Na tese incluir a Ficha Catalográfica 
+% A ficha catalográfica  é emitida pelo SIGAA no módulo Portal do Discente, na aba Biblioteca - Serviços ao Usuário. 
+% Após o preenchimento do formulário, pelo próprio autor, será gerada automaticamente a ficha catalográfica para ser  salva como pdf.
+% Arquivo deve ser incluido conforme abaixo
+%--- 
+\includepdf[pages={1}]{ficha_catalografica.pdf}
+
+
+%---
+% Folha de Aprovação 
+%---
+
+%---
+% Na tese não incluir a Folha de Aprovação assinada
+%---
+%\includepdf[pages={1}]{assinaturas.pdf}
+
+%\begin{folhadeaprovacao}
+
+%\alinhadodir{ \large\imprimirautor}
+
+%\vspace*{\fill}
+%\vspace*{\fill}
+%\alinhadodir{ \bfseries\Large\imprimirtitulo}
+%\vspace*{\fill}
+
+%\hspace{.35\textwidth}
+
+%\begin{minipage}{.55\textwidth}
+%   \imprimirpreambulo
+%\end{minipage} 
+%\vspace*{\fill}
+
+%\alinhadodir{ \txtaprovada }
+
+ 
+%\vspace*{\fill} 
+%\alinhadodir{ \textbf{\imprimirorientador} \\ Orientador\\ Universidade Federal do Maranhão %}
+ 
+%\vspace*{\fill} 
+
+%\alinhadodir{ \textbf{Prof. Dr. João Dallyson Sousa de Almeida} \\ Co-orientador\\ Universidade Federal do Maranhão }
+
+%\vspace*{\fill}    
+
+%\alinhadodir{\textbf{Prof. Dr. Profa. Dra. Aura Conci} \\ Examinadora Externa\\ Universidade Federal Fluminense}
+
+%\vspace*{\fill} 
+
+%\alinhadodir{\textbf{Prof. Dr. Leandro Augusto Frata Fernandes} \\ Examinador Externo \\ Universidade Federal Fluminense}
+
+%\vspace*{\fill} 
+
+%\alinhadodir{\textbf{Prof. Dr. Kelson Rômulo Teixeira Aires} \\ Examinador Interno \\ Universidade Federal do Piauí}
+
+%\vspace*{\fill} 
+      
+%\alinhadodir{\imprimirlocal, \myday\,de \mymonth\,de \myyear}
+      
+%\end{folhadeaprovacao}
+
+
+% ---
+% Folha Aprovação Verso DCCMAPI 2022 
+% ---
+\begin{folhadeaprovacao}
+
+\alinhadodir{ \large\imprimirautor}
+
+\vspace*{\fill}
+\alinhadodir{ \bfseries\Large\imprimirtitulo}
+\vspace*{\fill}
+
+\hspace{.15\textwidth}
+\begin{minipage}{.75\textwidth}
+   A presente Tese de Doutorado foi avaliada e aprovada por banca examinadora composta pelos seguintes membros: 
+\end{minipage} 
+ 
+ \vspace{0.01\textwidth} 
+
+\alinhadodir{ \textbf{\imprimirorientador} \\ Orientador\\ Universidade Federal do Maranhão }
+ 
+\vspace{0.01\textwidth} 
+
+\alinhadodir{ \textbf{Prof. Dr. Co-orientador} \\ Co-orientador\\ Universidade Federal do Maranhão }
+
+\vspace{0.01\textwidth} 
+\alinhadodir{\textbf{Prof. Dr. Profa. Examinadora 1} \\ Examinadora Externa\\ Universidade Federal Fluminense}
+
+\vspace{0.01\textwidth} 
+\alinhadodir{\textbf{Prof. Dr. EXaminador 2} \\ Examinador Externo \\ Universidade Federal Fluminense}
+
+\vspace{0.01\textwidth} 
+\alinhadodir{\textbf{Prof. Dr. EXaminador 3} \\ Examinador Interno \\ Universidade Federal do Piauí}
+
+\vspace{0.03\textwidth} 
+
+\hspace{.15\textwidth}
+\begin{minipage}{.75\textwidth}
+   Certificamos que esta é a versão original e final da Tese de Doutorado  que foi julgada adequada para obtenção do título de Doutora em Ciência da Computação.
+\end{minipage} 
+
+\vspace*{\fill} 
+
+\alinhadodir{ \textbf{\imprimirorientador} \\ Orientador }
+\vspace*{\fill} 
+
+\alinhadodir{\textbf{Prof. Dr. Anselmo Cardoso de Paiva} \\ Coordenador }
+
+\vspace*{\fill} 
+
+\alinhadodir{\imprimirlocal, \myday\,de \mymonth\,de \myyear}
+      
+\end{folhadeaprovacao}
+
+
+% ---
+% Dedicatória
+% ---
+
+\begin{dedicatoria}
+  \vspace*{\fill}
+  \begin{flushright}
+        \textit{Ao minha dedicatórias.}
+  \end{flushright}
+  \vspace{2.5cm}
+\end{dedicatoria}%
+
+% ---
+
+% ---
+% Agradecimentos
+% ---
+
+\begin{agradecimentos}
+Em primeiro lugar, agradeco a agradecimento 1.
+
+Aos meus agradecimentos 2.
+
+Ao meu orientador professor orientador 
+
+
+Aos meus agradecimentos 3
+
+À Coordenação de Aperfeiçoamento de Pessoal de Nível Superior - Brasil (CAPES) - Código de Financiamento 001,  apoio financeiro.
+
+Agradeço a todos que de alguma forma contribuíram para minha formação acadêmica.
+
+
+\end{agradecimentos}
+% ---
+
+% ---
+% Epígrafe
+% ---
+\newpage
+\begin{epigrafe}
+   \vspace*{\fill}
+	\begin{flushright}
+		\textit{“texto da epigrafe.”}
+
+    Autor da epigrafe.
+	\end{flushright}
+	\vspace{2.5cm}
+\end{epigrafe}
+% ---
+
+
+%----
+% Resumo em português
+%----
+
+\setlength{\absparsep}{18pt} % ajusta o espaçamento dos parágrafos do resumo
+
+\begin{resumo}
+
+O câncer renal é um problema de saúde pública que afeta milhares de pessoas em todo o mundo. A segmentação precisa dos rins e dos tumores renais pode ajudar os especialistas a diagnosticar doenças e melhorar o planejamento do tratamento, o que é importante na prática clínica. No entanto, devido à heterogeneidade dos rins e dos tumores renais, a segmentação manual é um processo demorado e sujeito a variabilidade entre os especialistas. Devido a esse trabalho árduo, técnicas computacionais, como redes neurais convolucionais (\textit{Convolutional Neural Networks} - CNNs), tornaram-se populares em tarefas de segmentação automática de rins e tumores renais. As redes tridimensionais (3D) apresentam bom desempenho em tarefas de segmentação, mas são complexas e apresentam altos custos computacionais. .
+
+\textbf{Palavras-chave}: Câncer de rim, Segmentação de rim, Segmentação de tumores renais, Redes neurais convolucionais, Aprendizado profundo, Tomografia computadorizada, Imagens médicas
+\end{resumo}
+
+%----
+% Resumo em Inglês
+%----
+
+\begin{resumo}[Abstract]
+\begin{otherlanguage*}{english}
+
+Kidney cancer is a public health problem that affects thousands of people worldwide. The precise segmentation of kidneys and kidney tumors can help medical specialists to diagnose diseases and improve treatment planning, which is highly required in clinical practice. However, because of the heterogeneity of kidneys and kidney tumors, manually segmenting is a time-consuming process and subject to variability among specialists. Because of this hard work, computational techniques, such as convolutional neural networks (CNNs), have become popular in automatic medical image segmentation tasks. Three-dimensional (3D) networks have a high segmentation capacity, but they are complex and have high computational costs. 
+ 
+\textbf{Keywords}: Kidney cancer, Kidney segmentation, Kidney tumor segmentation, Convolutional neural networks, Deep learning, Computed tomography, Medical images.
+\end{otherlanguage*}
+\end{resumo}
+
+\cleardoublepage
+
+%----
+% inserir lista de ilustrações
+%----
+
+\pdfbookmark[0]{\listfigurename}{lof}
+\listoffigures*
+\cleardoublepage
+
+%----
+% inserir lista de tabelas
+%----
+\pdfbookmark[0]{\listtablename}{lot}
+\listoftables*
+\cleardoublepage
+
+%----
+% inserir lista de abreviaturas e siglas
+%----
+\begin{siglas}
+
+    \item[3D-MS-RFCNN] \textit{Multi-Scale Residual Fully Convolutional Neural Network}
+    \item[Acc] Acurácia
+    \item[ASPP] \textit{Atrous Spatial Pyramid Pooling}
+    \item[CAD] \textit{Computer Aided Diagnosis}
+    \item[CADx] \textit{Computer Aided Detection}
+    \item[CNN] \textit{Convolutional Neural Network}
+    \item[DenseNet] \textit{Densely Convolutional Network}
+    \item[DNA] \textit{Deoxyribonucleic Acid}
+    \item[DPN] \textit{Dual Path Network}
+    \item[DRLSE] \textit{Distance Regularized Level-Sets Evolution}
+    \item[Esp] Especificidade
+    \item[FCN] \textit{Fully Convolutional Network}
+    \item[FN] Falso Negativo
+    \item[FP] Falso Positivo
+    \item[FSGAN] \textit{Feature Sharing Generative Adversarial Network}
+    \item[GPU] \textit{Graphics Processing Unit}
+    \item[HU] \textit{Hounsfield Units}
+    \item[IA] Inteligência Artificial
+    \item[IoU] \textit{Intersection over Union}
+    \item[Jacc] Jaccard
+    \item[MB-FSGAN] \textit{Multi-Branch Feature Sharing Generative Adversarial Network}
+    \item[MLP] \textit{Multilayer Perceptron}
+    \item[MSFE] \textit{Multi-Scale Feature Extractor}
+    
+
+\end{siglas}
+
+%----
+%  Sumário
+%----
+
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\cleardoublepage
+
+\textual
+
+%----
+% Início do Texto
+%----
+
+\input{capitulos/1_introducao.tex}
+\input{capitulos/2_relacionados.tex}
+\input{capitulos/3_referencial.tex}
+\input{capitulos/4_metodologia.tex}
+\input{capitulos/5_resultados.tex}
+\input{capitulos/7_conclusao.tex}
+%\input{extra.tex}
+
+\phantompart
+
+\postextual
+
+%---
+% Referências Bibliográficas
+%----
+
+%\renewcommand{\bibname}{Referências Bibliográficas}	 % Change "Bibliography" to "References" if needed
+
+
+
+
+\bibliography{bibliography}
+
+\end{document}

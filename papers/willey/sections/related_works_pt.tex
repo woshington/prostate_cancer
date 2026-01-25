@@ -1,0 +1,31 @@
+A aplicação de técnicas de aprendizado profundo para a classificação automatizada de câncer de próstata tem sido extensivamente investigada, com avanços significativos particularmente no uso de imagens de lâminas completas (WSIs), estratégias baseadas em patches e mecanismos de agregação multi-escala. Esta seção apresenta uma revisão dos trabalhos relacionados, organizados por metodologia predominante.
+
+\subsection{Abordagens Baseadas em Segmentação e Arquiteturas U-Net}
+
+Abordagens baseadas em segmentação têm demonstrado resultados promissores na classificação de graus ISUP, utilizando arquiteturas que combinam codificadores e decodificadores para realizar segmentação semântica ou detecção de padrões histológicos.
+
+\cite{ref-bulten2020} desenvolveram um sistema de aprendizado profundo para classificação automatizada de graus Gleason utilizando um conjunto de dados de 5.759 biópsias do Radboud University Medical Center, estratificado em conjuntos de treinamento (4.712), validação (497) e teste (535). O método, baseado em uma arquitetura U-Net estendida com rotulagem semi-supervisionada, alcançou um kappa quadrático ponderado ($\kappa_{quad}$) de 0,918 no conjunto de teste interno. A validação do sistema também incluiu um estudo observacional, no qual o modelo superou 10 dos 15 patologistas, além de avaliação em um conjunto de dados externo independente do University Hospital of Zurich, alcançando $\kappa_{quad} > 0,700$.
+
+\cite{ref-singhal2022} desenvolveram um sistema de aprendizado profundo para classificação de biópsias baseado em uma arquitetura U-Net com codificador ResNeXt50, utilizando estratégias de treinamento agnósticas a domínio e aprendizado ativo para mitigar variações de coloração. O modelo foi desenvolvido utilizando 6.670 WSIs de três instituições diferentes e demonstrou forte desempenho de generalização, alcançando 83,1\% de acurácia e um kappa quadrático ponderado ($\kappa_{\text{quad}}$) de 0,93 em um conjunto de dados externo, mantendo AUCs acima de 0,93 para estratificação de risco clínico em diferentes centros.
+
+\subsection{Abordagens Baseadas em Patches com CNNs Tradicionais}
+
+Estratégias baseadas em extração de patches têm evoluído rapidamente, permitindo o processamento eficiente de WSIs de alta resolução através da análise de regiões menores e subsequente agregação das predições.
+
+\cite{ref-nagpal2019} desenvolveram um sistema de aprendizado profundo em dois estágios (CNN InceptionV3 e k-NN) para classificação de graus Gleason utilizando dados do TCGA e dois centros médicos nos Estados Unidos. O modelo foi treinado em 112 milhões de patches anotados extraídos de 1.226 lâminas e validado em uma coorte independente de 331 lâminas de prostatectomia. O sistema alcançou uma acurácia de 0,70 contra um padrão de referência de especialistas, superando significativamente a acurácia média de 0,61 obtida por um painel de 29 patologistas ($p = 0,002$), e demonstrou desempenho superior na estratificação de risco clínico.
+
+\cite{ref-kott2019} conduziram um estudo piloto para desenvolver um algoritmo de aprendizado profundo especificamente focado em biópsias de próstata utilizando ResNet-18. O modelo foi treinado e validado em 14.803 patches de imagem extraídos de 85 WSIs de 25 pacientes em uma única instituição. O sistema alcançou 91,5\% de acurácia para detecção de malignidade (AUC = 0,83) e 85,4\% de acurácia para classificação multiclasse de escores Gleason, incluindo benigno, Gleason 3, Gleason 4 e Gleason 5.
+
+\cite{ref-lucas2019} propuseram uma abordagem baseada na arquitetura CNN Inception-v3 para detecção de padrões Gleason e determinação automatizada de Grade Groups em biópsias de próstata. O estudo utilizou um conjunto de dados compreendendo 96 seções histológicas de tecido de 38 pacientes, cada uma com anotações detalhadas em nível de pixel. O método gerou mapas de probabilidade para computar a composição da biópsia. O sistema alcançou 92\% de acurácia na detecção de malignidade e 90\% na distinção entre padrões de baixo grau ($GP \le 3$) e alto grau ($GP \ge 4$). Na classificação final de Grade Groups em nível de lâmina, o modelo alcançou um kappa quadrático ponderado ($\kappa_{quad}$) de 0,70.
+
+\subsection{Abordagens Multi-escala e Pirâmides}
+
+Abordagens que exploram múltiplas escalas espaciais têm sido propostas para capturar informações em diferentes níveis de resolução, melhorando a capacidade de discriminação entre padrões histológicos.
+
+\cite{ref-hammouda2021} propuseram um sistema para classificação de graus Gleason utilizando uma CNN piramidal de três escalas e uma estratégia de classificação pixel a pixel com votação majoritária. O modelo foi desenvolvido utilizando 608 imagens WSI do Radboud University Medical Center, aplicando uma estratégia de balanceamento para mitigar a predominância do padrão estroma. A abordagem, que integra pré-processamento de realce de bordas, alcançou 94\% de acurácia na determinação final de Grade Groups e demonstrou eficiência computacional, operando com aproximadamente 1 milhão de parâmetros.
+
+\subsection{Limitações e Lacunas Identificadas}
+
+Apesar desses avanços, o campo ainda enfrenta limitações relacionadas à escala de dados e metodologia. Muitos estudos dependem de conjuntos de dados pequenos~\cite{ref-kott2019,ref-lucas2019}, o que compromete a generalização. Mesmo trabalhos robustos focados em adaptação de domínio, como \cite{ref-singhal2022}, colocam ênfase limitada na eficiência arquitetural e em regressão ordinal. Além disso, o potencial de técnicas de filtragem de ruído e curadoria baseada em incerteza permanece subexplorado em comparação com abordagens tradicionais de classificação e segmentação.
+
+Neste contexto, o presente trabalho se distingue por avaliar sistematicamente múltiplas variantes de EfficientNet (B0, B3 e B7) para classificação ISUP no conjunto de dados PANDA, combinando regressão ordinal e focal loss para modelar a natureza ordinal e desbalanceada das classes. Também exploramos estratégias de ensemble otimizadas que consistentemente superam modelos individuais e incorporamos uma etapa de filtragem baseada em entropia de Shannon para mitigar rótulos ruidosos, uma abordagem não explorada nos estudos revisados neste trabalho.

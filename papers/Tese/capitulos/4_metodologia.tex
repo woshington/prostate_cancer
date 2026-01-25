@@ -1,0 +1,16 @@
+\chapter{Método Proposto}
+\label{cap:materiais-metodo}
+%\phantom{0}
+
+Este capítulo descreve o método proposto para segmentar os rins e tumores renais em TCs de pacientes doentes. A base de imagens usada para validar o método proposto é descrita na Seção~\ref{sec:conjunto-dados}. Inicialmente, foi realizada a etapa de pré-processamento em todos os volumes de TC da base de imagens, seguindo fluxos diferentes para os modelos de segmentação. Na segunda etapa, a segmentação inicial dos rins foi realizada usando o modelo ResUNet 2.5D e a segmentação inicial a candidatos de tumores renais foi realizado em duas subetapas: na primeira, os candidatos a tumores renais foram segmentados dentro da região renal usando o modelo DeepLabv3+ 2.5D; na segunda, foram segmentados dentro da região abdominal usando o modelo ResUNet 2.5D. Na terceira etapa, a reconstrução das regiões tumorais é realizada por meio da segmentação de candidatos a tumores renais. Por fim, na etapa de redução de falsos positivos, os resultados finais das segmentações foram alcançados. A Figura~\ref{fig:EtapasM} ilustra cada uma dessas etapas, e os detalhes são fornecidos nas seções a seguir.
+
+
+
+\section{Considerações Finais}
+\label{consideracoes-finais-metodo}
+
+Este capítulo apresentou e descreveu em detalhes o método proposto para segmentação de rins e tumores em imagens de TC. Foram detalhadas cada uma das etapas que compõem o método, e apresentadas as adaptações empregadas para a segmentação de rins e tumores nesta tese. Entre as principais contribuições estão: a distribuição proporcional da base de imagens; balanceamento de fatias do alvo de segmentação; segmentação de rins e candidatos a tumores renais na região abdominal usando o modelo ResUNet 2.5D; combinação do modelo DeepLabv3+ com o codificador DPN-131 para segmentação de candidatos a tumores renais na região renal; reconstrução dos tumores renais usando operações binárias; e técnicas de processamento de imagens para redução de falsos positivos com base em informações contextuais.
+
+%No próximo capítulo, serão apresentados os resultados com a aplicação do método proposto. Será feita uma discussão acerca dos resultados obtidos, e também uma comparação com os trabalhos descritos na literatura, visando contextualizar a relevância da pesquisa desenvolvida neste trabalho.
+
+No próximo capítulo, serão apresentados os resultados obtidos em cada uma das etapas do método proposto. Além disso, são apresentadas a base de imagens aplicada, a configuração experimental das redes usadas e alguns experimentos para validar as etapas do método proposto.

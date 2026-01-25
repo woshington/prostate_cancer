@@ -1,0 +1,68 @@
+\chapter{Conclusão}
+\label{cap:conclusao}
+%\phantom{2}
+
+As altas taxas de incidência do câncer de rim em todo o mundo mostram a importância do desenvolvimento de pesquisas que forneçam suporte ao diagnóstico precoce da doença. Essa é uma etapa fundamental para viabilizar o tratamento adequado aos pacientes. Nesse contexto, este trabalho apresentou um método automático para a tarefa de segmentação de rins e tumores renais baseado em aprendizado profundo e técnicas de processamento de imagens para reduzir os falsos positivos.
+
+
+
+\section{Contribuições}
+\label{sec:contribuições}
+
+Finalmente, as principais contribuições do método proposto desenvolvido nesta tese são descritas a seguir:
+
+\begin{enumerate}
+    \item Desenvolvimento de um método automático para agrupar casos (exames) e distribuí-los proporcionalmente no conjunto de treinamento e validação para garantir que os modelos fossem equilibrados e obtivessem melhor desempenho;
+    
+    \item Adaptação da arquitetura DeepLabv3+, com o uso da DPN-31 como codificador para a segmentação de tumores renais, fornecendo resultados precisos;
+    
+   
+\end{enumerate}
+
+\section{Trabalhos Futuros}
+\label{sec:trabalhos-futuros}
+
+Apesar dos bons resultados obtidos para a segmentação de rins e tumores renais em imagens de TCs, melhorias ainda podem ser feitas no método proposto visando incrementar a sua eficiência. A seguir são destacadas algumas sugestões:
+
+\begin{enumerate}
+    \item Considerando a diversidade de aquisições da base de imagens, padronizar as entradas da rede usando uma rede \textit{autoencoder} como um pré-processamento poderia aumentar a eficiência dos modelos de segmentação;
+    
+    \item Assim como na abordagem 2.5D usada no método proposto as fatias são visualizadas sequencialmente. Acredita-se que o uso de recursos recorrentes da rede neural pode melhorar o desempenho, pois essas redes podem “lembrar” informações de fatias anteriores, adicionando recursos ao modelo;
+    
+  
+\end{enumerate}
+
+\section{Produções Científicas}
+\label{sec:producoes-cientificas}
+
+A Tabela~\ref{tab:artigos-autoria} apresenta os artigos diretamente relacionados ao método proposto ....... Além disso, a Tabela~\ref{tab:artigos-coautoria} lista os artigos científicos publicados e submetidos em outras aplicações de processamento de imagens e visão computacional desde o início do doutorado.
+
+\begin{table}[ht!]
+\centering
+\onehalfspacing
+\caption{Produções científicas em relação ao método proposto para segmentação de rins e tumores renais.}
+\label{tab:artigos-autoria}
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{p{10cm}lccc}
+\hline
+\textbf{Artigo}                                                                                                                         & \centering \textbf{Tipo} & \textbf{Qualis} & \textbf{Status} \\ \hline
+Titulo do artigo Em: Nome do periodico Ano: 2020.        & Periódico     & A1              & Publicado       \\ \hline
+Titulo do artigo Em: Nome do periodico Ano: 2020.      & Periódico     & A1              & Publicado      \\ \hline
+\end{tabular}
+}
+\end{table}
+
+\begin{table}[ht!]
+\centering
+\onehalfspacing
+\caption{Produções científicas em outras aplicações de processamento de imagens e visão computacional.}
+\label{tab:artigos-coautoria}
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{p{11cm}lccc}
+\hline
+\textbf{Artigo}                                                                                                                                                                            & \textbf{Tipo} & \textbf{Qualis} & \textbf{Status} \\ \hline
+Titulo do artigo Em: Nome do periodico Ano: 2020.      . & Periódico     & A1              & Publicado       \\ \hline
+Titulo do artigo Em: Nome do periodico Ano: 2020.                          & Simpósio      & B3              & Publicado       \\ \hline
+\end{tabular}
+}
+\end{table}

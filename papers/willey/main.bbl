@@ -1,0 +1,93 @@
+\begin{thebibliography}{10}
+\providecommand \doibase [0]{http://dx.doi.org/}%
+
+\bibitem{ref-siegel2024}
+Siegel RL, Giaquinto AN, Jemal A. Cancer statistics, 2024. {\it CA: A Cancer
+  Journal for Clinicians.} 2024\string;74(1)\string:12--49.
+
+\bibitem{ref-epstein2016}
+Epstein JI, Egevad L, Amin MB, Delahunt B, Srigley JR, Humphrey PA. The 2014
+  {International Society of Urological Pathology (ISUP)} Consensus Conference
+  on Gleason Grading of Prostatic Carcinoma: Definition of Grading Patterns and
+  Proposal for a New Grading System. {\it The American Journal of Surgical
+  Pathology.} 2016\string;40(2)\string:244--252.
+
+\bibitem{ref-bulten2020}
+Bulten W, Pinckaers H, Boven vH, et al. Automated deep-learning system for
+  {Gleason} grading of prostate cancer using biopsies: a diagnostic study. {\it
+  The Lancet Oncology.} 2020\string;21(2)\string:233--241.
+
+\bibitem{ref-campanella2019}
+Campanella G, Hanna MG, Geneslaw L, et al. Clinical-grade computational
+  pathology using weakly supervised deep learning on whole slide images. {\it
+  Nature Medicine.} 2019\string;25(9)\string:1301--1309.
+
+\bibitem{ref-nagpal2019}
+Nagpal K, Foote D, Liu Y, et al. Development and validation of a deep learning
+  algorithm for improving {Gleason} scoring of prostate cancer. {\it npj
+  Digital Medicine.} 2019\string;2\string:48.
+
+\bibitem{ref-tan2019}
+Tan M, Le QV. {EfficientNet}: Rethinking Model Scaling for Convolutional Neural
+  Networks. In:  2019; Long Beach, CA, USA\string:6105--6114.
+
+\bibitem{ref-hu2018}
+Hu J, Shen L, Sun G. Squeeze-and-Excitation Networks. In:  2018; Salt Lake
+  City, UT, USA\string:7132--7141.
+
+\bibitem{ref-panda2020}
+{PANDA Challenge} . Prostate {cANcer} graDe Assessment Challenge.
+  \url{https://www.kaggle.com/c/prostate-cancer-grade-assessment};  2020.
+\newblock Accessed: 2024-01-01.
+
+\bibitem{ref-izmailov2018}
+Izmailov P, Podoprikhin D, Garipov T, Vetrov D, Wilson AG. Averaging Weights
+  Leads to Wider Optima and Better Generalization. In:  2018; Monterey, CA,
+  USA\string:876--885.
+
+\bibitem{ref-cohen1968}
+Cohen J. Weighted kappa: Nominal scale agreement with provision for scaled
+  disagreement or partial credit. {\it Psychological Bulletin.}
+  1968\string;70(4)\string:213--220.
+
+\bibitem{ref-kott2019}
+Kott O, Linsley D, Amin A, et al. Development of a Deep Learning Algorithm for
+  the Histopathologic Diagnosis and {Gleason} Grading of Prostate Cancer
+  Biopsies: A Pilot Study. {\it European Urology Focus.}
+  2019\string;5(1)\string:79--83.
+
+\bibitem{ref-lucas2019}
+Lucas M, Jansen I, Savci-Heijink CD, et al. Deep learning for automatic
+  {Gleason} pattern classification for grade group determination of prostate
+  biopsies. {\it Virchows Archiv.} 2019\string;475(1)\string:77--83.
+
+\bibitem{ref-hammouda2021}
+Hammouda K, Khalifa F, El-Melegy M, et al. A Deep Learning Pipeline for Grade
+  Groups Classification Using Digitized Prostate Biopsy Specimens. {\it
+  Sensors.} 2021\string;21(19)\string:6708.
+
+\bibitem{ref-singhal2022}
+Singhal N, Soni S, Bonthu S, et al. A deep learning system for prostate cancer
+  diagnosis and grading in whole slide images of core needle biopsies. {\it
+  Scientific Reports.} 2022\string;12\string:3383.
+
+\bibitem{ali2023entropy}
+Ali I, Khan A, Khan M, Ahmad R, Ullah I. Shannon Entropy in Artificial
+  Intelligence and Its Applications Based on Information Theory. {\it Entropy.}
+  2023\string;25(2)\string:364.
+
+\bibitem{russakovsky2015imagenet}
+Russakovsky O, Deng J, Su H, et al. {ImageNet} Large Scale Visual Recognition
+  Challenge. {\it International Journal of Computer Vision.}
+  2015\string;115(3)\string:211--252.
+
+\bibitem{lin2017focal}
+Lin TY, Goyal P, Girshick R, He K, Doll{\'{a}}r P. Focal loss for dense object
+  detection. In:  2017\string:2980--2988.
+
+\bibitem{mian2024ensemble}
+Mian Q, Yang X, Zhang H, et al. Ensemble learning: A systematic review and
+  meta-analysis. {\it Engineering Applications of Artificial Intelligence.}
+  2024\string;132\string:107812.
+
+\end{thebibliography}

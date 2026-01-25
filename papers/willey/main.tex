@@ -1,0 +1,112 @@
+\documentclass[AMA,Times1COL]{WileyNJD-v5}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+
+
+
+\articletype{Journal Article}%
+
+\received{Date Month Year}
+\revised{Date Month Year}
+\accepted{Date Month Year}
+\journal{Journal}
+\volume{00}
+\copyyear{2023}
+\startpage{1}
+
+\raggedbottom
+
+
+
+\begin{document}
+
+\title{Efficient-EF-OFL: An Entropy-Based Filtering and Ordinal Focal Loss Approach with EfficientNet for Prostate Lesion Classification}
+
+\author[1]{Woshington V S Rodrigues}
+
+\author[2]{Armando Luz Borges}
+
+\author[3]{José D. L. Araújo}
+\author[4]{Antonio O. C. Filho}
+
+\authormark{RODRIGUES \textsc{et al.}}
+
+\titlemark{Efficient-EF-OFL: An Entropy-Based Filtering and Ordinal Focal Loss Approach with EfficientNet for Prostate Lesion Classification}
+
+\address[1]{\orgdiv{Postgraduate Program Doctorate in Computer Science}, \orgname{UFMA/UFPI Association, Ministro Petrônio Portella University Campus}, \orgaddress{\state{PI}, \country{Brazil}}}
+
+\address[2]{\orgdiv{Graduate}, \orgname{UFMA/UFPI Association, Ministro Petrônio Portella University Campus}, \orgaddress{\state{PI}, \country{Brazil}}}
+
+\address[3]{\orgdiv{Postgraduate Program Doctorate in Computer Science}, \orgname{UFMA/UFPI Association, Ministro Petrônio Portella University Campus}, \orgaddress{\state{PI}, \country{Brazil}}}
+
+\address[4]{\orgdiv{Postgraduate Program Doctorate in Computer Science}, \orgname{UFMA/UFPI Association, Ministro Petrônio Portella University Campus}, \orgaddress{\state{PI}, \country{Brazil}}}
+
+\corres{Corresponding author Woshington Valdeci.\email{woshington@ifpi.edu.br}}
+
+%\presentaddress{This is sample for present address text this is sample for present address text.}
+
+%\fundingInfo{Text}
+%\JELinfo{ejlje}
+
+\abstract[Abstract]{Automated ISUP grade classification in prostate biopsy whole-slide images remains challenging due to high morphological variability, label noise, and inter-institutional heterogeneity. This study proposes an efficient pipeline combining entropy-based noise filtering, systematic patch extraction, ordinal regression, and focal loss to enhance robustness in learning from large-scale data. Variants of the EfficientNet architecture (B0, B3, and B7) were trained using a unified strategy, and their outputs were aggregated through ensemble methods. Experiments were conducted on the multicentric PANDA dataset, comprising 10,616 WSIs. The best individual model (EfficientNet-B0 with ordinal focal loss) achieved a QWK of 0.856, while deeper variants did not yield further improvements. The simple-average ensemble surpassed all single models, reaching a QWK of 0.879 and producing the most clinically coherent confusion matrix, with misclassifications largely restricted to adjacent ISUP grades. These results demonstrate that combining ordinal modeling, noise filtering, and lightweight architectures provides an advantageous balance between accuracy, stability, and computational efficiency. Although competitive with state-of-the-art approaches, the method requires validation on external datasets to further assess generalizability. Future directions include specialized models for intermediate grades and the exploration of transformer-based architectures.}
+
+\keywords{Prostate cancer; ISUP grading; EfficientNet; Ordinal Regression, Ensemble Learning; Noise Filtering}
+
+\jnlcitation{\cname{%
+		\author{Rodrigues WVS}, 
+		\author{Borges AL}, 
+		\author{Araújo JDL}, e 
+		\author{Filho AOC}} (\cyear{2025}), 
+	\ctitle{Efficient-EF-OFL: An Entropy-Based Filtering and Ordinal Focal Loss Approach with EfficientNet for Prostate Lesion Classification}, \cjournal{Engineering Reports}, \cvol{2025;e0000}.}
+
+
+\maketitle
+
+\renewcommand\thefootnote{}
+\footnotetext{\textbf{Abbreviations:} ANA, anti-nuclear antibodies; APC, antigen-presenting cells; IRF, interferon regulatory factor.}
+
+\renewcommand\thefootnote{\fnsymbol{footnote}}
+\setcounter{footnote}{1}
+
+\section{Introduction}
+\label{sec:introduction}
+\input{sections/introduction.tex}
+
+\section{Related Works}
+\label{sec:related_works}
+\input{sections/related_works.tex}
+
+\section{Materials and Methods}
+\label{sec:materials_methods}
+\input{sections/materials_methods.tex}
+
+\section{Results}
+\label{sec:results}
+\input{sections/results.tex}
+
+\section{Discussion}
+\label{sec:discussion}
+\input{sections/discussion.tex}
+
+\section{Conclusion}
+\label{sec:conclusion}
+\input{sections/conclusion.tex}
+
+
+\bibliography{wileyNJD-AMA}
+
+
+
+%\bmsection*{Author Biography}
+
+
+%\begin{biography}{\includegraphics[width=76pt,height=76pt,draft]{empty}}{
+%{\textbf{Author Name.} Please check with the journal's author guidelines %whether
+%author biographies are required. They are usually only included for
+%review-type articles, and typically require photos and brief
+%biographies for each author.}}
+%\end{biography}
+
+
+\end{document}
