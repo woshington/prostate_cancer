@@ -4,6 +4,7 @@ import torch
 import torch.nn as nn
 import efficientnet_pytorch as efficientnet_model
 from torchvision.models.efficientnet import EfficientNet as EfficientNetPytorch
+from torchvision.models.convnext import ConvNeXt as ConvNeXtPytorch
 from typing import List, Literal, Optional
 from utils.layer import AdaptiveConcatPool2d, GeM, Flatten, SEBlock, SelfAttentionLayer, DeformableConv2d
 
@@ -38,6 +39,38 @@ class EfficientNet(nn.Module):
         return x
 
 
+class EfficientNetApiA(nn.Module):
+    def __init__(
+        self,
+        model: EfficientNetPytorch,
+        output_dimensions: int,
+        fine_tune=100,
+        dropout_rate=0.4
+    ):
+        super(EfficientNetApiA, self).__init__()
+        self.model = model
+        self.dropout_rate = dropout_rate
+
+        for param in list(self.model.parameters())[:-fine_tune]:
+            param.requires_grad = False
+
+        in_features = self.model.classifier[1].in_features
+
+        # Replace the final classification layer with Identity
+        self.model.classifier[1] = nn.Identity()
+
+        self.fully_connected = nn.Linear(in_features, output_dimensions)
+
+    def extract(self, inputs):
+        """Extract features from the model (before final FC layer)"""
+        return self.model(inputs)
+
+    def forward(self, inputs):
+        """Complete forward pass including dropout and classification"""
+        x = self.extract(inputs)
+        x = self.fully_connected(x)
+        return x
+
 class EfficientNetApi(nn.Module):
     def __init__(
             self,
@@ -51,7 +84,7 @@ class EfficientNetApi(nn.Module):
         self.dropout_rate = dropout_rate
         self.use_deformable = use_deformable
 
-        # Freeze early layers (all but last 150 parameters)
+
         for param in list(self.model.parameters())[:-150]:
             param.requires_grad = False
 
@@ -107,6 +140,38 @@ class EfficientNetApi(nn.Module):
 
     def forward(self, inputs):
         """Complete forward pass including dropout and classification"""
+        x = self.extract(inputs)
+        x = self.dropout(x)
+        x = self.fully_connected(x)
+        return x
+
+
+class ConvNeXtApi(nn.Module):
+    def __init__(
+            self,
+            model: ConvNeXtPytorch,
+            output_dimensions: int,
+            dropout_rate: float = 0.3,
+    ):
+        super(ConvNeXtApi, self).__init__()
+        self.model = model
+
+        # Freeze the backbone features entirely to avoid splitting LayerNorm
+        # weight/bias across the freeze boundary (which causes NativeLayerNormBackward errors)
+        for param in self.model.features[-150:].parameters():
+            param.requires_grad = False
+
+        # ConvNeXt classifier: [LayerNorm, Flatten, Linear]
+        in_features = self.model.classifier[2].in_features
+        self.model.classifier[2] = nn.Identity()
+
+        self.dropout = nn.Dropout(dropout_rate)
+        self.fully_connected = nn.Linear(in_features, output_dimensions)
+
+    def extract(self, inputs):
+        return self.model(inputs)
+
+    def forward(self, inputs):
         x = self.extract(inputs)
         x = self.dropout(x)
         x = self.fully_connected(x)
@@ -437,3 +502,40 @@ def decode_ordinal_predictions(logits):
     return predictions
 
 
+
+from torchvision.models import efficientnet_b0, EfficientNet_B0_Weights
+import torch.nn as nn
+import torch.nn.functional as F
+import torch
+
+class AttentionMIL(nn.Module):
+    def __init__(self, base_model, output_classes=5, dropout_rate=0.6):
+        super(AttentionMIL, self).__init__()
+        self.base_model = base_model
+        self.feature_extractor = nn.Sequential(*list(base_model.children())[:-1])
+
+        self.attention = nn.Sequential(
+            nn.Linear(1280, 512),
+            nn.Tanh(),
+            nn.Linear(512, 1)
+        )
+        self.classifier = nn.Sequential(
+            nn.Dropout(dropout_rate),
+            nn.Linear(1280, output_classes)
+        )
+
+    def forward(self, x):
+        # x: (batch_size, num_instances, C, H, W)
+        b, n, C, H, W = x.size()
+        x = x.view(b*n, C, H, W)
+
+        features = self.feature_extractor(x).squeeze()  # (b*n, 1280)
+        features = features.view(b, n, -1)
+
+        attn_weights = self.attention(features)  # (b, n, 1)
+        attn_weights = F.softmax(attn_weights, dim=1)
+
+        bag_representation = torch.sum(attn_weights * features, dim=1)
+
+        logits = self.classifier(bag_representation)
+        return logits

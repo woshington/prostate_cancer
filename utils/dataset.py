@@ -484,3 +484,64 @@ class PandasDatasetSimple(Dataset):
         label = row.isup_grade
 
         return image, label
+
+class PatchBagDataset(Dataset):
+    def __init__(
+        self,
+        image_dir,
+        dataframe,
+        transforms=None,
+        normalize=False,
+        format="png",
+        num_classes=5,
+        patch_size=256,
+        grid_size=6
+    ):
+        self.image_dir = image_dir
+        self.dataframe = dataframe
+        self.transforms = transforms
+        self.normalize = normalize
+        self.format = format
+        self.num_classes = num_classes
+        self.patch_size = patch_size
+        self.grid_size = grid_size
+
+    def __len__(self):
+        return self.dataframe.shape[0]
+
+    def __getitem__(self, index):
+        row = self.dataframe.iloc[index]
+        img_id = row.image_id.strip()
+
+        file_path = f"{self.image_dir}/{img_id}.{self.format}"
+        try:
+            image = skio.imread(file_path)
+
+            # lista de patches
+            patches = []
+            for i in range(self.grid_size):
+                for j in range(self.grid_size):
+                    top = i * self.patch_size
+                    left = j * self.patch_size
+                    patch = image[top:top+self.patch_size, left:left+self.patch_size, :]
+
+                    if self.transforms is not None:
+                        patch = self.transforms(image=patch)['image']
+
+                    if self.normalize:
+                        patch = patch.astype(np.float32) / 255.0
+
+                    patch = np.transpose(patch, (2, 0, 1))  # (C,H,W)
+                    patches.append(torch.tensor(patch, dtype=torch.float32))
+
+            # Bag de 36 patches
+            bag = torch.stack(patches)  # (36, C, H, W)
+
+            # Label ordinal
+            label = np.zeros(self.num_classes).astype(np.float32)
+            label[:row.isup_grade] = 1.
+
+            return bag, torch.tensor(label, dtype=torch.float32), img_id
+        except Exception as e:
+            print(f"Erro ao carregar {file_path}: {e}")
+            return None

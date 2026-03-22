@@ -1,16 +1,15 @@
 \chapter{Introdução}
-%\addcontentsline{toc}{chapter}{\uppercase{INTRODUÇÃO}}
 \label{cap:introducao}
-%\phantom{0}
 
-O câncer de próstata é uma das neoplasias malignas mais comuns em homens, representando um desafio significativo para a saúde pública~\cite{ref-siegel2024}. A graduação tumoral desempenha um papel central na definição do manejo clínico e do prognóstico. O sistema de Gleason, baseado na soma dos dois padrões histológicos mais prevalentes (escore de Gleason), evoluiu para o sistema de graduação da ISUP (0–5), que fornece uma estratificação prognóstica aprimorada e é amplamente utilizado na prática clínica~\cite{ref-epstein2016}.
+O câncer de próstata é uma das neoplasias malignas mais comuns em homens, representando um desafio significativo para a saúde pública \cite{ref_siegel2024}. Estatísticas coletadas pela \textit{International Agency for Research on Cancer} (IARC) indicam que, em 2022, essa neoplasia foi a quarta mais comum no mundo, correspondendo a 7,3\% de todos os casos de câncer \cite{JournalStatistic2024}. A graduação tumoral desempenha papel central na definição do manejo clínico e do prognóstico. O sistema de \textit{Gleason}, baseado na soma dos dois padrões histológicos predominantes, evoluiu para o sistema de graduação da ISUP (0–5), que fornece uma estratificação prognóstica aprimorada e é amplamente utilizado na prática clínica \cite{ref-epstein2016}.
 
-A avaliação histopatológica tradicional de imagens de lâminas inteiras (\textit{Whole-Slide Images} – WSIs) depende da análise manual realizada por patologistas, um processo sujeito à variabilidade inter e intraobservador~\cite{ref-bulten2020}, além de ser demorado e limitado pela disponibilidade de especialistas. Essas restrições motivaram o desenvolvimento de métodos automatizados baseados em aprendizado profundo.
+A avaliação histopatológica tradicional de imagens de lâminas inteiras (\textit{Whole-Slide Images} – WSIs) depende da análise manual realizada por patologistas, sendo um processo sujeito à variabilidade inter e intraobservador~\cite{ref-bulten2020}, além de demandar tempo e elevada especialização. Essas limitações têm impulsionado o desenvolvimento de métodos automatizados baseados em inteligência artificial, particularmente em aprendizado profundo, para apoiar a análise diagnóstica.
 
-Redes neurais convolucionais (CNNs) têm demonstrado desempenho destacado na análise de imagens médicas~\cite{ref-campanella2019}, incluindo a graduação automatizada de padrões de Gleason e graus ISUP~\cite{ref-nagpal2019,ref-bulten2020}. Entre as arquiteturas modernas, a família EfficientNet~\cite{ref-tan2019} oferece um excelente equilíbrio entre acurácia e custo computacional, devido à sua estratégia de \textit{compound scaling} e ao uso de blocos MBConv com \textit{squeeze-and-excitation}~\cite{ref-hu2018}.
+Em \cite{expert2022review}, os autores realizaram uma revisão sistemática da literatura, que demonstrou um crescimento expressivo no uso de inteligência artificial na análise do câncer de próstata, evidenciando que as imagens médicas constituem a principal fonte de dados explorada, presente em mais da metade dos estudos investigados. Entre as abordagens predominantes, destacam-se técnicas de aprendizado profundo, de aprendizado de máquina e de redes neurais convolucionais, aplicadas principalmente a tarefas de diagnóstico e classificação, com menor exploração em aplicações terapêuticas. De forma geral, os resultados indicam que sistemas baseados em Inteligência Artificial (IA) contribuem para reduzir a subjetividade diagnóstica, lidar com grandes volumes de dados e auxiliar especialistas na interpretação de exames clínicos e histopatológicos, reforçando o potencial dessas técnicas como ferramentas de apoio à decisão clínica.
 
-Neste trabalho, investigamos a classificação automatizada dos graus ISUP por meio da avaliação de variantes da EfficientNet (B0, B3 e B7) no conjunto de dados PANDA~\cite{ref-panda2020}. Empregamos técnicas de \textit{transfer learning}, estratégias de \textit{fine-tuning}, técnicas avançadas de treinamento e métodos de \textit{ensemble} para aumentar a robustez dos modelos. 
+Nesse contexto, redes neurais convolucionais (CNNs) têm apresentado desempenho destacado na análise de imagens médicas \cite{ref-campanella2019}, incluindo a graduação automatizada de padrões de Gleason e de graus ISUP \cite{ref-nagpal2019,ref-bulten2020}. Entre as arquiteturas modernas, a família EfficientNet \cite{ref-tan2019} oferece um equilíbrio favorável entre acurácia e custo computacional por meio da estratégia de \textit{compound scaling} e do uso de blocos MBConv com mecanismos de \textit{squeeze-and-excitation} \cite{ref-hu2018}. Tais características tornam essas arquiteturas particularmente adequadas para tarefas envolvendo imagens histopatológicas de alta resolução.
 
+Neste trabalho, investigamos a classificação automatizada dos graus ISUP por meio da avaliação de variantes da EfficientNet (B0, B3 e B7) no conjunto de dados PANDA \cite{ref-panda2020}. São empregadas técnicas de \textit{transfer learning}, estratégias de \textit{fine-tuning}, técnicas avançadas de treinamento e métodos de \textit{ensemble} para aumentar a robustez, a estabilidade e o desempenho dos modelos propostos.
 
 \section{Objetivo Geral}
 \label{sec:objetivo-geral}
@@ -23,9 +22,9 @@ Investigar e avaliar métodos de aprendizado profundo para a classificação aut
 Para alcançar o objetivo geral deste trabalho, faz-se necessário atingir os seguintes objetivos específicos:
 
 \begin{itemize}
-    \item Implementar e avaliar uma função de perda que combine componentes ordinais e focais, visando melhorar o desempenho em tarefas de classificação ordinal.
+    \item Implementar e avaliar uma função de perda que combine componentes ordinais e focais, visando aprimorar o desempenho em tarefas de classificação ordinal.
     \item  Comparar diferentes técnicas de treinamento, incluindo estratégias de redução de ruído, \textit{Stochastic Weight Averaging} (SWA)~\cite{ref-izmailov2018} e \textit{focal loss}, analisando seus impactos no desempenho e na estabilidade dos modelos.
-    \item Desenvolver e analisar modelos do tipo ensemble com o objetivo de aumentar a robustez e a estabilidade das predições.
+    \item Desenvolver e analisar modelos de ensemble para aumentar a robustez e a estabilidade das predições.
     \item Realizar uma análise sistemática do desempenho das variantes da EfficientNet na tarefa de classificação dos graus ISUP.
     \item Avaliar o desempenho dos modelos propostos utilizando principalmente o \textit{Quadratic Weighted Kappa} (QWK)~\cite{ref-cohen1968}, métrica apropriada para problemas de classificação ordinal, em conjunto com a acurácia.
 \end{itemize}
@@ -36,8 +35,8 @@ Para alcançar o objetivo geral deste trabalho, faz-se necessário atingir os se
 Os demais capítulos deste trabalho foram organizados em:
 
 \begin{itemize}
-    \item O Capítulo~\ref{cap:trabalhos-relacionados} apresenta uma revisão dos trabalhos relacionados à classificação automatizada de graus ISUP em câncer de próstata.
-    \item O Capítulo~\ref{cap:fundamentacao-teorica} trata dos conceitos fundamentais necessários para a construção desta pesquisa.
-    \item O Capítulo~\ref{cap:materiais-metodo} descreve todas as etapas do método proposto, incluindo a implementação das arquiteturas EfficientNet, técnicas de treinamento avançadas e métodos de ensemble.
+    \item O Capítulo~\ref{cap:trabalhos-relacionados} apresenta um resumo dos trabalhos relacionados a ??????.
+    \item O Capítulo~\ref{cap:fundamentacao-teorica} aborda os conceitos fundamentais necessários à construção desta pesquisa.
+    \item O Capítulo~\ref{cap:materiais-metodo} descreve todas as etapas do método proposto usado para 
     \item Finalmente, o Capítulo~\ref{cap:conclusao} apresenta as considerações finais e sugestões de trabalhos futuros.
 \end{itemize}

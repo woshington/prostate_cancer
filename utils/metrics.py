@@ -15,7 +15,7 @@ def calculate_metrics(preds, targets, num_bootstraps=1000, seed=42, num_classes=
     targets = np.array(targets)
     n = len(preds)
 
-    accs, kappas, f1s, recalls, precisions = [], [], [], [], []
+    accs, kappas, f1s, recalls, precisions, mean_error = [], [], [], [], [], []
     confusion_matrices = []
 
     torch.manual_seed(seed)
@@ -26,7 +26,7 @@ def calculate_metrics(preds, targets, num_bootstraps=1000, seed=42, num_classes=
         p_sample = torch.tensor(preds[idxs])
         t_sample = torch.tensor(targets[idxs])
 
-        acc = (p_sample == t_sample).float().mean().item() * 100.
+        acc = (p_sample == t_sample).float().mean().item()
         accs.append(acc)
 
         kappa = cohen_kappa_score(p_sample.numpy(), t_sample.numpy(), weights='quadratic')
@@ -39,6 +39,7 @@ def calculate_metrics(preds, targets, num_bootstraps=1000, seed=42, num_classes=
         f1s.append(f1(p_sample, t_sample).item())
         recalls.append(recall(p_sample, t_sample).item())
         precisions.append(precision(p_sample, t_sample).item())
+        mean_error.append(torch.mean(torch.abs(t_sample - p_sample)).item())
 
         cm = confusion_matrix(t_sample.numpy(), p_sample.numpy(), labels=np.arange(num_classes))
         cm_norm = cm / cm.sum(axis=1, keepdims=True, where=(cm.sum(axis=1, keepdims=True) != 0))
@@ -59,6 +60,7 @@ def calculate_metrics(preds, targets, num_bootstraps=1000, seed=42, num_classes=
         'f1_macro': summarize_metric(f1s),
         'recall_macro': summarize_metric(recalls),
         'precision_macro': summarize_metric(precisions),
+        "mean_error": summarize_metric(mean_error),
         'confusion_matrix': avg_confusion_matrix
     }
 
@@ -145,6 +147,7 @@ def evaluation(model, dataloader, device):
         "val_f1": results.get("f1_macro"),
         "val_recall": results.get("recall_macro"),
         "val_precision": results.get("precision_macro"),
+        "mean_error": results.get("mean_error"),
         "confusion_matrix": results.get("confusion_matrix")
     }, (predicts, targets, imgs)
 

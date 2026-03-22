@@ -1,78 +1,110 @@
 \chapter{Fundamentação Teórica}
 \label{cap:fundamentacao-teorica}
-%\phantom{0}
 
-Neste capítulo são detalhados os tópicos necessários para compreensão das técnicas usadas na elaboração do método proposto. As seções a seguir abordam conceitos sobre o exame de TC, o rim e tumores renais, aprendizado profundo e as métricas de desempenho para validar os resultados experimentais.
+Este capítulo apresenta o embasamento teórico necessário à compreensão dos conceitos explorados neste trabalho. Inicialmente, abordam-se os aspectos clínicos e histopatológicos do câncer de próstata, com foco no sistema de graduação de Gleason. Em seguida, descreve-se a evolução da Inteligência Artificial (IA) e do \textit{Deep Learning} no contexto da Patologia Digital, destacando como essas tecnologias transformaram a análise de lâminas histológicas. Adicionalmente, detalha-se a arquitetura \textit{EfficientNet}, selecionada por sua eficácia no equilíbrio entre profundidade, largura e resolução na classificação de imagens médicas. Por fim, apresenta-se o conceito de Regressão Ordinal, uma abordagem estatística e computacional fundamental para problemas de classificação em que as categorias possuem uma ordem intrínseca de gravidade, como é o caso dos graus histopatológicos do câncer de próstata.
 
-\section{Rins e Tumores Renais}
-\label{sec:rins-e-tumores-renais}
+\section{Câncer de Próstata e Sistema de Graduação de Gleason}
 
-Os rins são órgãos bilaterais em forma de feijão, de cor marrom-avermelhada e localizados na região posterior do abdômen. Geralmente, o rim direito é ligeiramente menor e mais baixo que o esquerdo devido à presença do fígado. Cada rim pesa cerca de 125-170 gramas nos homens e 115-155 gramas nas mulheres, e são revestidos por uma cápsula renal fibrosa e resistente. Além disso, duas camadas de gordura servem como proteção \cite{tim_newman}.
+O câncer de próstata configura-se como uma das neoplasias malignas de maior incidência entre homens em escala global, representando um relevante problema de saúde pública devido à morbidade e mortalidade associadas~\cite{ref-siegel2024}. Nesse contexto, a graduação tumoral desempenha papel essencial na definição de estratégias terapêuticas e na estimativa prognóstica. Tradicionalmente baseado na soma dos dois padrões histológicos predominantes, o escore de Gleason evoluiu para o sistema de grupos prognósticos da ISUP (0-5), que proporciona uma melhor estratificação clínica e é amplamente adotado na prática médica contemporânea~\cite{ref-epstein2016}.
 
-\begin{figure}[!ht]
+O sistema de graduação de Gleason foi originalmente desenvolvido com base em um estudo prospectivo envolvendo mais de 2.900 pacientes, conduzido pela \textit{Veterans Administration} nos Estados Unidos. Proposto pelo Dr. Donald Gleason nas décadas de 1960 e 1970, o método estabeleceu padrões arquiteturais de crescimento do adenocarcinoma prostático e investigou sua relação com o estágio clínico e com desfechos prognósticos. Esses achados fundamentaram a criação do sistema que posteriormente foi incorporado às classificações oficiais da Organização Mundial da Saúde~\cite{chen2016}.
+
+O modelo clássico descreve cinco padrões histológicos arquiteturais distintos. O padrão 1 corresponde a tumores bem diferenciados e geralmente associados a melhor prognóstico, enquanto o padrão 5 representa neoplasias pouco diferenciadas e de comportamento mais agressivo. Considerando que tumores prostáticos frequentemente apresentam heterogeneidade morfológica, introduziu-se o escore de Gleason, obtido pela soma dos padrões predominante e secundário (por exemplo, 3+4=7), demonstrando maior correlação com o comportamento biológico tumoral do que a avaliação isolada de cada padrão~\cite{chen2016}.
+
+Na descrição original, o padrão 1 era caracterizado por glândulas uniformes e bem delimitadas; entretanto, evidências posteriores indicaram que essa morfologia é rara ou inexistente em carcinomas verdadeiros. O padrão 3, mais frequentemente observado, apresenta glândulas neoplásicas individualizadas infiltrando o estroma. Já o padrão 4 é definido pela fusão glandular, presença de estruturas cribriformes ou glândulas malformadas, enquanto o padrão 5 engloba crescimento sólido, necrose ou células isoladas sem formação glandular~\cite{chen2016}.
+
+Com a evolução das técnicas diagnósticas e do entendimento da biologia tumoral, revisões substanciais foram implementadas, especialmente após o consenso da ISUP em 2005. Essas atualizações resultaram na virtual eliminação do padrão 1, na restrição do padrão 2, na reclassificação de determinadas arquiteturas cribriformes como padrão 4 e no estabelecimento de critérios mais rigorosos para a identificação de necrose do tipo comedo no padrão 5. Tais modificações contribuíram para maior reprodutibilidade diagnóstica e para o aprimoramento da correlação prognóstica~\cite{chen2016}.
+
+A adoção dessas revisões impactou significativamente a prática clínica, refletindo-se no aumento da frequência de tumores classificados com escores mais elevados, maior concordância entre achados de biópsia e de espécimes cirúrgicos e maior capacidade preditiva de recorrência bioquímica após prostateAinda assim, a variabilidade intra- e interobservador permanece um desafio diagnóstico relevante, embora reduzida pela padronização dos critérios histopatológicos. dos critérios histopatológicos.
+
+Posteriormente, em 2014, um novo consenso internacional introduziu um sistema prognóstico complementar baseado em grupos de grau (textit{Grade Groups}), que foi incorporado à classificação da OMS. Esse sistema reorganiza os escores de Gleason em cinco categorias prognósticas, facilitando a comunicação clínica e aprimorando a estratificação de risco, sem abandonar os fundamentos morfológicos originais~\cite{chen2016}:
+
+\begin{itemize}
+\item Grupo 1: escore $\leq 6$
+\item Grupo 2: escore 3+4=7
+\item Grupo 3: escore 4+3=7
+\item Grupo 4: escore 8
+\item Grupo 5: escores $\geq 9$
+\end{itemize}
+
+A relação entre os padrões arquiteturais do sistema de Gleason e sua correspondência aos grupos prognósticos pode ser observada na Figura~\ref{fig:gleason_patterns}. A ilustração sintetiza as principais características morfológicas utilizadas no diagnóstico histopatológico e evidencia sua integração à classificação prognóstica contemporânea. Percebe-se que, quanto menor a uniformidade das glândulas, maior a gravidade do tumor.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{figuras/gleason_pattern_and_grade_group.png}
+\caption{
+    Representação esquemática dos padrões arquiteturais do sistema de Gleason e sua correspondência aos grupos prognósticos (Grade Groups). \\ 
+    Fonte: \cite{hossain2025}.
+}
+\label{fig:gleason_patterns}
+\end{figure}
+
+\section{Inteligência Artificial e Aprendizagem Profunda em Patologia Digital}
+
+A avaliação histopatológica tradicional de imagens de lâmina inteira baseia-se na análise manual realizada por patologistas, sendo um processo suscetível à variabilidade inter e intraobservador~\cite{ref-bulten2020}, além de demandar tempo e depender da disponibilidade de especialistas. Essas limitações têm impulsionado o desenvolvimento de abordagens automatizadas fundamentadas em técnicas de aprendizado profundo (\textit{Deep Learning}), visando aumentar a reprodutibilidade e eficiência diagnóstica.
+
+Nesse contexto, as Redes Neurais Convolucionais (CNNs) têm demonstrado desempenho expressivo na análise de imagens médicas~\cite{ref-campanella2019}, incluindo tarefas como a detecção e graduação automatizada de padrões de Gleason e de grupos ISUP~\cite{ref-nagpal2019,ref-bulten2020}. A aplicação dessas técnicas na classificação do câncer de próstata tem sido amplamente investigada, com avanços relevantes, especialmente no processamento de WSIs por meio de estratégias baseadas na divisão em \textit{patches} e na integração de informações em múltiplas escalas.
+
+Entre as abordagens existentes, os métodos baseados em segmentação têm apresentado resultados promissores na identificação de estruturas histológicas e na classificação de graus ISUP. Arquiteturas como a U-Net exploram esquemas encoder-decoder capazes de capturar informações contextuais e espaciais, permitindo segmentação semântica detalhada dos tecidos~\cite{ref-bulten2020,ref-singhal2022}.
+
+Paralelamente, estratégias baseadas na extração de \textit{patches} evoluíram significativamente, possibilitando o processamento eficiente de WSIs de alta resolução por meio da análise de regiões menores, seguida da agregação das predições locais. Trabalhos como os de \cite{ref-nagpal2019} e \cite{ref-kott2019} utilizaram CNNs para analisar milhões de \textit{patches}, alcançando desempenho comparável ou superior ao de patologistas especialistas, evidenciando o potencial dessas abordagens no suporte à decisão clínica.
+
+De forma geral, a integração de modelos de aprendizado profundo na patologia digital representa um avanço significativo na automação da análise histopatológica, contribuindo para maior padronização diagnóstica e abrindo caminho para sistemas de apoio baseados em inteligência artificial em ambientes clínicos.
+
+
+\section{Redes Neurais Convolucionais e EfficientNet}
+
+As Redes Neurais Convolucionais (CNNs) representam um dos pilares fundamentais do aprendizado profundo. Inspiradas na organização do córtex visual, essas arquiteturas são projetadas para extrair representações hierárquicas diretamente a partir de dados brutos. A sua evolução, desde os modelos precursores até as arquiteturas modernas, permitiu o aprendizado de padrões visuais complexos, superando a necessidade da engenharia manual de atributos \cite{recentcnn}.
+
+De forma geral, uma CNN é composta por três tipos principais de camadas: Convolucionais, Pooling e totalmente conectadas. As camadas convolucionais aplicam filtros compartilhados espacialmente para gerar mapas de características, reduzindo o número de parâmetros e capturando padrões locais relevantes. Funções de ativação não lineares permitem modelar relações complexas, enquanto camadas de pooling reduzem a dimensionalidade espacial e introduzem invariância a pequenas transformações. Por fim, camadas densas realizam a inferência de alto nível necessária para tarefas de classificação ou de regressão \cite{recentcnn}. 
+
+\begin{figure}
     \centering
-    \caption{Estrutura interna do rim.}
-    \includegraphics[width=0.85\textwidth]{figuras/anatomia-rins-interno.png}
-    \legend{Fonte: \cite{vanessa_sardinha}.}
-    \label{fig:anatomia-rins-interno}
+    \includegraphics[width=\linewidth]{figuras/removebg_arquitetura_cnn_basica_1.png}
+    \caption{Arquitetura ilustrativa de uma Rede Neural Convolucional para classificação de imagens.}
+    \label{fig:cnn_arch}
 \end{figure}
 
 
-A maioria dos casos de câncer renal tem cura com um diagnóstico precoce. Para iniciar o tratamento adequado do câncer renal, a segmentação acurada dos rins é necessária. Portanto, as informações estruturais do rim são analisadas por meio de exames de ultrassom, Ressonância Magnética (RM) ou TC de abdômen. Embora as imagens RM tenham sido usadas para segmentação renal em alguns estudos na literatura~\cite{goceri2011automatic,7424483}, a TC, dentre as modalidades disponíveis, é considerada o padrão ouro, especialmente para o diagnóstico de câncer precoce~\cite{kaur2016survey}. Além disso, a TC é muito útil no estadiamento (verificação da extensão para outros órgãos) e no planejamento terapêutico.
+O treinamento de redes neurais convolucionais consiste na estimação de um conjunto ótimo de parâmetros por meio da minimização de uma função de perda definida em termos de pares entrada-saída. Formalmente, dado um conjunto de amostras rotuladas, o problema é tratado como uma tarefa de otimização global, na qual os parâmetros da rede são ajustados para reduzir o erro entre as predições e os alvos, sendo o método de gradiente estocástico uma abordagem amplamente empregada para essa finalidade \cite{recentcnn}. Essa formulação estabelece a base do aprendizado supervisionado em CNNs e permite a adaptação do modelo a diferentes tarefas por meio da escolha adequada da função de perda.
 
-\section{Tomografia Computadorizada}
-\label{sec:tumografia-computadorizada}
+O avanço significativo dessas arquiteturas nas últimas décadas está diretamente associado à disponibilidade crescente de grandes conjuntos de dados anotados, bem como ao desenvolvimento de hardware especializado, particularmente de unidades de processamento gráfico, que viabilizaram o treinamento de modelos mais profundos e expressivos. Além disso, técnicas complementares, como o aumento de dados, a inicialização adequada dos pesos e estratégias de regularização, contribuíram para mitigar problemas de sobreajuste e instabilidade durante o treinamento, possibilitando melhor generalização \cite{recentcnn}.
 
-Para planejar o tratamento radioterápico, é necessário obter informações sobre os tumores renais, como tamanho e a localização exata. Para isso, é necessária uma imagem tridimensional detalhada da região do abdômen do paciente, geralmente realizada por meio do exame de TC. Essas informações são eventualmente usadas para orientar o radioterapeuta a produzir o melhor tratamento radioterápico para cada paciente.
+Diversas melhorias estruturais foram introduzidas para ampliar a capacidade representacional das CNNs. No âmbito das camadas convolucionais, extensões como convoluções transpostas e dilatadas permitem ampliar o campo receptivo e reconstruir estruturas espaciais complexas, enquanto variantes que modificam o compartilhamento de pesos buscam capturar invariâncias adicionais. No processamento de pooling, foram propostas abordagens alternativas para preservar informação espacial relevante, e avanços em funções de ativação, regularização e estratégias de otimização contribuíram para aprimorar a estabilidade e a eficiência do treinamento. De maneira geral, essas evoluções consolidaram as CNNs como uma estrutura flexível e adaptável a múltiplos domínios de aplicação \cite{recentcnn}.
 
+Como consequência dessa evolução metodológica, CNNs passaram a ser empregadas em um amplo espectro de tarefas, incluindo a classificação de imagens, a detecção e o rastreamento de objetos, o reconhecimento de texto em cenários naturais, o processamento de fala e a modelagem de linguagem. Tal diversidade evidencia a capacidade dessas redes de aprender representações hierárquicas e transferíveis, reforçando seu papel central no avanço da visão computacional e de áreas correlatas \cite{recentcnn}.
 
+Entre as arquiteturas contemporâneas que exploram essas contribuições, a família \textit{EfficientNet} destaca-se por oferecer uma relação particularmente favorável entre desempenho preditivo e eficiência computacional. Proposta por \cite{ref-tan2019}, essa abordagem observa que o escalonamento convencional de redes profundas costuma ser realizado de forma independente da profundidade, da largura ou da resolução, o que pode resultar em uso ineficiente de recursos. Como alternativa, o método de \textit{compound scaling} ajusta simultaneamente essas dimensões por meio de coeficientes compartilhados, permitindo um balanceamento sistemático entre capacidade representacional e custo computacional.
 
-\section{Processamento Digital de Imagens}
-\label{sec:processamento-digital-imagens}
+Além do escalonamento composto, a EfficientNet fundamenta-se em uma arquitetura base obtida por \textit{Neural Architecture Search}, denominada EfficientNet-B0, projetada para equilibrar precisão e complexidade em termos de FLOPs. Essa rede utiliza blocos MBConv combinados com mecanismos de \textit{squeeze-and-excitation}, promovendo a recalibração adaptativa dos canais e a melhor modelagem das dependências entre as características. A partir desse modelo inicial, variantes progressivamente maiores (B1–B7) são derivadas por escalonamento composto, ampliando a expressividade da rede enquanto preservam consistência estrutural \cite{ref-tan2019}.
 
-O processamento digital de imagens é definido como um conjunto de técnicas computacionais que transformam uma imagem de entrada em uma saída desejada~\cite{gonzalez2008digital}. Esse conjunto de técnicas permite extrair e identificar informações de imagens e melhorar a qualidade visual de aspectos estruturais, facilitando a percepção humana e a interpretação automática por meio de máquinas~\cite{pedrini2008analise}.
+\section{Funções de Perda}
 
-Existem vários algoritmos com propósitos muito específicos, que juntos formam a metodologia final. Portanto, uma metodologia difere de outra na forma como compõe suas etapas ou ferramentas, mas normalmente segue as etapas apresentadas por \citeonline{gonzalez2008digital}:
+\section{Aprendizagem em Conjunto}
 
-\begin{enumerate}
-    \item Aquisição das imagens: as imagens são capturadas por meio de um dispositivo ou sensor e transformadas em um formato que pode ser processado posteriormente. Porém, como resultado desse processo, a imagem resultante pode apresentar falhas devido às condições de iluminação ou às características do dispositivo, por exemplo;
-    
-    \item Pré-processamento: o objetivo é melhorar a qualidade da imagem por meio de técnicas para reduzir o ruído, realçar o contraste e suavizar certas estruturas da imagem;
-    
-    \item Segmentação: consiste em localizar e extrair áreas de interesse contidas na imagem, com o objetivo de dividir a imagem isolando os diferentes objetos que a compõem;
-    
-    \item Representação e descrição: denominada de extração de características, pois extrai informações que podem ser usadas para discriminar classes de objetos;
-    
-    \item Reconhecimento e interpretação: reconhecimento é o processo que atribui um identificador aos objetos da imagem. A interpretação consiste em atribuir um significado ao conjunto de objetos reconhecidos.
-\end{enumerate}
+Para maximizar o desempenho preditivo, adota-se o uso de \textit{ensembles} (conjuntos de modelos). A literatura apoia essa abordagem devido à sua maior robustez e capacidade de generalização em comparação com o uso de modelos individuais~\cite{mian2024ensemble}. Diferentes estratégias podem ser utilizadas para combinar as predições:
 
+\begin{itemize}
+    \item \textbf{Média Simples}: As probabilidades preditas de cada modelo são combinadas usando uma média aritmética, assumindo que todos os modelos contribuem igualmente para a decisão final.
+    \item \textbf{Média Ponderada}: Segue o mesmo princípio, mas atribui pesos diferentes a cada modelo, geralmente definidos com base no desempenho individual em um conjunto de validação.
+    \item \textbf{Máximo}: A decisão final é obtida selecionando, para cada classe, a maior probabilidade predita entre os modelos do \textit{ensemble}.
+    \item \textbf{Votação Majoritária}: Cada modelo produz uma predição discreta, e a classe mais frequentemente predita é selecionada como a saída final.
+\end{itemize}
 
+\section{Métricas de Avaliação}
 
-\begin{equation}
-\label{eq:relu}
-\sigma(x) = max(0,x),
-\end{equation}
-\begin{equation}
-\label{eq:leakyrelu}
-\sigma(x) = max(0.1,x).
-\end{equation}
+Para avaliação, utilizam-se métricas como a acurácia e o Kappa Quadrático Ponderado de Cohen.
 
-\subsection{Redes \textit{Multilayer Percepton}}
-\label{sec:redes-multilayer-percepton}
+A acurácia é definida como:
+\[
+A = \frac{TP + TN}{TP + TN + FP + FN},
+\]
+onde $TP$ (verdadeiros positivos) corresponde aos casos em que o modelo identifica corretamente uma classe, e $TN$ (verdadeiros negativos) representa instâncias corretamente reconhecidas como não pertencentes a essa classe.
 
-
-
-\begin{figure}[!ht]
-    \centering
-    \caption{Rede \textit{Multilayer Percepton}.}
-    \includegraphics[width=0.45\textwidth]{figuras/RNA.png}
-    \legend{Fonte: Elaborado pela autora.}
-    \label{fig:rna}
-\end{figure}
-
-
-
-\section{Considerações Finais}
-\label{consideracoes-finais-fundamentacao}
-
-Neste capítulo, foi apresentada a fundamentação teórica necessária para a compreensão das técnicas utilizadas e suas aplicações no método proposto. Foram abordados temas como: rins e tumores renais, exame de TC, técnicas de pré-processamento digital de imagens, aprendizado profundo e métricas de desempenhos.
+O Kappa Quadrático Ponderado de Cohen ($\kappa$)~\cite{ref-cohen1968} é dado por:
+\[
+\kappa = 1 - \frac{\sum_{i,j} w_{ij} O_{ij}}{\sum_{i,j} w_{ij} E_{ij}},
+\qquad
+w_{ij} = \frac{(i-j)^2}{(k-1)^2}.
+\]
+Aqui, $O_{ij}$ e $E_{ij}$ denotam as matrizes de confusão observada e esperada, respectivamente, e $k$ é o número de classes. Essa métrica é adequada à natureza ordinal dos graus de Gleason, pois atribui penalidades maiores ($w_{ij} \propto (i-j)^2$) a erros entre classes mais distantes.
