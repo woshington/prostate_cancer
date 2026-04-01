@@ -1,0 +1,30 @@
+EfficientNet-B7 with Entropy Filtering, Ordinal Loss, and Focal Loss
+================================================================================
+
+Bootstrap resamples : 1000
+
+Accuracy  : 60.25% ± 1.24%  [95% CI: 57.67% – 62.52%]
+QW Kappa  : 0.8440 ± 0.0115  [95% CI: 0.8209 – 0.8654]
+Macro F1  : 0.5564 ± 0.0128  [95% CI: 0.5302 – 0.5791]
+
+Classification Report:
+              precision    recall  f1-score   support
+
+      ISUP 0     0.8162    0.7880    0.8019       434
+      ISUP 1     0.6416    0.6400    0.6408       400
+      ISUP 2     0.4339    0.5250    0.4751       200
+      ISUP 3     0.3771    0.3568    0.3667       185
+      ISUP 4     0.4091    0.4332    0.4208       187
+      ISUP 5     0.6879    0.5870    0.6334       184
+
+    accuracy                         0.6025      1590
+   macro avg     0.5610    0.5550    0.5564      1590
+weighted avg     0.6104    0.6025    0.6053      1590
+
+Confusion Matrix:
+[[342  75  10   3   3   1]
+ [ 56 256  81   7   0   0]
+ [  3  43 105  39  10   0]
+ [  4  11  33  66  55  16]
+ [  8  10  11  45  81  32]
+ [  6   4   2  15  49 108]]

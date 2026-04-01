@@ -1,0 +1,30 @@
+EfficientNet-B0 with Entropy Filtering, Ordinal Loss, and Focal Loss
+================================================================================
+
+Bootstrap resamples : 1000
+
+Accuracy  : 66.04% ± 1.19%  [95% CI: 63.83% – 68.30%]
+QW Kappa  : 0.8570 ± 0.0115  [95% CI: 0.8345 – 0.8777]
+Macro F1  : 0.6124 ± 0.0127  [95% CI: 0.5874 – 0.6362]
+
+Classification Report:
+              precision    recall  f1-score   support
+
+      ISUP 0     0.8631    0.8571    0.8601       434
+      ISUP 1     0.7446    0.6925    0.7176       400
+      ISUP 2     0.4470    0.4850    0.4652       200
+      ISUP 3     0.4740    0.4919    0.4828       185
+      ISUP 4     0.4692    0.6524    0.5459       187
+      ISUP 5     0.7712    0.4946    0.6026       184
+
+    accuracy                         0.6604      1590
+   macro avg     0.6282    0.6123    0.6124      1590
+weighted avg     0.6787    0.6604    0.6639      1590
+
+Confusion Matrix:
+[[372  38   6   9   9   0]
+ [ 38 277  75   9   1   0]
+ [  3  46  97  46   8   0]
+ [  5   6  27  91  50   6]
+ [  7   3   9  25 122  21]
+ [  6   2   3  12  70  91]]

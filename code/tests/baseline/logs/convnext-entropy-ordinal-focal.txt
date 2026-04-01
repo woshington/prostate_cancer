@@ -1,0 +1,4 @@
+epoch: 1 | lr: 0.0003000 | train_loss: 0.03768 | val_loss: 0.03377 | val_acc: 0.2620 | val_kappa: 0.2688
+epoch: 2 | lr: 0.0003003 | train_loss: 0.03434 | val_loss: 0.03224 | val_acc: 0.2303 | val_kappa: 0.3832
+epoch: 3 | lr: 0.0003000 | train_loss: 0.03265 | val_loss: 0.03556 | val_acc: 0.2009 | val_kappa: 0.3759
+epoch: 4 | lr: 0.0002991 | train_loss: 0.03067 | val_loss: 0.02980 | val_acc: 0.3503 | val_kappa: 0.5498
