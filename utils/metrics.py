@@ -39,7 +39,9 @@ def calculate_metrics(preds, targets, num_bootstraps=1000, seed=42, num_classes=
         f1s.append(f1(p_sample, t_sample).item())
         recalls.append(recall(p_sample, t_sample).item())
         precisions.append(precision(p_sample, t_sample).item())
-        mean_error.append(torch.mean(torch.abs(t_sample - p_sample)).item())
+        diff = torch.abs(t_sample - p_sample).float()
+        mean_error.append(diff.mean().item())
+        # mean_error.append(torch.mean(torch.abs(t_sample - p_sample)).item())
 
         cm = confusion_matrix(t_sample.numpy(), p_sample.numpy(), labels=np.arange(num_classes))
         cm_norm = cm / cm.sum(axis=1, keepdims=True, where=(cm.sum(axis=1, keepdims=True) != 0))

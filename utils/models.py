@@ -71,13 +71,142 @@ class EfficientNetApiA(nn.Module):
         x = self.fully_connected(x)
         return x
 
+
+
+class EfficientNetMIL(nn.Module):
+    def __init__(
+        self,
+        model: EfficientNetPytorch,
+        output_classes: int,
+        fine_tune=100,
+        dropout_rate=0.4
+    ):
+        super(EfficientNetMIL, self).__init__()
+        self.dropout_rate = dropout_rate
+
+        # Congela as primeiras camadas
+        for param in list(model.parameters())[:-fine_tune]:
+            param.requires_grad = False
+
+        in_features = model.classifier[1].in_features
+
+        # Remove a cabeça de classificação
+        model.classifier[1] = nn.Identity()
+        self.feature_extractor = model
+
+        # Attention Network
+        self.attention = nn.Sequential(
+            nn.Linear(in_features, 512),
+            nn.Tanh(),
+            nn.Linear(512, 1)
+        )
+
+        # Classifier
+        self.classifier = nn.Sequential(
+            nn.Dropout(dropout_rate),
+            nn.Linear(in_features, output_classes)
+        )
+
+    def extract(self, x):
+        """Extrai features de todos os patches"""
+        return self.feature_extractor(x)
+
+    def forward(self, x):
+        b, n, C, H, W = x.size()
+
+        # Processa todos os patches de uma vez
+        x = x.view(b * n, C, H, W)
+        features = self.extract(x)           # (b*n, in_features)
+        features = features.view(b, n, -1)   # (b, n, in_features)
+
+        # Atenção sobre os patches
+        attn_weights = self.attention(features)              # (b, n, 1)
+        attn_weights = F.softmax(attn_weights, dim=1)
+
+        # Agregação ponderada
+        bag = torch.sum(attn_weights * features, dim=1)     # (b, in_features)
+
+        # Classificação
+        logits = self.classifier(bag)                        # (b, output_classes)
+        return logits
+        
+import torch
+import torch.nn as nn
+
+
+class ConvNeXtApi(nn.Module):
+    def __init__(
+        self,
+        model: nn.Module,
+        output_dimensions: int,
+        dropout_rate: float = 0.3,
+        freeze_backbone: bool = True,
+        unfreeze_last_blocks: int = 1,
+    ):
+        super().__init__()
+
+        self.model = model
+
+        # ========================
+        # Freeze backbone (robusto)
+        # ========================
+        if freeze_backbone:
+            for param in self.model.parameters():
+                param.requires_grad = False
+
+            # Unfreeze últimos estágios (melhor que [: -150])
+            if hasattr(self.model, "features"):
+                for block in self.model.features[-unfreeze_last_blocks:]:
+                    for param in block.parameters():
+                        param.requires_grad = True
+
+        # ========================
+        # Extrair in_features corretamente
+        # ========================
+        if hasattr(self.model, "classifier"):
+            if isinstance(self.model.classifier, nn.Sequential):
+                in_features = self.model.classifier[-1].in_features
+            else:
+                in_features = self.model.classifier.in_features
+        else:
+            raise ValueError("ConvNeXt model without classifier attribute")
+
+        # ========================
+        # Remove head original
+        # ========================
+        self.model.classifier = nn.Identity()
+
+        # ========================
+        # Head melhorado
+        # ========================
+        self.head = nn.Sequential(
+            nn.LayerNorm(in_features),   # ConvNeXt gosta disso
+            nn.Dropout(dropout_rate),
+            nn.Linear(in_features, output_dimensions)
+        )
+
+    def extract(self, x):
+        x = self.model(x)
+
+        # Garantir shape (B, C)
+        if x.ndim == 4:
+            x = x.mean(dim=[2, 3])  # global average pooling
+
+        return x
+
+    def forward(self, x):
+        x = self.extract(x)
+        x = self.head(x)
+        return x
+
+
 class EfficientNetApi(nn.Module):
     def __init__(
-            self,
-            model: EfficientNetPytorch,
-            output_dimensions: int,
-            dropout_rate=0.3,
-            use_deformable=False
+        self,
+        model: EfficientNetPytorch,
+        output_dimensions: int,
+        dropout_rate=0.3,
+        use_deformable=False
     ):
         super(EfficientNetApi, self).__init__()
         self.model = model
@@ -94,43 +223,6 @@ class EfficientNetApi(nn.Module):
         # Replace the final classification layer with Identity
         self.model.classifier[1] = nn.Identity()
 
-        # Add deformable convolution if requested
-        if use_deformable:
-            # Para efficientnet_b0 do torchvision
-            last_conv_channels = None
-
-            # Iterar pelos módulos de features para encontrar a última Conv2d
-            for module in reversed(list(self.model.features.modules())):
-                if isinstance(module, nn.Conv2d):
-                    last_conv_channels = module.out_channels
-                    break
-
-            if last_conv_channels is None:
-                raise ValueError("Não foi possível encontrar camada convolucional no modelo")
-
-            self.deformable_layer = DeformableConv2d(
-                in_channels=last_conv_channels,
-                out_channels=last_conv_channels,
-                kernel_size=3,
-                stride=1,
-                padding=1
-            )
-
-            # Armazenar o forward original de features
-            self.original_features_forward = self.model.features.forward
-
-            # A função precisa aceitar self quando vinculada como método
-            def new_features_forward(self_features, x):
-                x = self.original_features_forward(x)
-                x = self.deformable_layer(x)
-                return x
-
-            import types
-            self.model.features.forward = types.MethodType(
-                new_features_forward, self.model.features
-            )
-
-        # Add dropout and final fully connected layer
         self.dropout = nn.Dropout(self.dropout_rate)
         self.fully_connected = nn.Linear(in_features, output_dimensions)
 
@@ -144,158 +236,6 @@ class EfficientNetApi(nn.Module):
         x = self.dropout(x)
         x = self.fully_connected(x)
         return x
-
-
-class ConvNeXtApi(nn.Module):
-    def __init__(
-            self,
-            model: ConvNeXtPytorch,
-            output_dimensions: int,
-            dropout_rate: float = 0.3,
-    ):
-        super(ConvNeXtApi, self).__init__()
-        self.model = model
-
-        # Freeze the backbone features entirely to avoid splitting LayerNorm
-        # weight/bias across the freeze boundary (which causes NativeLayerNormBackward errors)
-        for param in self.model.features[-150:].parameters():
-            param.requires_grad = False
-
-        # ConvNeXt classifier: [LayerNorm, Flatten, Linear]
-        in_features = self.model.classifier[2].in_features
-        self.model.classifier[2] = nn.Identity()
-
-        self.dropout = nn.Dropout(dropout_rate)
-        self.fully_connected = nn.Linear(in_features, output_dimensions)
-
-    def extract(self, inputs):
-        return self.model(inputs)
-
-    def forward(self, inputs):
-        x = self.extract(inputs)
-        x = self.dropout(x)
-        x = self.fully_connected(x)
-        return x
-
-
-class EfficientNetApiGem(nn.Module):
-    def __init__(
-        self,
-        model: EfficientNetPytorch,
-        output_dimensions: int,
-        pool_type: str = "avg",
-        dropout_rate: float = 0.3,
-        use_se_block: bool = True,
-        se_reduction: int = 8,
-        use_self_attention: bool = False
-    ):
-        super(EfficientNetApiGem, self).__init__()
-
-        self.model = model
-        self.pool_type = pool_type
-        self.use_se_block = use_se_block
-        self.use_self_attention = use_self_attention
-
-        # Freeze early layers (keep last 150 parameters trainable for better fine-tuning)
-        for param in list(self.model.parameters())[:-150]:
-            param.requires_grad = False
-
-        original_features = self.model.classifier[1].in_features
-
-        if pool_type == "concat":
-            self.model.avgpool = AdaptiveConcatPool2d()
-            final_features = original_features * 2
-        elif pool_type == "gem":
-            self.model.avgpool = GeM()
-            final_features = original_features
-        else:
-            final_features = original_features
-
-            if self.use_self_attention:
-                self.self_attention = SelfAttentionLayer(in_features=original_features)
-                final_features = original_features
-
-
-        classifier_layers = []
-
-        if self.use_se_block:
-            classifier_layers.append(SEBlock(final_features, r=se_reduction))
-
-        classifier_layers.append(nn.BatchNorm1d(final_features))
-        classifier_layers.extend([
-            nn.Dropout(dropout_rate),
-            nn.Linear(final_features, output_dimensions)
-        ])
-
-        # Replace the original classifier
-        self.model.classifier = nn.Sequential(
-            Flatten(),
-            *classifier_layers
-        )
-
-    def extract(self, inputs):
-        x = self.model.features(inputs)
-
-        if self.use_self_attention:
-            x = x.permute(0, 2, 3, 1)
-            x = x.reshape(x.size(0), -1, x.size(-1))
-            x = self.self_attention(x)
-            x = x.max(dim=1)
-        else:
-            x = self.model.avgpool(x)
-
-        return x
-
-    def forward(self, inputs):
-        x = self.extract(inputs)
-        x = self.model.classifier(x)
-        return x
-
-class EfficientNetMultiColor(nn.Module):
-    pre_trained_model = {
-        'efficientnet-b0': 'pre-trained-models/efficientnet-b0-08094119.pth'
-    }
-    def __init__(self, backbone, output_dimensions, pre_trained_model=None):
-        super(EfficientNetMultiColor, self).__init__()
-        if pre_trained_model is not None:
-            self.pre_trained_model = pre_trained_model
-
-        self.efficient_net = efficientnet_model.EfficientNet.from_pretrained(backbone)
-        self.efficient_net.load_state_dict(
-            torch.load(self.pre_trained_model.get(backbone), weights_only=True)
-        )
-
-        old_conv = self.efficient_net._conv_stem  # conv2d(3, 32, kernel_size=(3, 3), stride=(2, 2), bias=False)
-
-        self.efficient_net._conv_stem = nn.Conv2d(
-            in_channels=18,
-            out_channels=old_conv.out_channels,
-            kernel_size=old_conv.kernel_size,
-            stride=old_conv.stride,
-            padding=old_conv.padding,
-            bias=old_conv.bias is not None
-        )
-        nn.init.kaiming_normal_(self.efficient_net._conv_stem.weight, mode='fan_out', nonlinearity='relu')
-        self.fully_connected = nn.Linear(self.efficient_net._fc.in_features, output_dimensions)
-        self.efficient_net._fc = nn.Identity()
-
-    def extract(self, inputs):
-        return self.efficient_net(inputs)
-
-    def forward(self, inputs):
-        x = self.extract(inputs)
-        x = self.fully_connected(x)
-        return x
-
-
-class FixedScheduler:
-    def __init__(self, lr):
-        self.init_lr = lr
-    def step(self):
-        pass
-
-    def get_last_lr(self):
-        return [self.init_lr]
 
 
 class EnsembleEfficientNet(nn.Module):
@@ -508,6 +448,41 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch
 
+class ViTApi(nn.Module):
+    def __init__(
+        self,
+        model,
+        output_dimensions: int,
+        dropout_rate=0.3
+    ):
+        super(ViTApi, self).__init__()
+        self.model = model
+        self.dropout_rate = dropout_rate
+
+        for param in list(self.model.parameters())[:-150]:
+            param.requires_grad = False
+
+        # Get input features before replacing classifier
+        in_features = self.model.heads.head.in_features
+
+        # Replace the final classification layer with Identity
+        self.model.heads.head = nn.Identity()
+
+        self.dropout = nn.Dropout(self.dropout_rate)
+        self.fully_connected = nn.Linear(in_features, output_dimensions)
+
+    def extract(self, inputs):
+        """Extract features from the model (before final FC layer)"""
+        return self.model(inputs)
+
+    def forward(self, inputs):
+        """Complete forward pass including dropout and classification"""
+        x = self.extract(inputs)
+        x = self.dropout(x)
+        x = self.fully_connected(x)
+        return x
+
+
 class AttentionMIL(nn.Module):
     def __init__(self, base_model, output_classes=5, dropout_rate=0.6):
         super(AttentionMIL, self).__init__()
@@ -539,3 +514,92 @@ class AttentionMIL(nn.Module):
 
         logits = self.classifier(bag_representation)
         return logits
+
+
+class SwinApi(nn.Module):
+    def __init__(
+        self,
+        model,
+        output_dimensions: int,
+        dropout_rate=0.3
+    ):
+        super(SwinApi, self).__init__()
+        self.model = model
+        self.dropout_rate = dropout_rate
+
+        for param in list(self.model.parameters())[:-150]:
+            param.requires_grad = False
+
+        # Get input features before replacing head
+        in_features = self.model.head.in_features
+
+        # Replace the final classification layer with Identity
+        self.model.head = nn.Identity()
+
+        self.dropout = nn.Dropout(self.dropout_rate)
+        self.fully_connected = nn.Linear(in_features, output_dimensions)
+
+    def extract(self, inputs):
+        """Extract features from the model (before final FC layer)"""
+        return self.model(inputs)
+
+    def forward(self, inputs):
+        """Complete forward pass including dropout and classification"""
+        x = self.extract(inputs)
+        x = self.dropout(x)
+        x = self.fully_connected(x)
+        return x
+
+
+class SwinAttentionMIL(nn.Module):
+    def __init__(self, base_model, output_classes=5, dropout_rate=0.6, freeze_backbone=True):
+        super(SwinAttentionMIL, self).__init__()
+        self.base_model = base_model
+        
+        # Freezing backbone parameter
+        if freeze_backbone:
+            # Let's freeze all but the last 150 parameters (similar to EfficientNet) or just freeze all features
+            # swin_v2_t has many params, freezing most of them saves VRAM.
+            params = list(self.base_model.parameters())
+            freeze_up_to = max(0, len(params) - 100)  # leave the last 100 params unfrozen (usually last block)
+            for i, param in enumerate(params):
+                if i < freeze_up_to:
+                    param.requires_grad = False
+
+        layers = list(base_model.children())[:-1]
+        self.feature_extractor = nn.Sequential(*layers)
+
+        in_features = base_model.head.in_features
+        
+        self.attention = nn.Sequential(
+            nn.Linear(in_features, 512),
+            nn.Tanh(),
+            nn.Linear(512, 1)
+        )
+        self.classifier = nn.Sequential(
+            nn.Dropout(dropout_rate),
+            nn.Linear(in_features, output_classes)
+        )
+
+    def forward(self, x):
+        b, n, C, H, W = x.size()
+        x = x.view(b*n, C, H, W)
+
+        # Process features in chunks to save peak VRAM
+        chunk_size = 12
+        features_list = []
+        for i in range(0, b*n, chunk_size):
+            chunk = x[i:i+chunk_size]
+            features_list.append(self.feature_extractor(chunk))
+            
+        features = torch.cat(features_list, dim=0)
+        features = features.view(b, n, -1)
+
+        attn_weights = self.attention(features)
+        attn_weights = F.softmax(attn_weights, dim=1)
+
+        bag_representation = torch.sum(attn_weights * features, dim=1)
+
+        logits = self.classifier(bag_representation)
+        return logits
+
