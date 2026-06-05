@@ -1,0 +1,7 @@
+Based on the conducted experiments, the hybrid loss function demonstrated a direct impact on training robustness, increasing the baseline accuracy from 0.592 to 0.669 (+7 percentage points) and the $\kappa_{\text{quad}}$ from 0.826 to 0.856 (+3 percentage points), as shown in Table~\ref{tab:impacto_loss_expandido}.
+
+The comparative analysis with previous studies (Table~\ref{tab:comparacao_estado_arte}) shows that although some works report high absolute metrics, they often do so in simplified scenarios, with less challenging validation settings or isolated metrics.
+
+For example, \cite{Xiang2023Prostate} obtained $\kappa = 0.931$ in internal validation but 0.801 in external validation. In contrast, our model achieved $\kappa = 0.856$ directly on the noisy public PANDA dataset, indicating stronger practical robustness. Similarly, \cite{afifi2024prostate} reported an accuracy of 91.80\% but $\kappa = 0.608$, suggesting relevant ordinal inconsistencies.
+
+Unlike these approaches, the proposed model performs full grading across all six ISUP levels (0–5), explicitly incorporates the ordinal nature of the disease through a hierarchy-sensitive loss function, and reduces extreme classification errors, thereby providing a better balance among statistical performance, clinical coherence, and generalization.

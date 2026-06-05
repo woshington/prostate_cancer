@@ -1,0 +1,51 @@
+This file provides summaries and bibliographic details for the papers located in `papers/related-works/`.
+
+### 1. A deep learning system for prostate cancer diagnosis and grading in whole slide images of core needle biopsies.pdf
+- **Citation Key**: `ref-singhal2022`
+- **Reference**: Singhal, N. et al. (2022). *A deep learning system for prostate cancer diagnosis and grading in whole slide images of core needle biopsies*. Scientific Reports.
+- **Summary**: Developed a deep learning system for biopsy grading based on a U-Net architecture with a ResNeXt50 encoder, using domain-agnostic training strategies and active learning to mitigate staining variations. The model was developed using 6,670 WSIs from three different institutions and demonstrated strong generalization performance, achieving 83.1% accuracy and a quadratic weighted kappa (QWK) of 0.93 on an external dataset, while maintaining AUCs above 0.93 for clinical risk stratification.
+
+### 2. Artificial intelligence system shows performance at the level of.pdf
+- **Citation Key**: `ref-nagpal2019` (Inferred from context)
+- **Reference**: Nagpal, K. et al. (2019). *Development and validation of a deep learning algorithm for improving Gleason scoring of prostate cancer*. npj Digital Medicine.
+- **Summary**: Developed a two-stage deep learning system (InceptionV3 CNN and k-NN) for Gleason grading using data from TCGA and two medical centers in the USA. The model was trained on 112 million annotated patches extracted from 1,226 slides and validated on an independent cohort. The system achieved an accuracy of 0.70 against an expert reference standard, significantly outperforming the average accuracy of 0.61 obtained by a panel of 29 pathologists (p = 0.002), and demonstrated superior performance in clinical risk stratification.
+
+### 3. Automatic diagnosis and grading of Prostate Cancer with weakly supervised.pdf
+- **Citation Key**: `ref-campanella2019` (Inferred from title match "weakly supervised")
+- **Reference**: Campanella, G. et al. (2019). *Clinical-grade computational pathology using weakly supervised deep learning on whole slide images*. Nature Medicine.
+- **Summary**: This paper demonstrates clinical-grade computational pathology using weakly supervised deep learning on whole slide images. It shows that large-scale datasets can be leveraged for accurate diagnosis without pixel-level annotations, achieving high performance across multiple cancer types including prostate.
+
+### 4. Deep_Learning_with_Uncertainty_Quantification_for_Predicting_the_Segmentation_Dice_Coefficient_of_Prostate_Cancer_Biopsy_Images.pdf
+- **Citation Key**: Not found in bibliography.
+- **Title**: Deep Learning with Uncertainty Quantification for Predicting the Segmentation Dice Coefficient of Prostate Cancer Biopsy Images.
+- **Summary**: This paper likely focuses on using deep learning techniques to estimate the uncertainty in segmentation tasks for prostate cancer biopsy images, specifically predicting the Dice coefficient as a measure of segmentation quality.
+
+### 5. Grading of Prostate Whole-slide Images Using.pdf
+- **Citation Key**: Not found in bibliography.
+- **Title (Inferred)**: Grading of Prostate Whole-slide Images Using [Specific Method/Architecture].
+- **Summary**: Likely discusses a method for automated Gleason grading on whole-slide images. The filename matches common titles in this domain (e.g., "Grading of Prostate Whole-Slide Images with Artificial Intelligence").
+
+### 6. Recent Patterns and Trends in Global Prostate Cancer Incidence.pdf
+- **Citation Key**: Not found in bibliography (possibly background reading).
+- **Title**: Recent Patterns and Trends in Global Prostate Cancer Incidence.
+- **Summary**: A global epidemiological study analyzing incidence rates and trends of prostate cancer across different regions and populations, providing context on the scale and impact of the disease.
+
+### 7. bulten2020.pdf
+- **Citation Key**: `ref-bulten2020`
+- **Reference**: Bulten, W. et al. (2020). *Automated deep-learning system for Gleason grading of prostate cancer using biopsies: a diagnostic study*. The Lancet Oncology.
+- **Summary**: Developed a deep learning system for automated Gleason grading using a dataset of 5,759 biopsies from Radboud University Medical Center. The method, based on an extended U-Net architecture with semi-supervised labeling, achieved a quadratic weighted kappa (QWK) of 0.918 on the internal test set. In an observe study, the model outperformed 10 out of 15 pathologists and achieved QWK > 0.700 on an independent external dataset.
+
+### 8. j.euf.2019.11.003.pdf
+- **Citation Key**: `ref-kott2019`
+- **Reference**: Kott, O. et al. (2019). *Development of a Deep Learning Algorithm for the Histopathologic Diagnosis and Gleason Grading of Prostate Cancer Biopsies: A Pilot Study*. European Urology Focus.
+- **Summary**: A pilot study developing a deep learning algorithm for prostate biopsies using ResNet-18. Trained and validated on 14,803 image patches from 85 WSIs. Achieved 91.5% accuracy for malignancy detection (AUC = 0.83) and 85.4% accuracy for multiclass Gleason score classification.
+
+### 9. s00428-019-02577-x (1).pdf
+- **Citation Key**: `ref-lucas2019`
+- **Reference**: Lucas, M. et al. (2019). *Deep learning for automatic Gleason pattern classification for grade group determination of prostate biopsies*. Virchows Archiv.
+- **Summary**: Proposed an approach based on Inception-v3 CNN for detecting Gleason patterns and determining Grade Groups. Used 96 histological tissue sections with pixel-level annotations. Achieved 92% accuracy in malignancy detection and 90% in distinguishing low-grade vs. high-grade patterns. Slide-level Grade Group classification achieved a QWK of 0.70.
+
+### 10. sensors-21-06708-v3 (1).pdf
+- **Citation Key**: `ref-hammouda2021`
+- **Reference**: Hammouda, K. et al. (2021). *A Deep Learning Pipeline for Grade Groups Classification Using Digitized Prostate Biopsy Specimens*. Sensors.
+- **Summary**: Proposed a system for Gleason grading using a three-scale pyramidal CNN and pixel-wise classification with majority voting. Developed using 608 WSIs, applying a balancing strategy for stroma. Achieved 94% accuracy in Grade Group determination and demonstrated computational efficiency (~1M parameters).

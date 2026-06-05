@@ -1,0 +1,99 @@
+This section presents the implementation environment, the selection of the best configuration pipeline, and the impact of the hybrid Ordinal-Focal loss function.
+
+\subsection{Implementation Environment}
+
+The experiments were conducted on a Linux workstation equipped with an RTX 3060 GPU, an AMD Ryzen 5 5600X CPU, and 32 GB of DDR4 RAM. In addition, PyTorch, CUDA, and OpenSlide were used to read WSIs and extract patches.
+
+\subsection{Initial Stage - Hyperparameter Configuration}
+\label{subsec:hiper}
+
+The initial training stage, as described in Section~\ref{sec:method}, enabled the identification of the optimal hyperparameter configuration for the model. The evaluated values and the selected configuration are presented in Table~\ref{tab:hiperparametros_gridsearch}.
+
+\begin{table}[htb]
+\centering
+\begin{tabular}{lll}
+\toprule
+\textbf{Parameter} & \textbf{Evaluated values} & \textbf{Selected value} \\
+\midrule
+Learning rate & $3\times10^{-4}$, $3\times10^{-3}$, $1\times10^{-4}$ & $3\times10^{-4}$ \\
+Number of epochs & 50 & 50 \\
+Unfrozen layers (fine-tuning) & 100, 150 & 150 \\
+\textit{Dropout} & 0.4, 0.5, 0.6 & 0.4 \\
+Batch size & 2 & 2 \\
+Loss function & BCE & BCE \\
+Optimizer & Adam & Adam \\
+\bottomrule
+\end{tabular}
+\caption{Evaluated hyperparameters and the configuration selected after grid search.}
+\label{tab:hiperparametros_gridsearch}
+\end{table}
+
+\subsection{Impact of Noise Removal and Loss Formulations}
+
+Table~\ref{tab:impacto_loss_expandido} presents the incremental performance evolution of the \textit{EfficientNet-B0}. The strategies were applied cumulatively, so that each configuration incorporates the improvements from the previous stage.
+
+Initially, noise removal was applied to the \textit{baseline} model, increasing the $\kappa_{\text{quad}}$ from $0.826$ to $0.833$. This result indicates that correcting dataset inconsistencies contributed to greater training stability. Subsequently, while maintaining noise removal, replacing BCE with the ordinal loss increased the value to $0.851$. This improvement demonstrates that explicitly modeling the ordinal relationship among classes improves predictive performance. This configuration also presented the lowest standard deviation ($0.009$), indicating greater stability.
+
+Finally, the hybrid strategy was applied to the ordinal formulation, resulting in the best observed performance ($\kappa_{\text{quad}} = 0.856$). This combination allowed the simultaneous treatment of the ordinal structure of the classes and the dataset imbalance. Overall, the sequence of refinements yielded an absolute gain of 3\% relative to the \textit{baseline} model.
+
+\begin{table}[!htb]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{lcccccc}
+			\toprule
+			& \multicolumn{3}{c}{\textbf{Quadratic Kappa}} & \multicolumn{3}{c}{\textbf{Accuracy (\%)}} \\
+			\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+			\textbf{Configuration} & \textbf{Result} & \textbf{Std} & \textbf{CI 95\%} & \textbf{Result} & \textbf{Std} & \textbf{CI 95\%} \\
+			\midrule
+			
+			\quad BCE (\textit{baseline}) 
+			& 0.826 & 0.012 & [0.806; 0.846] 
+			& 0.592 & 0.012 & [0.572; 0.612] \\
+			
+			\quad BCE + Noise Removal 
+			& 0.833 & 0.013 & [0.812; 0.853] 
+			& 0.638 & 0.116 & [0.619; 0.657] \\
+			
+			\quad Ordinal Loss 
+			& 0.851 & \textbf{0.009} & [0.833; 0.869] 
+			& 0.608 & 0.126 & [0.587; 0.628] \\
+			
+			\quad \textbf{Ordinal + Focal (Hybrid)} 
+			& \textbf{0.856} & 0.011 & [0.833; 0.876] 
+			& \textbf{0.669} & 0.011 & [0.635; 0.683] \\
+			
+			\bottomrule
+		\end{tabular}%
+	}
+	\caption{Impact of the loss function formulation on EfficientNet-B0 performance}
+	\label{tab:impacto_loss_expandido}
+\end{table}
+
+The incorporation of the ordinal focal loss into the training process improved model performance. Although the kappa coefficient increased modestly (approximately 0.5\%), the joint analysis with accuracy reveals a gain of more than 6 percentage points. This increase indicates that the model trained with focal loss was more precise in exact predictions.
+
+This conclusion is reinforced by the analysis of the confusion matrices shown in Figure~\ref{fig:cm_ordinal_focal}. The model without focal loss (Figure~\ref{subfig:ordinal}) presents lower values along the main diagonal, especially for the ISUP 3 class, whose accuracy was 0.365, with considerable dispersion toward ISUP 2 (0.303) and ISUP 4 (0.212).
+
+In contrast, the model with ordinal focal loss (Figure~\ref{subfig:ordinal_focal}) shows consistent improvements across several classes, including ISUP 0 (0.857 vs.\ 0.711), ISUP 3 (0.492 vs.\ 0.365), and ISUP 4 (0.652 vs.\ 0.498), demonstrating greater discriminative capability, including in intermediate classes that are traditionally more difficult to classify.
+
+\begin{figure}[!htb]
+	\centering
+	\subfloat[\centering Ordinal]{
+		\includegraphics[width=0.47\textwidth]{images/cm_ordinal.png} 
+		\label{subfig:ordinal}
+	}%
+	\hspace{0.2cm}
+	\subfloat[\centering Ordinal Focal]{
+		\includegraphics[width=0.47\textwidth]{images/cm_ordinal_focal.png} 
+		\label{subfig:ordinal_focal}
+	}%
+	\caption{Normalized confusion matrices of models trained with ordinal loss (left) and ordinal-focal loss (right).}
+	\label{fig:cm_ordinal_focal}
+\end{figure}
+
+\subsection{Comparison Between EfficientNet Architectures}
+
+After defining the optimal hyperparameters and loss function using EfficientNet-B0, the same experimental configuration was applied to EfficientNet-B3 and EfficientNet-B7, representing intermediate- and high-complexity models, respectively. The goal was to evaluate whether the methodological refinement developed for the base model would produce additional gains when applied to architectures with greater representational capacity within the same family.
+
+The results are presented in Table~\ref{tab:comparacao_arquiteturas}. It can be observed that EfficientNet-B0 achieved the best performance in both quadratic kappa and accuracy. The deeper architectures (B3 and B7) did not show statistically significant improvements and even exhibited a slight degradation in the mean values of the evaluated metrics.
+
+This behavior may be associated with dataset size or with the greater tendency toward overfitting in models with more parameters. Therefore, EfficientNet-B0 demonstrated the best balance between predictive performance, statistical stability, and computational cost.

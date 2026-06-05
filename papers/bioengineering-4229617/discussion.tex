@@ -1,0 +1,120 @@
+The automated classification of ISUP grade groups faces significant challenges due to the high visual similarity between adjacent grades, the inherent subjectivity of human assessment, and the natural imbalance of clinical datasets. The results of this study demonstrate that combining an ordinally penalized loss function with noise filtering techniques provides a robust approach to overcoming these limitations.
+
+\subsection{Performance and Comparison with Related Work}
+
+The studies presented in Table~\ref{tab:comparacao_estado_arte} highlight different trade-offs between model complexity, task formulation, and clinical applicability. Early approaches such as \cite{pyramidalcnn} rely on computationally intensive pipelines that process millions of patches and multiple CNNs, limiting scalability. Similarly, \cite{ikromjanov2021vit_prostate} and \cite{kosoko2024xai_prostate} operate at the patch level, simplifying the problem and ignoring global tissue context, which is essential for reliable whole-slide image (WSI) grading.
+
+Other works adopt more complex architectures at the WSI level. For instance, \cite{Xiang2023Prostate} combines convolutional and graph-based models, achieving a high internal Kappa (0.931) but with a noticeable drop in external validation (0.801), indicating sensitivity to domain shifts. Likewise, \cite{bhattacharyya2024wsi} reports a competitive Kappa (0.881) using a multiple instance learning (MIL) ensemble; however, this result is obtained under a forced class balancing scheme applied before dataset splitting, which alters the natural data distribution. Since class imbalance is intrinsic to prostate cancer grading, this strategy may lead to overestimated performance and reduced robustness under realistic conditions. Similarly, \cite{bhattacharyya2026tsor} achieves a Kappa of 0.884 using self-supervised learning, but relies on curated subsets, which may affect generalization.
+
+In addition, \cite{kabir2025automating} incorporates a segmentation stage with DeepLabV3 followed by a Random Forest classifier, achieving a high Kappa (0.921). However, this approach depends on pixel-level annotations, limiting scalability. On the other hand, \cite{alici2024efficient} reports very high accuracy (up to 0.961), but addresses a simplified task (binary or reduced class setting), making comparisons with full ISUP grading less meaningful.
+
+In contrast, the proposed method achieves a Kappa of 0.857 with a relatively simple and computationally efficient EfficientNet-B0 architecture. It addresses the full ISUP grading problem at the WSI level without relying on pixel-level annotations, artificial balancing, or task simplification. The use of Ordinal Focal Loss encourages errors between adjacent classes, improving clinical consistency. Although the proposed model reports lower accuracy than some simplified approaches, it provides a more realistic and clinically meaningful evaluation, offering a better balance between performance, robustness, and practical applicability.
+
+\begin{table}[htb]
+	\centering
+	\scriptsize
+	\setlength{\tabcolsep}{3pt}
+	\renewcommand{\arraystretch}{1.0}
+	
+	\resizebox{\linewidth}{!}{
+		\begin{tabular}{llllccc}
+			\toprule
+			\textbf{Study} & \textbf{Dataset} & \textbf{Model} & \textbf{Level} & \textbf{Task} & \textbf{Acc.} & \textbf{Kappa} \\
+			\midrule
+			
+			\cite{pyramidalcnn} 
+			& Radboud 
+			& Pyramidal CNN 
+			& Patch $\rightarrow$ WSI 
+			& Gleason / GG 
+			& 0.773 
+			& - \\
+			
+			\cite{ikromjanov2021vit_prostate} 
+			& PANDA 
+			& ViT 
+			& Patch
+			& Gleason 
+			& 0.800 
+			& - \\
+			
+			\cite{Xiang2023Prostate} 
+			& PANDA 
+			& ResNet50 + GCN 
+			& WSI
+			& ISUP (6) 
+			& - 
+			& 0.931 (Int.) / 0.801 (Ext.) \\
+			
+			\cite{alici2024efficient}
+			& DiagSet 
+			& EffNet-B4 + ECA 
+			& Patch
+			& Binary / 4 classes 
+			& 0.961 / 0.948 
+			& - \\
+			
+			\cite{kosoko2024xai_prostate}
+			& SICAPv2 
+			& VGG19 
+			& Patch
+			& Gleason 
+			& 0.780 
+			& - \\			
+			
+			\cite{bhattacharyya2024wsi}
+			& PANDA
+			& EffNet-B1 + MIL + Ensemble
+			& WSI
+			& ISUP (6)
+			& -
+			& 0.881 \\ 
+			
+			\cite{kabir2025automating}
+			& PANDA
+			& EffNet-B0 + DeepLabV3 + RF
+			& WSI + Seg
+			& ISUP (6)
+			& -
+			& 0.921 \\
+			
+			\cite{bhattacharyya2026tsor}
+			& PANDA / SICAPv2
+			& TSOR
+			& WSI
+			& ISUP (6)
+			& -
+			& 0.884 \\ 
+			
+			\midrule
+			
+			\textbf{Proposed (Base)} 
+			& \textbf{PANDA} 
+			& \textbf{EffNet-B0 + Ordinal Focal Loss} 
+			& \textbf{WSI}
+			& \textbf{ISUP (6)} 
+			& \textbf{0.669} 
+			& \textbf{0.857} \\		
+			
+			\bottomrule
+		\end{tabular}
+	}
+	
+	\caption{Comparison between the proposed method and recent studies.}
+	\label{tab:comparacao_estado_arte}
+\end{table}
+
+
+\subsection{Impact of the Ordinal Loss Function and Noise Filtering}
+
+The transition from the BCE loss function to the hybrid formulation (ordinal + focal loss) produced the largest improvement in model performance. From a clinical perspective, distinguishing between ISUP 2 and ISUP 3 has different prognostic implications compared to a confusion between ISUP 1 and ISUP 5. The ordinal loss encourages the model to respect this hierarchical relationship between classes. Furthermore, the entropy-based filtering strategy reinforced the importance of training data quality. Removing samples with high uncertainty reduced the influence of potentially noisy labels and improved model performance, without requiring dataset expansion.
+
+\subsection{Computational Efficiency and Architecture Selection}
+
+When comparing architectures from the EfficientNet family, increasing model complexity did not result in improved performance; in fact, a slight degradation was observed for deeper variants (as shown in Table~\ref{tab:comparacao_arquiteturas}). EfficientNet-B0 achieved the best balance between predictive performance and statistical stability. These results suggest that more complex architectures (such as B3 and B7) may be more susceptible to overfitting in this context or may require more refined training adjustments to reach their full potential. For practical implementations in pathology laboratories, selecting EfficientNet-B0 is advantageous due to its lower computational cost and shorter inference time.
+
+\subsection{Limitations and Future Work}
+
+Despite the promising results, an important limitation of this study is the absence of external validation on data from independent institutions. Although the PANDA dataset includes samples from two different centers, both are incorporated into the training process, which does not fully reflect real-world deployment scenarios with unseen acquisition conditions. Previous studies have shown that models trained on PANDA may experience a significant performance drop under external validation (e.g., a decrease of approximately 0.13 in Cohen’s kappa reported in \cite{Xiang2023Prostate}). Therefore, the generalization capability of the proposed model to different clinical environments remains uncertain, and the results presented here should be interpreted as internal performance.
+
+Future work should prioritize evaluation on external datasets to assess robustness and support clinical applicability. Additionally, transformer-based architectures and ensemble strategies may be explored to further improve performance and stability.

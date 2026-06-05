@@ -1,0 +1,56 @@
+epoch: 1 | lr: 1.40e-04 | train_loss: 0.17446 | val_loss: nan | val_acc: 0.5931 | val_kappa: 0.8137
+epoch: 2 | lr: 1.40e-04 | train_loss: 0.14438 | val_loss: nan | val_acc: 0.5920 | val_kappa: 0.7513
+epoch: 3 | lr: 1.40e-04 | train_loss: 0.12441 | val_loss: nan | val_acc: 0.6061 | val_kappa: 0.8065
+epoch: 4 | lr: 1.40e-04 | train_loss: 0.11158 | val_loss: 0.18401 | val_acc: 0.4641 | val_kappa: 0.6111
+epoch: 5 | lr: 1.40e-04 | train_loss: 0.10103 | val_loss: 0.18852 | val_acc: 0.4997 | val_kappa: 0.6347
+epoch: 6 | lr: 1.40e-04 | train_loss: 0.09514 | val_loss: nan | val_acc: 0.6327 | val_kappa: 0.8416
+epoch: 7 | lr: 1.40e-04 | train_loss: 0.08814 | val_loss: nan | val_acc: 0.5948 | val_kappa: 0.8092
+epoch: 8 | lr: 1.40e-04 | train_loss: 0.08015 | val_loss: nan | val_acc: 0.6191 | val_kappa: 0.8386
+epoch: 9 | lr: 1.40e-04 | train_loss: 0.07776 | val_loss: nan | val_acc: 0.6672 | val_kappa: 0.8596
+epoch: 10 | lr: 1.40e-04 | train_loss: 0.07292 | val_loss: nan | val_acc: 0.6282 | val_kappa: 0.8382
+epoch: 11 | lr: 1.40e-04 | train_loss: 0.06888 | val_loss: nan | val_acc: 0.6338 | val_kappa: 0.8542
+epoch: 12 | lr: 1.40e-04 | train_loss: 0.06595 | val_loss: nan | val_acc: 0.6435 | val_kappa: 0.8497
+epoch: 13 | lr: 1.40e-04 | train_loss: 0.05860 | val_loss: nan | val_acc: 0.6661 | val_kappa: 0.8471
+epoch: 1 | lr: 1.40e-04 | train_loss: 0.17466 | val_loss: nan | val_acc: 0.5886 | val_kappa: 0.8058
+epoch: 2 | lr: 1.40e-04 | train_loss: 0.14707 | val_loss: nan | val_acc: 0.5925 | val_kappa: 0.7842
+epoch: 3 | lr: 1.40e-04 | train_loss: 0.12306 | val_loss: nan | val_acc: 0.6163 | val_kappa: 0.8111
+epoch: 4 | lr: 1.40e-04 | train_loss: 0.11117 | val_loss: nan | val_acc: 0.6174 | val_kappa: 0.8308
+epoch: 5 | lr: 1.40e-04 | train_loss: 0.10236 | val_loss: nan | val_acc: 0.6559 | val_kappa: 0.8431
+epoch: 6 | lr: 1.40e-04 | train_loss: 0.09509 | val_loss: nan | val_acc: 0.6497 | val_kappa: 0.8458
+epoch: 7 | lr: 1.40e-04 | train_loss: 0.08725 | val_loss: nan | val_acc: 0.6542 | val_kappa: 0.8374
+epoch: 8 | lr: 1.40e-04 | train_loss: 0.08488 | val_loss: nan | val_acc: 0.6469 | val_kappa: 0.8419
+epoch: 9 | lr: 1.40e-04 | train_loss: 0.07995 | val_loss: nan | val_acc: 0.6553 | val_kappa: 0.8471
+epoch: 10 | lr: 1.40e-04 | train_loss: 0.07498 | val_loss: nan | val_acc: 0.6525 | val_kappa: 0.8412
+epoch: 11 | lr: 1.40e-04 | train_loss: 0.07175 | val_loss: nan | val_acc: 0.6559 | val_kappa: 0.8374
+epoch: 12 | lr: 1.40e-04 | train_loss: 0.06626 | val_loss: nan | val_acc: 0.4890 | val_kappa: 0.6252
+epoch: 13 | lr: 1.40e-04 | train_loss: 0.06069 | val_loss: nan | val_acc: 0.6446 | val_kappa: 0.8416
+epoch: 14 | lr: 1.40e-04 | train_loss: 0.05928 | val_loss: nan | val_acc: 0.6621 | val_kappa: 0.8572
+epoch: 15 | lr: 1.40e-04 | train_loss: 0.05488 | val_loss: nan | val_acc: 0.6655 | val_kappa: 0.8554
+epoch: 16 | lr: 1.40e-04 | train_loss: 0.05047 | val_loss: nan | val_acc: 0.6633 | val_kappa: 0.8581
+epoch: 17 | lr: 1.40e-04 | train_loss: 0.04981 | val_loss: nan | val_acc: 0.4924 | val_kappa: 0.7098
+epoch: 18 | lr: 1.40e-04 | train_loss: 0.04404 | val_loss: nan | val_acc: 0.6650 | val_kappa: 0.8556
+epoch: 19 | lr: 1.40e-04 | train_loss: 0.04467 | val_loss: nan | val_acc: 0.6740 | val_kappa: 0.8543
+epoch: 20 | lr: 1.40e-04 | train_loss: 0.03697 | val_loss: nan | val_acc: 0.6650 | val_kappa: 0.8555
+epoch: 21 | lr: 1.40e-04 | train_loss: 0.03729 | val_loss: nan | val_acc: 0.6735 | val_kappa: 0.8532
+epoch: 22 | lr: 1.40e-04 | train_loss: 0.03398 | val_loss: nan | val_acc: 0.6814 | val_kappa: 0.8596
+epoch: 23 | lr: 1.40e-04 | train_loss: 0.03255 | val_loss: nan | val_acc: 0.6786 | val_kappa: 0.8610
+epoch: 24 | lr: 1.40e-04 | train_loss: 0.02926 | val_loss: 0.98334 | val_acc: 0.1228 | val_kappa: -0.0219
+epoch: 25 | lr: 1.40e-04 | train_loss: 0.02743 | val_loss: nan | val_acc: 0.6836 | val_kappa: 0.8581
+epoch: 26 | lr: 1.40e-04 | train_loss: 0.02549 | val_loss: nan | val_acc: 0.6786 | val_kappa: 0.8579
+epoch: 27 | lr: 1.40e-04 | train_loss: 0.02293 | val_loss: 1.05534 | val_acc: 0.1132 | val_kappa: -0.0483
+epoch: 28 | lr: 1.40e-04 | train_loss: 0.02055 | val_loss: nan | val_acc: 0.6831 | val_kappa: 0.8541
+epoch: 29 | lr: 1.40e-04 | train_loss: 0.02143 | val_loss: nan | val_acc: 0.6916 | val_kappa: 0.8711
+epoch: 30 | lr: 1.40e-04 | train_loss: 0.01819 | val_loss: nan | val_acc: 0.6921 | val_kappa: 0.8629
+epoch: 31 | lr: 1.40e-04 | train_loss: 0.01626 | val_loss: nan | val_acc: 0.6910 | val_kappa: 0.8652
+epoch: 32 | lr: 1.40e-04 | train_loss: 0.01721 | val_loss: nan | val_acc: 0.1958 | val_kappa: 0.2543
+epoch: 33 | lr: 1.40e-04 | train_loss: 0.01404 | val_loss: nan | val_acc: 0.6304 | val_kappa: 0.8280
+epoch: 34 | lr: 1.40e-04 | train_loss: 0.01388 | val_loss: nan | val_acc: 0.6684 | val_kappa: 0.8613
+epoch: 35 | lr: 1.40e-04 | train_loss: 0.01226 | val_loss: nan | val_acc: 0.1534 | val_kappa: 0.1169
+epoch: 36 | lr: 1.40e-04 | train_loss: 0.01180 | val_loss: nan | val_acc: 0.6995 | val_kappa: 0.8704
+epoch: 37 | lr: 1.40e-04 | train_loss: 0.01105 | val_loss: nan | val_acc: 0.6938 | val_kappa: 0.8632
+epoch: 38 | lr: 1.40e-04 | train_loss: 0.01070 | val_loss: nan | val_acc: 0.6955 | val_kappa: 0.8704
+epoch: 39 | lr: 1.40e-04 | train_loss: 0.00983 | val_loss: nan | val_acc: 0.7029 | val_kappa: 0.8648
+
+=== TEST RESULTS ===
+acc=0.6912 | kappa=0.8634 | f1=0.6398 | recall=0.6366 | precision=0.6459
+gamma=2.4691 | w_focal=1.0410 | w_ord=1.1828 | lr=1.40e-04

@@ -1,0 +1,2 @@
+max_patches=49 | batch=6
+Optuna best: gamma=1.6767, w_focal=1.0316, w_ord=1.6714, lr=5.38e-05

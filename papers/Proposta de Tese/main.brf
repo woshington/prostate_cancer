@@ -1,0 +1,90 @@
+\backcite {neumaier2023biopsia}{{8}{(document)}{Doc-Start}}
+\backcite {hossain2025}{{8}{(document)}{Doc-Start}}
+\backcite {ref-tan2019}{{8}{(document)}{Doc-Start}}
+\backcite {ref-tan2019}{{9}{(document)}{Doc-Start}}
+\backcite {ref_siegel2024}{{14}{1}{chapter.1}}
+\backcite {JournalStatistic2024}{{14}{1}{chapter.1}}
+\backcite {ref-epstein2016}{{14}{1}{chapter.1}}
+\backcite {ref-bulten2020}{{14}{1}{chapter.1}}
+\backcite {expert2022review}{{14}{1}{chapter.1}}
+\backcite {ref-campanella2019}{{14}{1}{chapter.1}}
+\backcite {ref-nagpal2019,ref-bulten2020}{{14}{1}{chapter.1}}
+\backcite {ref-tan2019}{{14}{1}{chapter.1}}
+\backcite {ref-hu2018}{{14}{1}{chapter.1}}
+\backcite {ref-panda2020}{{15}{1}{chapter.1}}
+\backcite {Xiang2023Prostate}{{17}{2.1}{section.2.1}}
+\backcite {pyramidalcnn}{{17}{2.1}{section.2.1}}
+\backcite {bhattacharyya2024efficient}{{18}{2.1}{section.2.1}}
+\backcite {kabir2025automating}{{18}{2.1}{section.2.1}}
+\backcite {bhattacharyya2026tsor}{{19}{2.1}{section.2.1}}
+\backcite {kosoko2024xai_prostate}{{19}{2.2}{section.2.2}}
+\backcite {alici2024efficient}{{20}{2.2}{section.2.2}}
+\backcite {ikromjanov2021vit_prostate}{{20}{2.2}{section.2.2}}
+\backcite {rebello2021prostate}{{22}{3.1}{section.3.1}}
+\backcite {rebello2021prostate}{{22}{3.1}{section.3.1}}
+\backcite {rawla2019epidemiology}{{22}{3.1}{figure.caption.14}}
+\backcite {bergengren2023update}{{22}{3.1}{figure.caption.14}}
+\backcite {bergengren2023update,perdana2016}{{22}{3.1}{figure.caption.14}}
+\backcite {nci2024prostate}{{23}{1}{figure.caption.14}}
+\backcite {hammerich_anatomy}{{23}{3.1}{table.caption.15}}
+\backcite {crawford2003epidemiology, rawla2019epidemiology}{{23}{3.1}{table.caption.15}}
+\backcite {matlaga2003prostate}{{24}{3.1.1}{subsection.3.1.1}}
+\backcite {matlaga2003prostate}{{24}{3.1.1}{figure.caption.16}}
+\backcite {matlaga2003prostate}{{24}{3.1.1}{figure.caption.16}}
+\backcite {neumaier2023biopsia}{{25}{2}{figure.caption.16}}
+\backcite {ref-epstein2016}{{25}{3.2}{section.3.2}}
+\backcite {chen2016}{{25}{3.2}{section.3.2}}
+\backcite {chen2016}{{26}{3.2}{section.3.2}}
+\backcite {chen2016}{{26}{3.2}{section.3.2}}
+\backcite {chen2016}{{26}{3.2}{section.3.2}}
+\backcite {ref-epstein2016}{{26}{3.2}{section.3.2}}
+\backcite {hossain2025}{{27}{3}{figure.caption.17}}
+\backcite {gonzalez2008digital}{{28}{3.3}{section.3.3}}
+\backcite {gonzalez2008digital}{{28}{3.3}{figure.caption.18}}
+\backcite {gonzalez2008digital}{{29}{3.3}{figure.caption.18}}
+\backcite {sengupta2020}{{29}{3.4}{section.3.4}}
+\backcite {maas2013}{{29}{3.4}{figure.caption.19}}
+\backcite {goodfellow2016deep}{{30}{3.4.1}{subsection.3.4.1}}
+\backcite {rumelhart1986learning}{{30}{3.4.1}{figure.caption.20}}
+\backcite {lecun2015deep}{{31}{3.5}{section.3.5}}
+\backcite {focal_loss_iot}{{32}{3.5.1.1}{subsubsection.3.5.1.1}}
+\backcite {focal_loss_liver}{{32}{3.5.1.1}{equation.3.5.6}}
+\backcite {imbalanced_ordinal_nn}{{32}{3.5.1.2}{subsubsection.3.5.1.2}}
+\backcite {focal_loss_iot}{{33}{3.5.1.2}{equation.3.5.10}}
+\backcite {lecun1998, goodfellow2016deep}{{34}{3.5.2}{subsection.3.5.2}}
+\backcite {esteva2017dermatologist}{{34}{3.5.2}{figure.caption.21}}
+\backcite {ref-tan2019}{{34}{3.5.3}{subsection.3.5.3}}
+\backcite {ref-tan2019}{{35}{8}{figure.caption.22}}
+\backcite {ref-tan2019}{{36}{2}{table.caption.23}}
+\backcite {novotny2025eocc}{{37}{3.6}{section.3.6}}
+\backcite {novotny2025eocc}{{37}{3.6}{section.3.6}}
+\backcite {dietterich2000ensemble, kuncheva2004combining}{{37}{3.6}{section.3.6}}
+\backcite {wolpert1992stacked}{{37}{3.6}{section.3.6}}
+\backcite {baratloo2015part}{{38}{3.7}{section.3.7}}
+\backcite {baratloo2015part}{{38}{3.7}{section.3.7}}
+\backcite {ref-cohen1968}{{38}{3.7}{equation.3.7.12}}
+\backcite {efron1979bootstrap}{{38}{3.7}{equation.3.7.14}}
+\backcite {ref-panda2020}{{42}{4.1}{section.4.1}}
+\backcite {kabir2025automating}{{42}{4.1}{section.4.1}}
+\backcite {ali2023entropy}{{44}{4.2.1}{subsection.4.2.1}}
+\backcite {Ozkan2016Gleason, cinar2025assessment}{{50}{5.3}{section.5.3}}
+\backcite {Ozkan2016Gleason}{{50}{5.3}{section.5.3}}
+\backcite {cinar2025assessment}{{50}{5.3}{section.5.3}}
+\backcite {pyramidalcnn}{{56}{\caption@xref {??}{ on input line 317}}{table.caption.37}}
+\backcite {ikromjanov2021vit_prostate}{{56}{\caption@xref {??}{ on input line 317}}{table.caption.37}}
+\backcite {Xiang2023Prostate}{{56}{\caption@xref {??}{ on input line 317}}{table.caption.37}}
+\backcite {alici2024efficient}{{56}{\caption@xref {??}{ on input line 317}}{table.caption.37}}
+\backcite {kosoko2024xai_prostate}{{56}{\caption@xref {??}{ on input line 317}}{table.caption.37}}
+\backcite {bhattacharyya2024wsi}{{56}{\caption@xref {??}{ on input line 317}}{table.caption.37}}
+\backcite {kabir2025automating}{{56}{\caption@xref {??}{ on input line 317}}{table.caption.37}}
+\backcite {bhattacharyya2026tsor}{{56}{\caption@xref {??}{ on input line 317}}{table.caption.37}}
+\backcite {pyramidalcnn}{{56}{5.6}{table.caption.37}}
+\backcite {ikromjanov2021vit_prostate}{{56}{5.6}{table.caption.37}}
+\backcite {alici2024efficient}{{56}{5.6}{table.caption.37}}
+\backcite {kosoko2024xai_prostate}{{56}{5.6}{table.caption.37}}
+\backcite {ikromjanov2021vit_prostate}{{56}{5.6}{table.caption.37}}
+\backcite {Xiang2023Prostate}{{56}{5.6}{table.caption.37}}
+\backcite {kabir2025automating}{{56}{5.6}{table.caption.37}}
+\backcite {bhattacharyya2026tsor}{{57}{5.6}{table.caption.37}}
+\backcite {bhattacharyya2024wsi}{{57}{5.6}{table.caption.37}}
+\backcite {bhattacharyya2024wsi}{{57}{5.6}{table.caption.37}}

@@ -1,0 +1,124 @@
+\begin{thebibliography}{}
+
+\bibitem[Afifi et~al. 2024]{afifi2024prostate}
+Afifi, A., Alrahmawy, M., and El-Baz, A. (2024).
+\newblock Prostate cancer detection using deep learning models on
+  histopathological image slides: An experimental analysis.
+\newblock {\em International Journal of Advanced Computer Science and
+  Applications}, 15(1):xxx--xxx.
+
+\bibitem[Albahri et~al. 2022]{expert2022review}
+Albahri, O.~S., Albahri, A.~S., Mohammed, K.~I., Zaidan, A., Zaidan, B.~B.,
+  Hashim, M., Salman, O.~H., Alaa, M., and Alsalem, M.~A. (2022).
+\newblock Expert system research for prostate cancer: A literature review.
+\newblock {\em Computers in Biology and Medicine}, 145:105487.
+
+\bibitem[Ali et~al. 2023]{ali2023entropy}
+Ali, I., Khan, A., Khan, M., Ahmad, R., and Ullah, I. (2023).
+\newblock Shannon entropy in artificial intelligence and its applications based
+  on information theory.
+\newblock {\em Entropy}, 25(2):364.
+
+\bibitem[Alici-Karaca and Akay 2024]{alici2024efficient}
+Alici-Karaca, D. and Akay, B. (2024).
+\newblock An efficient deep learning model for prostate cancer diagnosis.
+\newblock {\em IEEE Access}, 12:150776--150790.
+
+\bibitem[Ara{\'u}jo et~al. 2021]{araujo2021active}
+Ara{\'u}jo, F.~H., Silva, R.~R., Medeiros, F.~N., Neto, J. F.~R., Oliveira, P.
+  H.~C., Bianchi, A. G.~C., and Ushizima, D. (2021).
+\newblock Active contours for overlapping cervical cell segmentation.
+\newblock {\em International Journal of Biomedical Engineering and Technology},
+  35(1):70--92.
+
+\bibitem[Baldi et~al. 2000]{baldi2000assessing}
+Baldi, P., Brunak, S., Chauvin, Y., Andersen, C. A.~F., and Nielsen, H. (2000).
+\newblock Assessing the accuracy of prediction algorithms for classification:
+  an overview.
+\newblock {\em Bioinformatics}, 16(5):412--424.
+
+\bibitem[Bray et~al. 2024]{JournalStatistic2024}
+Bray, F., Laversanne, M., Sung, H., Ferlay, J., Siegel, R.~L., Soerjomataram,
+  I., and Jemal, A. (2024).
+\newblock Global cancer statistics 2022: Globocan estimates of incidence and
+  mortality worldwide for 36 cancers in 185 countries.
+\newblock {\em CA: A Cancer Journal for Clinicians}, 74(3):229--263.
+
+\bibitem[Bulten et~al. 2020]{ref-bulten2020}
+Bulten, W., Pinckaers, H., van Boven, H., Vink, R., de~Bel, T., van Ginneken,
+  B., van~der Laak, J., Hulsbergen-van~de Kaa, C., and Litjens, G. (2020).
+\newblock Automated deep-learning system for {Gleason} grading of prostate
+  cancer using biopsies: a diagnostic study.
+\newblock {\em The Lancet Oncology}, 21(2):233--241.
+
+\bibitem[Campanella et~al. 2019]{ref-campanella2019}
+Campanella, G., Hanna, M.~G., Geneslaw, L., Miraflor, A., Silva, V. W.~K.,
+  Busam, K.~J., Brogi, E., Reuter, V.~E., Klimstra, D.~S., and Fuchs, T.~J.
+  (2019).
+\newblock Clinical-grade computational pathology using weakly supervised deep
+  learning on whole slide images.
+\newblock {\em Nature Medicine}, 25(9):1301--1309.
+
+\bibitem[Chen 2026]{CHEN2026235}
+Chen, X. (2026).
+\newblock A transfer learning-based deep focal multiclass network for
+  psychological emotion recognition in community-correction populations.
+\newblock {\em Alexandria Engineering Journal}, 135:235--242.
+
+\bibitem[Cohen 1968]{ref-cohen1968}
+Cohen, J. (1968).
+\newblock Weighted kappa: Nominal scale agreement with provision for scaled
+  disagreement or partial credit.
+\newblock {\em Psychological Bulletin}, 70(4):213--220.
+
+\bibitem[Dina et~al. 2023]{DINA2023100699}
+Dina, A.~S., Siddique, A., and Manivannan, D. (2023).
+\newblock A deep learning approach for intrusion detection in internet of
+  things using focal loss function.
+\newblock {\em Internet of Things}, 22:100699.
+
+\bibitem[Efron 1979]{efron1979bootstrap}
+Efron, B. (1979).
+\newblock Bootstrap methods: Another look at the jackknife.
+\newblock {\em The Annals of Statistics}, 7(1):1--26.
+
+\bibitem[Epstein et~al. 2016]{ref-epstein2016}
+Epstein, J.~I., Egevad, L., Amin, M.~B., Delahunt, B., Srigley, J.~R., and
+  Humphrey, P.~A. (2016).
+\newblock The 2014 {International Society of Urological Pathology (ISUP)}
+  consensus conference on gleason grading of prostatic carcinoma: Definition of
+  grading patterns and proposal for a new grading system.
+\newblock {\em The American Journal of Surgical Pathology}, 40(2):244--252.
+
+\bibitem[Kosoko et~al. 2024]{kosoko2024xai_prostate}
+Kosoko, I., Garg, A., Jain, S., and Hewage, P. (2024).
+\newblock Leveraging deep learning and explainable ai for diagnosis of prostate
+  cancer.
+\newblock In {\em Proceedings of the International Conference on Applied
+  Artificial Intelligence in Medical Imaging}, Bolton, United Kingdom.
+
+\bibitem[Lin et~al. 2017]{lin2017focal}
+Lin, T.-Y., Goyal, P., Girshick, R., He, K., and Doll{\'{a}}r, P. (2017).
+\newblock Focal loss for dense object detection.
+\newblock In {\em Proceedings of the IEEE International Conference on Computer
+  Vision (ICCV)}, pages 2980--2988.
+
+\bibitem[{PANDA Challenge} 2020]{ref-panda2020}
+{PANDA Challenge} (2020).
+\newblock Prostate {cANcer} grade assessment challenge.
+\newblock \url{https://www.kaggle.com/c/prostate-cancer-grade-assessment}.
+\newblock Accessed: 2024-01-01.
+
+\bibitem[Siegel et~al. 2024]{ref_siegel2024}
+Siegel, R.~L., Giaquinto, A.~N., and Jemal, A. (2024).
+\newblock Cancer statistics, 2024.
+\newblock {\em CA: A Cancer Journal for Clinicians}, 74(1):12--49.
+
+\bibitem[Xiang et~al. 2023]{Xiang2023Prostate}
+Xiang, J., Wang, X., Wang, X., Zhang, J., Yang, S., Yang, W., Han, X., and Liu,
+  Y. (2023).
+\newblock Automatic diagnosis and grading of prostate cancer with weakly
+  supervised learning on whole slide images.
+\newblock {\em Computers in Biology and Medicine}, 152:106340.
+
+\end{thebibliography}

@@ -1,0 +1,82 @@
+Os experimentos foram conduzidos em uma estação Linux com GPU RTX 3060, CPU AMD Ryzen 5 5600X e 32 GB de RAM DDR4, utilizando PyTorch, CUDA e OpenSlide.
+
+\subsection{Impacto da Remoção de Ruído e das Funções de Perda}
+
+A Tabela~\ref{tab:impacto_loss_expandido} apresenta a evolução incremental do desempenho da EfficientNet-B0. A remoção de ruído elevou o $\kappa_{\text{quad}}$ de $0{,}826$ para $0{,}833$. A substituição da BCE pela perda ordinal promoveu um salto para $0{,}851$, com o menor desvio padrão ($0{,}009$), indicando maior estabilidade. Por fim, a estratégia híbrida (Ordinal + Focal) resultou no melhor desempenho: $\kappa_{\text{quad}} = 0{,}856$ e acurácia de 66,9\%, ganho absoluto de 3\% em relação ao \textit{baseline}.
+
+\begin{table}[!htb]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{lcccccc}
+			\toprule
+			& \multicolumn{3}{c}{\textbf{Kappa Quadrático}} & \multicolumn{3}{c}{\textbf{Acurácia (\%)}} \\
+			\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+			\textbf{Configuração} & \textbf{Resultado} & \textbf{Std} & \textbf{IC 90\%} & \textbf{Resultado} & \textbf{Std} & \textbf{IC 90\%} \\
+			\midrule
+			BCE (\textit{baseline})
+			& 0,826 & 0,012 & [0,806; 0,846]
+			& 0,592 & 0,012 & [0,572; 0,612] \\
+			BCE + Remoção de Ruído
+			& 0,833 & 0,013 & [0,812; 0,853]
+			& 0,638 & 0,116 & [0,619; 0,657] \\
+			Perda Ordinal
+			& 0,851 & \textbf{0,009} & [0,833; 0,869]
+			& 0,608 & 0,126 & [0,587; 0,628] \\
+			\textbf{Ordinal + Focal (Híbrida)}
+			& \textbf{0,856} & 0,011 & [0,833; 0,876]
+			& \textbf{0,669} & 0,011 & [0,635; 0,683] \\
+			\bottomrule
+		\end{tabular}%
+	}
+	\caption{Impacto da função de perda no desempenho da EfficientNet-B0.}
+	\label{tab:impacto_loss_expandido}
+\end{table}
+
+\subsection{Comparação entre Arquiteturas EfficientNet}
+
+A mesma configuração foi aplicada às variantes B3 e B7 (Tabela~\ref{tab:comparacao_arquiteturas}). A EfficientNet-B0 apresentou o melhor desempenho, tanto em $\kappa_{\text{quad}}$ quanto em acurácia. As arquiteturas mais profundas não apresentaram ganho relevante, houve inclusive leve degradação, sugerindo que modelos com maior número de parâmetros requerem ajustes mais refinados ou conjuntos de dados maiores para atingir seu potencial. Assim, a B0 demonstrou o melhor equilíbrio entre desempenho, estabilidade e custo computacional.
+
+\begin{table}[h]
+\centering
+\resizebox{0.9\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+ & \multicolumn{3}{c}{\textbf{Kappa Quadrático}} & \multicolumn{3}{c}{\textbf{Acurácia (\%)}} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+\textbf{Arquitetura} & \textbf{Resultado} & \textbf{Std} & \textbf{IC 90\%} & \textbf{Resultado} & \textbf{Std} & \textbf{IC 90\%} \\
+\midrule
+\textbf{EfficientNet-B0} & \textbf{0,856} & 0,011 & [0,833; 0,876] & \textbf{0,669} & 0,119 & [0,635; 0,683] \\
+EfficientNet-B3          & 0,846 & 0,010 & [0,829; 0,861] & 0,659 & 0,125 & [0,554; 0,594] \\
+EfficientNet-B7          & 0,844 & 0,011 & [0,821; 0,865] & 0,602 & 0,112 & [0,578; 0,628] \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Comparação entre variantes da EfficientNet.}
+\label{tab:comparacao_arquiteturas}
+\end{table}
+
+Em termos clínicos, os modelos concentraram os erros entre classes adjacentes (especialmente ISUP 2-4), comportamento esperado em problemas de classificação ordinal e que confirma a eficácia da função de perda híbrida na preservação da hierarquia.
+
+\subsection{Comparação com o Estado da Arte}
+
+A Tabela~\ref{tab:comparacao_estado_arte} compara a abordagem proposta com trabalhos recentes. Embora \cite{Xiang2023Prostate} reporte $\kappa=0{,}931$ em validação interna, o desempenho cai para $0{,}801$ em validação externa. Nossa abordagem alcança $\kappa=0{,}856$ diretamente nos dados públicos ruidosos do PANDA, indicando maior robustez prática. O modelo proposto realiza a graduação completa dos seis níveis ISUP (0–5) e incorpora explicitamente a natureza ordinal da doença, diferenciando-se das abordagens binárias ou que utilizam funções de perda inadequadas.
+
+\begin{table}[htb]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{lllccl}
+			\toprule
+			\textbf{Trabalho} & \textbf{Base} & \textbf{Modelo} & \textbf{Tarefa} & \textbf{Acurácia} & \textbf{Kappa} \\
+			\midrule
+			\cite{Xiang2023Prostate} & PANDA & ResNet50 + GCN & ISUP (6 níveis) & — & 0,931 (Int.) / 0,801 (Ext.) \\
+			\cite{alici2024efficient} & DiagSet & EfficientNet-B4 + ECA & Binária / 4 classes & 0,961 / 0,948 & — \\
+			\cite{kosoko2024xai_prostate} & SICAPv2 & VGG19 & Escore de Gleason & 0,780 & — \\
+			\cite{afifi2024prostate} & PANDA & InceptionResNetV2 & Escore de Gleason & 0,918 & 0,608 \\
+			\midrule
+			\textbf{Proposta} & \textbf{PANDA} & \textbf{EfficientNet-B0 + Ordinal Focal} & \textbf{ISUP (6 níveis)} & \textbf{0,669} & \textbf{0,856} \\
+			\bottomrule
+		\end{tabular}%
+	}
+	\caption{Comparação com trabalhos da literatura.}
+	\label{tab:comparacao_estado_arte}
+\end{table}

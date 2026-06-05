@@ -2,7 +2,6 @@ import numpy as np
 import torch.nn.functional as F
 import torch
 import torch.nn as nn
-import efficientnet_pytorch as efficientnet_model
 from torchvision.models.efficientnet import EfficientNet as EfficientNetPytorch
 from torchvision.models.convnext import ConvNeXt as ConvNeXtPytorch
 from typing import List, Literal, Optional
@@ -72,65 +71,197 @@ class EfficientNetApiA(nn.Module):
         return x
 
 
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from efficientnet_pytorch import EfficientNet as EfficientNetPytorch
+from typing import Literal
 
-class EfficientNetMIL(nn.Module):
+
+# ─────────────────────────────────────────────
+# Módulo de atenção isolado e reutilizável
+# ─────────────────────────────────────────────
+class GatedAttention(nn.Module):
+    """
+    Gated Attention Mechanism (Ilse et al., 2018).
+
+    A(h) = softmax( W · tanh(V·h) ⊙ sigmoid(U·h) )
+
+    A atenção padrão usa só tanh; a versão "gated" adiciona
+    um sigmoid como portão multiplicativo, permitindo que a
+    rede suprima patches irrelevantes de forma mais seletiva.
+
+    Args:
+        in_features:  dimensão da feature de entrada.
+        hidden_dim:   dimensão da camada interna.
+        gated:        se False, usa tanh simples (ablation).
+        dropout_rate: dropout aplicado às features antes da atenção.
+    """
+
     def __init__(
-        self,
-        model: EfficientNetPytorch,
-        output_classes: int,
-        fine_tune=100,
-        dropout_rate=0.4
+            self,
+            in_features: int,
+            hidden_dim: int = 512,
+            gated: bool = True,
+            dropout_rate: float = 0.25,
     ):
-        super(EfficientNetMIL, self).__init__()
-        self.dropout_rate = dropout_rate
+        super().__init__()
+        self.gated = gated
 
-        # Congela as primeiras camadas
-        for param in list(model.parameters())[:-fine_tune]:
+        self.V = nn.Sequential(nn.Dropout(dropout_rate), nn.Linear(in_features, hidden_dim))
+        self.U = nn.Sequential(nn.Dropout(dropout_rate), nn.Linear(in_features, hidden_dim)) if gated else None
+        self.W = nn.Linear(hidden_dim, 1, bias=False)
+
+    def forward(self, features: torch.Tensor, mask: torch.Tensor | None = None) -> torch.Tensor:
+        """
+        Args:
+            features: (B, N, D)
+            mask:     (B, N)  — 1 = patch real, 0 = padding
+
+        Returns:
+            attn_weights: (B, N, 1)  softmax já aplicado
+        """
+        h_tanh = torch.tanh(self.V(features))  # (B, N, H)
+
+        if self.gated and self.U is not None:
+            h_sig = torch.sigmoid(self.U(features))  # (B, N, H)
+            h = h_tanh * h_sig
+        else:
+            h = h_tanh
+
+        logits = self.W(h)  # (B, N, 1)
+
+        # Mascara patches de padding com -inf antes do softmax
+        if mask is not None:
+            pad_mask = (mask == 0).unsqueeze(-1)  # (B, N, 1)
+            logits = logits.masked_fill(pad_mask, float("-inf"))
+
+        attn_weights = F.softmax(logits, dim=1)  # (B, N, 1)
+        return attn_weights
+
+
+# ─────────────────────────────────────────────
+# Modelo principal
+# ─────────────────────────────────────────────
+class EfficientNetMIL(nn.Module):
+    """
+    EfficientNet + Multiple Instance Learning com Gated Attention.
+
+    Args:
+        model:          backbone EfficientNet (efficientnet-pytorch).
+        output_classes: número de saídas (ordinal encoding → num_classes).
+        fine_tune:      quantos parâmetros (do fim) ficam treináveis.
+        dropout_rate:   dropout no classificador e na atenção.
+        hidden_dim:     dimensão da camada oculta da atenção.
+        gated:          usa Gated Attention se True.
+        pool:           'att' = attention pooling | 'mean' = mean pooling (baseline).
+    """
+
+    def __init__(
+            self,
+            model: EfficientNetPytorch,
+            output_classes: int,
+            fine_tune: int = 100,
+            dropout_rate: float = 0.4,
+            hidden_dim: int = 512,
+            gated: bool = True,
+            pool: Literal["att", "mean"] = "att",
+    ):
+        super().__init__()
+        self.pool = pool
+
+        # ── Congela backbone parcialmente ───────────────────────────
+        all_params = list(model.parameters())
+        for param in all_params[:-fine_tune]:
             param.requires_grad = False
 
-        in_features = model.classifier[1].in_features
-
-        # Remove a cabeça de classificação
+        # ── Remove cabeça de classificação ──────────────────────────
+        in_features: int = model.classifier[1].in_features
         model.classifier[1] = nn.Identity()
         self.feature_extractor = model
 
-        # Attention Network
-        self.attention = nn.Sequential(
-            nn.Linear(in_features, 512),
-            nn.Tanh(),
-            nn.Linear(512, 1)
-        )
+        # ── Normalização de features (estabiliza treino) ─────────────
+        self.feat_norm = nn.LayerNorm(in_features)
 
-        # Classifier
+        # ── Attention pooling ────────────────────────────────────────
+        if pool == "att":
+            self.attention = GatedAttention(
+                in_features=in_features,
+                hidden_dim=hidden_dim,
+                gated=gated,
+                dropout_rate=dropout_rate,
+            )
+
+        # ── Cabeça de classificação ──────────────────────────────────
         self.classifier = nn.Sequential(
+            nn.LayerNorm(in_features),
             nn.Dropout(dropout_rate),
-            nn.Linear(in_features, output_classes)
+            nn.Linear(in_features, output_classes),
         )
 
-    def extract(self, x):
-        """Extrai features de todos os patches"""
+    # ── helpers ─────────────────────────────────────────────────────
+    def extract(self, x: torch.Tensor) -> torch.Tensor:
+        """Extrai features de um batch de patches (B*N, C, H, W) → (B*N, D)."""
         return self.feature_extractor(x)
 
-    def forward(self, x):
-        b, n, C, H, W = x.size()
+    def _pool(self, features: torch.Tensor, mask: torch.Tensor | None) -> tuple[torch.Tensor, torch.Tensor | None]:
+        """
+        Agrega patches → representação da bag.
 
-        # Processa todos os patches de uma vez
-        x = x.view(b * n, C, H, W)
-        features = self.extract(x)           # (b*n, in_features)
-        features = features.view(b, n, -1)   # (b, n, in_features)
+        Returns:
+            bag:          (B, D)
+            attn_weights: (B, N, 1) ou None se pool='mean'
+        """
+        if self.pool == "att":
+            attn_weights = self.attention(features, mask)  # (B, N, 1)
+            bag = torch.sum(attn_weights * features, dim=1)  # (B, D)
+            return bag, attn_weights
 
-        # Atenção sobre os patches
-        attn_weights = self.attention(features)              # (b, n, 1)
-        attn_weights = F.softmax(attn_weights, dim=1)
+        # mean pooling com máscara
+        if mask is not None:
+            m = mask.unsqueeze(-1).float()  # (B, N, 1)
+            bag = (features * m).sum(dim=1) / m.sum(dim=1).clamp(min=1)
+        else:
+            bag = features.mean(dim=1)
+        return bag, None
 
-        # Agregação ponderada
-        bag = torch.sum(attn_weights * features, dim=1)     # (b, in_features)
+    # ── forward ─────────────────────────────────────────────────────
+    def forward(
+            self,
+            x: torch.Tensor,
+            mask: torch.Tensor | None = None,
+    ) -> dict[str, torch.Tensor]:
+        """
+        Args:
+            x:    (B, N, C, H, W)
+            mask: (B, N)  — 1 = real, 0 = padding  ← USE SEMPRE
 
-        # Classificação
-        logits = self.classifier(bag)                        # (b, output_classes)
-        return logits
+        Returns:
+            dict com:
+              'logits':  (B, output_classes)
+              'attn':    (B, N, 1) ou None
+              'features': (B, D)  — útil para visualização / probing
+        """
+        B, N, C, H, W = x.size()
+
+        # ── Extração de features ─────────────────────────────────────
+        x_flat = x.view(B * N, C, H, W)
+        feats = self.extract(x_flat)  # (B*N, D)
+        feats = feats.view(B, N, -1)  # (B, N, D)
+        feats = self.feat_norm(feats)  # normaliza por patch
+
+        # ── Pooling ──────────────────────────────────────────────────
+        bag, attn_weights = self._pool(feats, mask)  # (B, D)
+
+        # ── Classificação ────────────────────────────────────────────
+        logits = self.classifier(bag)  # (B, output_classes)
+
+        return {
+            "logits": logits,
+            "attn": attn_weights,
+            "features": bag,
+        }
         
-import torch
 import torch.nn as nn
 
 

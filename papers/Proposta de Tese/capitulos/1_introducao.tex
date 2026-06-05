@@ -1,0 +1,49 @@
+\chapter{Introdução}
+\label{cap:introducao}
+
+O câncer de próstata é uma das neoplasias malignas mais comuns em homens, representando um desafio significativo para a saúde pública \cite{ref_siegel2024}. Estatísticas coletadas pela \textit{International Agency for Research on Cancer} (IARC) indicam que, em 2022, essa neoplasia foi a quarta mais comum no mundo, correspondendo a 7,3\% de todos os casos de câncer \cite{JournalStatistic2024}. A graduação tumoral desempenha papel central na definição do manejo clínico e do prognóstico. O sistema de \textit{Gleason}, baseado na soma dos dois padrões histológicos predominantes, evoluiu para o sistema de graduação da \textit{International Society of Urological Pathology} (ISUP), que propõe uma classificação em cinco grupos prognósticos (1-5), com o objetivo de padronizar a interpretação dos escores de Gleason e melhorar a estratificação clínica \cite{ref-epstein2016}.
+
+A avaliação histopatológica tradicional de imagens de lâminas inteiras (\textit{Whole-Slide Images} - WSIs) depende da análise manual realizada por patologistas, sendo um processo sujeito à variabilidade inter e intraobservador~\cite{ref-bulten2020}, além de demandar tempo e elevada especialização. Essas limitações têm impulsionado o desenvolvimento de métodos automatizados baseados em inteligência artificial, particularmente em aprendizado profundo, para apoiar a análise diagnóstica.
+
+Em \cite{expert2022review}, os autores realizaram uma revisão sistemática da literatura, que demonstrou um crescimento expressivo no uso de inteligência artificial na análise do câncer de próstata, evidenciando que as imagens médicas constituem a principal fonte de dados explorada, presente em mais da metade dos estudos investigados. Entre as abordagens predominantes, destacam-se técnicas de aprendizado profundo, de aprendizado de máquina e de \textit{Convolucional Networks} (CNNs), aplicadas principalmente a tarefas de diagnóstico e classificação, com menor exploração em aplicações terapêuticas. De forma geral, os resultados indicam que sistemas baseados em Inteligência Artificial (IA) contribuem para reduzir a subjetividade diagnóstica, lidar com grandes volumes de dados e auxiliar especialistas na interpretação de exames clínicos e histopatológicos, reforçando o potencial dessas técnicas como ferramentas de apoio à decisão clínica.
+
+Nesse contexto, CNNs têm apresentado desempenho destacado na análise de imagens médicas \cite{ref-campanella2019}, incluindo a graduação automatizada de padrões de Gleason e de graus ISUP \cite{ref-nagpal2019,ref-bulten2020}. Entre as arquiteturas modernas, a família EfficientNet \cite{ref-tan2019} oferece um equilíbrio favorável entre acurácia e custo computacional por meio da estratégia de \textit{compound scaling} e do uso de blocos MBConv com mecanismos de \textit{squeeze-and-excitation} \cite{ref-hu2018}. Tais características tornam essas arquiteturas particularmente adequadas para tarefas envolvendo imagens histopatológicas de alta resolução.
+
+Neste trabalho, investigamos a classificação automatizada dos graus ISUP por meio da avaliação de variantes da EfficientNet (B0, B3 e B7) no conjunto de dados PANDA \cite{ref-panda2020}. São empregadas técnicas de \textit{transfer learning}, estratégias de \textit{fine-tuning}, técnicas avançadas de treinamento e métodos de \textit{ensemble} para aumentar a robustez, a estabilidade e o desempenho dos modelos propostos.
+
+\section{Objetivo Geral}
+\label{sec:objetivo-geral}
+
+Investigar e avaliar métodos de aprendizado profundo para a classificação automatizada dos graus ISUP em câncer de próstata, utilizando variantes da arquitetura EfficientNet, com foco no aprimoramento da robustez, da estabilidade e do desempenho dos modelos.
+
+\section{Objetivos Específicos}
+\label{sec:objetivos-especificos}
+
+Para alcançar o objetivo geral deste trabalho, faz-se necessário atingir os seguintes objetivos específicos:
+
+\begin{itemize}
+	\item Propor e implementar uma função de perda híbrida denominada \textit{Ordinal Focal Regression Loss}, que combine regressão ordinal e \textit{Focal Loss}, explorando explicitamente a natureza hierárquica dos graus ISUP e mitigando o desbalanceamento entre classes presente no conjunto de dados PANDA;
+	\item Desenvolver um método de filtragem de amostras ruidosas baseado na entropia de Shannon, utilizando um \textit{ensemble} de modelos EfficientNet para identificar e remover instâncias de alta incerteza preditiva do conjunto de treinamento, melhorando a estabilidade e a capacidade de generalização dos modelos;
+	\item Realizar uma análise sistemática e comparativa do desempenho das variantes EfficientNet-B0, B3 e B7 na tarefa de classificação dos graus ISUP;
+	\item Propor e avaliar estratégias de \textit{ensemble} as variantes EfficientNet, investigando diferentes métodos de combinação;
+	
+	\item Avaliar o desempenho dos modelos propostos por meio do Coeficiente Kappa Quadrático Ponderado, em conjunto com a acurácia e intervalos de confiança estimados via \textit{bootstrap} não paramétrico, garantindo a confiabilidade 
+	estatística dos resultados obtidos.
+\end{itemize}
+
+\section{Organização do Trabalho}
+\label{sec:organizacao-do-trabalho}
+
+Os demais capítulos deste trabalho estão organizados da seguinte forma:
+
+\begin{itemize}
+	\item O Capítulo \ref{cap:trabalhos-relacionados} apresenta uma revisão dos principais trabalhos relacionados à classificação automatizada do câncer de próstata por meio de técnicas de aprendizagem profunda;
+	
+	\item O Capítulo \ref{cap:fundamentacao-teorica} aborda os conceitos teóricos fundamentais que servem de base para o desenvolvimento desta pesquisa;
+	
+	\item O Capítulo \ref{cap:materiais-metodo} descreve os materiais utilizados e as etapas do método proposto;
+	
+	\item O Capítulo \ref{cap:resultados} apresenta os resultados experimentais obtidos;
+	
+	\item Por fim, o Capítulo \ref{cap:conclusao} apresenta as conclusões do trabalho, destacando as principais contribuições e as diretrizes propostas para pesquisas futuras.
+\end{itemize}

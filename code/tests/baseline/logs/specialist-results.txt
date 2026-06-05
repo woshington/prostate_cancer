@@ -1,0 +1,47 @@
+Ordinal-Best + Specialist Cascade Results
+======================================================================
+
+Confused pairs trained: [(3, 4), (4, 5)]
+
+BASE MODEL (ordinal-best)
+----------------------------------------
+accuracy             mean=0.7136  std=0.0112  95%CI=[0.6956, 0.7315]
+kappa                mean=0.8754  std=0.0112  95%CI=[0.8568, 0.8926]
+f1_macro             mean=0.6622  std=0.0124  95%CI=[0.6423, 0.6824]
+recall_macro         mean=0.6576  std=0.0124  95%CI=[0.6373, 0.6785]
+precision_macro      mean=0.6753  std=0.0123  95%CI=[0.6557, 0.6952]
+mean_error           mean=0.3873  std=0.0190  95%CI=[0.3566, 0.4182]
+
+CASCADE MODEL (base + specialists)
+----------------------------------------
+accuracy             mean=0.7132  std=0.0113  95%CI=[0.6956, 0.7315]
+kappa                mean=0.8721  std=0.0110  95%CI=[0.8537, 0.8893]
+f1_macro             mean=0.6592  std=0.0125  95%CI=[0.6387, 0.6793]
+recall_macro         mean=0.6572  std=0.0125  95%CI=[0.6367, 0.6784]
+precision_macro      mean=0.6629  std=0.0128  95%CI=[0.6423, 0.6838]
+mean_error           mean=0.3984  std=0.0194  95%CI=[0.3679, 0.4308]
+
+Delta Kappa : -0.0033
+Delta F1    : -0.0030
+
+Per-class diagonal:
+  ISUP 0: base=0.899  cascade=0.922  delta=+0.023
+  ISUP 1: base=0.708  cascade=0.772  delta=+0.065
+  ISUP 2: base=0.440  cascade=0.535  delta=+0.095
+  ISUP 3: base=0.400  cascade=0.524  delta=+0.124
+  ISUP 4: base=0.658  cascade=0.604  delta=-0.053
+  ISUP 5: base=0.576  cascade=0.630  delta=+0.054
+
+Classification Report — Cascade:
+              precision    recall  f1-score   support
+
+      ISUP 0     0.8658    0.9217    0.8929       434
+      ISUP 1     0.7630    0.7725    0.7677       400
+      ISUP 2     0.5632    0.5350    0.5487       200
+      ISUP 3     0.5174    0.4811    0.4986       185
+      ISUP 4     0.5769    0.5615    0.5691       187
+      ISUP 5     0.6927    0.6739    0.6832       184
+
+    accuracy                         0.7132      1590
+   macro avg     0.6632    0.6576    0.6600      1590
+weighted avg     0.7073    0.7132    0.7099      1590

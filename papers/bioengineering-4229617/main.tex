@@ -1,0 +1,195 @@
+\documentclass[journal,article,submit,pdftex,moreauthors]{Definitions/mdpi} 
+\usepackage{comment}
+\firstpage{1} 
+\makeatletter 
+\setcounter{page}{\@firstpage} 
+\makeatother
+\pubvolume{1}
+\issuenum{1}
+\articlenumber{0}
+\pubyear{2025}
+\copyrightyear{2025}
+
+\datereceived{ } 
+\daterevised{ } % Comment out if no revised date
+\dateaccepted{ } 
+\datepublished{ } 
+
+\hreflink{https://doi.org/}
+
+% Full title of the paper (Capitalized)
+\Title{Automatic ISUP Grade Classification in Prostate Histopathological Images Using EfficientNet and Ordinal Focal Loss}
+
+% MDPI internal command: Title for citation in the left column
+\TitleCitation{Automatic ISUP Grade Classification in Prostate Histopathological Images Using EfficientNet and Ordinal Focal Loss}
+
+\newcommand{\orcidauthorA}{0009-0005-7569-2237} % Add \orcidA{} behind the author's name
+\newcommand{\orcidauthorB}{0000-0002-9955-7401} % Add \orcidB{} behind the author's name
+\newcommand{\orcidauthorC}{0000-0002-1416-9013}
+\newcommand{\orcidauthorD}{0000-0003-3303-3346}
+\newcommand{\orcidauthorE}{0000-0001-9241-1277}
+
+% Authors, for the paper (add full first names)
+\Author{Woshington Rodrigues $^{1}$*\orcidA{}, Armando Luz $^{2}$\orcidB{}, José Araújo $^{3}$\orcidC{}, João Diniz $^{4}$\orcidD{} and Antonio Filho $^{5,}$\orcidE{}}
+
+
+\AuthorNames{Woshington Rodrigues, Armando Luz, José Araújo, João [Sobrenome do João] and Antonio Filho}
+
+% Author citation:  
+\AuthorCitation{Rodrigues, W.; Luz, A.; Araújo, J.; Diniz, J.; Filho, A.}
+
+\address{%
+	$^{1}$ \quad Universidade Federal do Piauí (UFPI); woshingtonvaldeci@gmail.com \\
+	$^{2}$ \quad Universidade Federal do Piauí (UFPI); armandoluzborges@ufpi.edu.br \\
+	$^{3}$ \quad Universidade Federal do Piauí (UFPI); jose.denes@ufpi.edu.br \\
+	$^{4}$ \quad Instituto Federal do Maranhão (IFMA); joao.bandeira@ifma.edu.br \\
+	$^{5}$ \quad Universidade Federal do Piauí (UFPI); antoniooseas@ufpi.edu.br
+}
+	
+
+
+% Contact information of the corresponding author
+\corres{Correspondence: woshingtonvaldeci@gmail.com;}
+
+% Current address and/or shared authorship
+%\firstnote{Current address: Affiliation.}  
+% Current address should not be the same as any items in the Affiliation section.
+
+%\secondnote{These authors contributed equally to this work.}
+% The commands \thirdnote{} till \eighthnote{} are available for further notes.
+
+%\simplesumm{} % Simple summary
+
+%\conference{} % An extended version of a conference paper
+
+% Abstract (Do not insert blank lines, i.e. \\) 
+\abstract{The automatic classification of ISUP grade groups in prostate histopathological images is a challenging problem due to high similarity between adjacent classes, dataset imbalance, and label noise. This work proposes a pipeline based on EfficientNet convolutional neural networks combined with a hybrid loss function that integrates ordinal regression and Focal Loss. Initially, a noise-filtering strategy based on the entropy of predictions from multiple EfficientNet models was applied, thereby identifying samples with high uncertainty in the training set. Subsequently, the problem was modeled as an ordinal regression task to capture the hierarchical relationship among ISUP grades. The experiments were conducted using the PANDA dataset. The results demonstrate that removing noisy samples improved the baseline model's performance from $\kappa = 0.826$ to $\kappa = 0.833$. Using an ordinal loss further improved performance, yielding $\kappa = 0.851$. The best configuration, combining ordinal loss and focal Loss, achieved $\kappa = 0.857$ and an accuracy of $0.669$, while also reducing errors between distant classes and concentrating confusions among adjacent grades.}
+
+% Keywords
+\keyword{Prostate cancer; Histopathological image classification; EfficientNet; Ordinal regression; Focal loss; Digital pathology; PANDA dataset}
+
+% The fields PACS, MSC, and JEL may be left empty or commented out if not applicable
+%\PACS{J0101}
+%\MSC{}
+%\JEL{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Diversity
+%\LSID{\url{http://}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Applied Sciences
+%\featuredapplication{Authors are encouraged to provide a concise description of the specific application or a potential application of the work. This section is not mandatory.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Data
+%\dataset{DOI number or link to the deposited data set if the data set is published separately. If the data set shall be published as a supplement to this paper, this field will be filled by the journal editors. In this case, please submit the data set as a supplement.}
+%\datasetlicense{License under which the data set is made available (CC0, CC-BY, CC-BY-SA, CC-BY-NC, etc.)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal BioTech, Fishes, Neuroimaging and Toxins
+%\keycontribution{The breakthroughs or highlights of the manuscript. Authors can write one or two sentences to describe the most important part of the paper.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Encyclopedia
+%\encyclopediadef{For entry manuscripts only: please provide a brief overview of the entry title instead of an abstract.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Different journals have different requirements. Please check the specific journal guidelines in the "Instructions for Authors" on the journal's official website.
+%\addhighlights{yes}
+%\renewcommand{\addhighlights}{%
+%
+%\noindent The goal is to increase the discoverability and readability of the article via search engines and other scholars. Highlights should not be a copy of the abstract, but a simple text allowing the reader to quickly and simplified find out what the article is about and what can be cited from it. Each of these parts should be devoted up to 2~bullet points.\vspace{3pt}\\
+%\textbf{What are the main findings?}
+% \begin{itemize}[labelsep=2.5mm,topsep=-3pt]
+% \item First bullet.
+% \item Second bullet.
+% \end{itemize}\vspace{3pt}
+%\textbf{What is the implication of the main finding?}
+% \begin{itemize}[labelsep=2.5mm,topsep=-3pt]
+% \item First bullet.
+% \item Second bullet.
+% \end{itemize}
+%}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+
+\section{Introduction}
+\label{sec:intro}
+\input{introduction}
+
+\section{Materials and Methods}
+\label{sec:method}
+\input{method}
+
+\section{Results}
+\label{sec:results}
+\input{results}
+
+\section{Discussion}
+\label{sec:discussion}
+\input{discussion}
+
+\section{Conclusion}
+\label{sec:conclusion}
+\input{conclusion}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\authorcontributions{Conceptualization, W.R.; methodology, W.R. and A.L.; investigation, W.R.; writing-original draft preparation, W.R. and A.L.; writing-review and editing, J.D.; supervision, J.A. and A.F. All authors have read and agreed to the published version of the manuscript.}
+
+\funding{This research received no external funding.}
+
+\institutionalreview{Not applicable.}
+
+\informedconsent{Not applicable.}
+
+
+\dataavailability{Publicly available datasets were analyzed in this study. The data presented in this study are openly available in the PANDA Challenge dataset at \url{https://www.kaggle.com/c/prostate-cancer-grade-assessment} (accessed on 13 March 2026). All processed results and model configurations used for analysis are available from the corresponding author upon reasonable request.}
+
+
+\acknowledgments{During the preparation of this manuscript, the authors used Gemini for the purposes of English language editing and text formatting. The authors have reviewed and edited the output and take full responsibility for the content of this publication.}
+
+\conflictsofinterest{The authors declare no conflict of interest.}
+
+
+\abbreviations{Abbreviations}{
+The following abbreviations are used in this manuscript:
+\\
+
+\noindent 
+\begin{tabular}{@{}ll}
+ISUP & International Society of Urological Pathology \\
+WSI & Whole Slide Image \\
+CNN & Convolutional Neural Network \\
+GCN & Graph Convolutional Network \\
+AI & Artificial Intelligence\\
+BCE & Binary Cross Entropy\\
+GG & Grade Group \\
+PANDA & Prostate Cancer Grade Assessment \\
+ViT & Vision Transformers \\
+
+\end{tabular}
+}
+
+\begin{adjustwidth}{-\extralength}{0cm}
+%} % If the paper is ``preprints'', please uncomment this parenthesis.
+%\printendnotes[custom] % Un-comment to print a list of endnotes
+
+\reftitle{References}
+
+
+% ACS format
+\begin{thebibliography}{999}
+\input{lib}
+\end{thebibliography}
+
+\PublishersNote{}
+%\isPreprints{}{% This command is only used for ``preprints''.
+\end{adjustwidth}
+%} % If the paper is ``preprints'', please uncomment this parenthesis.
+\end{document}

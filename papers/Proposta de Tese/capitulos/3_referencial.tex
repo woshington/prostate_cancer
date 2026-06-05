@@ -1,0 +1,415 @@
+\chapter{Fundamentação Teórica}
+\label{cap:fundamentacao-teorica}
+
+Este capítulo apresenta o embasamento teórico necessário à compreensão dos conceitos explorados neste trabalho. Inicialmente, abordam-se os aspectos clínicos e histopatológicos do câncer de próstata, com foco no sistema de graduação de Gleason. Em seguida, descreve-se a evolução da Inteligência Artificial (IA) e do \textit{Deep Learning} no contexto da Patologia Digital, destacando como essas tecnologias transformaram a análise de lâminas histológicas. Adicionalmente, detalha-se a arquitetura \textit{EfficientNet}, selecionada por sua eficácia no equilíbrio entre profundidade, largura e resolução na classificação de imagens médicas. Por fim, apresenta-se o conceito de Regressão Ordinal, uma abordagem estatística e computacional fundamental para problemas de classificação em que as categorias possuem uma ordem intrínseca de gravidade, como é o caso dos graus histopatológicos do câncer de próstata. 
+
+\section{Câncer de Próstata}
+
+A próstata é um órgão do sistema reprodutor masculino, localizado inferiormente à bexiga e circundando a uretra proximal, conforme ilustrado na Figura \ref{fig:prostategland}. Anatomicamente, encontra-se próxima às vesículas seminais e aos ductos ejaculatórios. Sua principal função biológica consiste na produção e secreção de fluidos que compõem o sêmen, contribuindo para a nutrição, a proteção e a viabilidade dos espermatozoides \cite{rebello2021prostate}. Alterações genéticas nas células epiteliais prostáticas podem levar à perda do controle do ciclo celular, resultando em proliferação celular desordenada e no desenvolvimento do câncer de próstata \cite{rebello2021prostate}.	
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1\linewidth]{figuras/prostate_gland}
+	\caption[Glândula Prostática]{
+		Localização da Glândula Prostática \\
+		Fonte: Adaptado de \cite{nci2024prostate}
+	}
+	\label{fig:prostategland}
+\end{figure}
+
+Globalmente, o câncer de próstata permanece como a segunda neoplasia maligna mais diagnosticada entre homens e a quinta principal causa de morte por câncer no mundo, apresentando uma incidência que varia substancialmente entre diferentes regiões geográficas \cite{rawla2019epidemiology}. Essa variabilidade reflete uma complexa interação entre predisposição genética, fatores ambientais, estilo de vida e condições socioeconômicas \cite{bergengren2023update}.
+
+Diversos fatores de risco têm sido associados ao desenvolvimento do câncer de próstata. Entre os mais bem estabelecidos, destacam-se a idade avançada, o histórico familiar positivo e os fatores genéticos. Além desses, outros fatores relacionados ao estilo de vida, como obesidade, padrões alimentares e níveis reduzidos de atividade física, também têm sido investigados como potenciais contribuintes para o desenvolvimento e progressão da doença \cite{bergengren2023update,perdana2016}. 
+
+A Tabela \ref{tab:risk_factors_prostate} apresenta um resumo dos principais fatores de risco associados ao câncer de próstata descritos na literatura, incluindo fatores demográficos, genéticos, comportamentais e ambientais.
+
+\begin{table}[h]
+	\centering
+	\caption{Principais fatores de risco associados ao câncer de próstata}
+	\label{tab:risk_factors_prostate}
+	\begin{tabular}{lp{10cm}}
+		\hline
+		\textbf{Fator de risco} & \textbf{Descrição} \\
+		\hline
+		
+		Idade & O risco aumenta significativamente após os 50 anos, sendo mais comum em homens acima de 65 anos. \\
+		
+		\hline
+		
+		Histórico familiar & Homens com parentes de primeiro grau com câncer de próstata apresentam maior risco de desenvolver a doença. \\
+		
+		\hline
+		
+		Fatores genéticos & Mutações em genes como \textit{BRCA1}, \textit{BRCA2} e \textit{HOXB13} estão associadas ao aumento do risco. \\
+		
+		\hline
+		
+		Etnia & Homens afrodescendentes apresentam maior incidência e mortalidade pela doença. \\
+		
+		\hline
+		
+		Obesidade & Associada a formas mais agressivas do câncer de próstata e a pior prognóstico clínico. \\
+		
+		\hline
+		
+		Dieta & Dietas ricas em gordura animal e pobres em frutas, vegetais e fibras podem aumentar o risco. \\
+		
+		\hline
+		
+		Sedentarismo & A baixa prática de atividade física pode contribuir para alterações metabólicas associadas ao desenvolvimento da doença. \\
+		
+		\hline
+		
+		Exposição ocupacional & Exposição a pesticidas ou outras substâncias químicas podem aumentar o risco em determinadas populações. \\
+		
+		\hline
+		
+	\end{tabular}
+\end{table}
+
+%Entre os fatores de risco não modificáveis mais bem estabelecidos destacam-se a idade avançada (especialmente acima de 65 anos), a ancestralidade africana e o histórico familiar positivo.
+
+Do ponto de vista anatômico e clínico, a localização tumoral na próstata constitui um importante fator prognóstico. Aproximadamente 70-80\% dos carcinomas prostáticos originam-se na zona periférica, região que pode ser acessada por meio do exame de toque retal, permitindo a identificação de alterações suspeitas durante a avaliação clínica. Em contraste, tumores originados na zona de transição ou na zona central são menos frequentes \cite{hammerich_anatomy}. O adenocarcinoma acinar, principal subtipo histológico da doença, caracteriza-se por evolução lenta e frequentemente assintomática em estágios iniciais. Com a progressão tumoral e eventual comprometimento da uretra prostática ou do colo vesical, podem surgir sintomas urinários obstrutivos ou irritativos, que frequentemente se sobrepõem às manifestações clínicas da hiperplasia prostática benigna (HPB), dificultando a distinção clínica entre essas condições \cite{crawford2003epidemiology, rawla2019epidemiology}.
+
+O diagnóstico do câncer de próstata baseia-se tradicionalmente na combinação entre a dosagem sérica do \textit{Prostate Specific Antigen} (PSA), o exame de toque retal e a confirmação histopatológica por biópsia prostática. 
+
+\subsection{Biópsia da Próstata}
+
+A biópsia prostática é o exame padrão para confirmar o câncer de próstata, pois permite a análise histopatológica do tecido suspeito. O procedimento é geralmente realizado com auxílio da ultrassonografia transretal (\textit{Transrectal Ultrasound} - TRUS), que permite a visualização da próstata em tempo real e o direcionamento preciso da agulha de coleta \cite{matlaga2003prostate}. Na Figura \ref{fig:ultrasom} pode-se visualizar uma ilustração do procedimento.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figuras/ultrasom.jpg}
+	\caption{
+		Ilustração de biópsia com auxílio de TRUS. \\ 
+		Fonte: \cite{neumaier2023biopsia}.
+	}
+	\label{fig:ultrasom}
+\end{figure}
+
+A indicação da biópsia baseia-se principalmente em níveis elevados de PSA e em alterações detectadas no exame de toque retal. Embora valores de PSA acima de 4,0 ng/ml sejam tradicionalmente utilizados como referência para investigação, níveis entre 2,5 e 4,0 ng/ml também podem justificar a realização do procedimento em determinados pacientes \cite{matlaga2003prostate}.
+
+Durante o procedimento, são coletados pequenos fragmentos de tecido prostático, denominados \textit{cores}. Inicialmente, utilizava-se o protocolo de sextante, que coletava seis fragmentos da glândula. Entretanto, devido à possibilidade de resultados falso-negativos, protocolos estendidos passaram a ser adotados, com a coleta sistemática de 10 a 12 fragmentos distribuídos nas regiões base, média e ápice da próstata \cite{matlaga2003prostate}. Esses fragmentos são posteriormente analisados por patologistas para identificar a presença de carcinoma.
+
+
+\section{Sistema de Graduação Gleason}
+A avaliação histopatológica desempenha papel central no manejo clínico do câncer de próstata, uma vez que o grau de diferenciação tumoral está diretamente associado ao prognóstico da doença e à escolha da estratégia terapêutica. Nesse contexto, o sistema de graduação de Gleason é um dos métodos mais amplamente utilizados para caracterizar a agressividade do adenocarcinoma prostático \cite{ref-epstein2016}.
+
+O sistema de Gleason foi originalmente desenvolvido nas décadas de 1960 e 1970 pelo patologista Dr. Donald Gleason, com base em um estudo prospectivo conduzido pela \textit{Veterans Administration} nos Estados Unidos, envolvendo mais de 2.900 pacientes. O objetivo do estudo era investigar a relação entre os padrões arquiteturais de crescimento do adenocarcinoma prostático, o estágio clínico da doença e os desfechos prognósticos observados nos pacientes. Os resultados desse trabalho fundamentaram a criação do sistema de classificação que posteriormente foi incorporado às classificações oficiais da Organização Mundial da Saúde (OMS) \cite{chen2016}.
+
+O modelo clássico descreve cinco padrões histológicos arquiteturais distintos, numerados de 1 a 5, que correspondem a diferentes níveis de diferenciação tumoral. O padrão 1 corresponde a tumores altamente diferenciados, geralmente associados a melhor prognóstico, enquanto o padrão 5 representa neoplasias pouco diferenciadas e de comportamento biológico mais agressivo. Como tumores prostáticos frequentemente apresentam heterogeneidade morfológica, foi introduzido o escore de Gleason, obtido pela soma dos dois padrões histológicos mais prevalentes observados na amostra tumoral (por exemplo, 3+4=7). Essa abordagem demonstrou maior correlação com o comportamento biológico do tumor e com os desfechos clínicos quando comparada à avaliação isolada de um único padrão histológico \cite{chen2016}.
+
+Na descrição original, o padrão 1 era caracterizado por glândulas pequenas, uniformes e bem delimitadas pelo estroma adjacente. Entretanto, estudos posteriores indicaram que tal morfologia é raramente observada em carcinomas prostáticos verdadeiros. O padrão 3, atualmente o mais frequentemente identificado em biópsias prostáticas, caracteriza-se por glândulas neoplásicas individualizadas infiltrando o estroma. Já o padrão 4 é definido pela presença de fusão glandular, estruturas cribriformes ou glândulas malformadas, enquanto o padrão 5 corresponde a tumores com crescimento sólido, necrose ou células isoladas, sem formação glandular definida \cite{chen2016}.
+
+Com o avanço do conhecimento em biologia tumoral e o aprimoramento das técnicas diagnósticas, revisões importantes foram realizadas no sistema de Gleason, especialmente após o consenso da ISUP em 2005. Entre as principais modificações destacam-se a virtual eliminação do padrão 1, a restrição do padrão 2, a reclassificação de determinadas arquiteturas cribriformes\footnote{Termo médico e anatômico utilizado para descrever uma estrutura que possui múltiplos pequenos orifícios ou perfurações, assemelhando-se a uma peneira ou crivo.}  como padrão 4 e o estabelecimento de critérios mais rigorosos para a identificação de necrose\footnote{Morte prematura e descontrolada de células ou tecidos vivos, provocada por agentes patológicos como isquemia (falta de sangue), infecções, traumas ou toxinas.}  do tipo comedo\footnote{Forma específica de necrose caracterizada pela presença de material necrótico central dentro de estruturas glandulares ou ductais.}  no padrão 5. Essas mudanças contribuíram significativamente para aumentar a reprodutibilidade diagnóstica e aprimorar a correlação prognóstica do sistema \cite{chen2016}.
+
+Posteriormente, em 2014, um novo consenso internacional introduziu um sistema prognóstico complementar baseado em grupos de grau, que atualmente está incorporado às classificações da Organização Mundial da Saúde. Esse sistema reorganiza os escores de Gleason em cinco categorias prognósticas, permitindo uma comunicação clínica mais clara e uma estratificação de risco mais precisa \cite{ref-epstein2016}:
+
+\begin{itemize}
+	\item Grupo 1: escore $\leq 6$
+	\item Grupo 2: escore 3+4=7
+	\item Grupo 3: escore 4+3=7
+	\item Grupo 4: escore 8
+	\item Grupo 5: escores $\geq 9$
+\end{itemize}
+
+A Figura~\ref{fig:gleason_patterns} apresenta uma representação esquemática da correspondência entre os padrões arquiteturais do sistema de Gleason e os respectivos grupos prognósticos. Observa-se um gradiente progressivo de desorganização tecidual à medida que o grau tumoral aumenta. Nos padrões de menor grau, as glândulas apresentam morfologia relativamente preservada e limites bem definidos em relação ao estroma adjacente. À medida que o padrão evolui, verifica-se uma crescente desorganização estrutural, caracterizada por margens infiltrativas, fusão glandular e formação de estruturas irregulares. No padrão 5, associado ao maior risco de progressão tumoral e de metástase, ocorre perda quase completa da arquitetura glandular original, o que reflete um carcinoma altamente agressivo e de rápida evolução.
+
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=1\textwidth]{figuras/gleason_pattern_and_grade_group.png}
+	\caption{
+		Representação esquemática dos padrões arquiteturais do sistema de Gleason e sua correspondência aos grupos prognósticos (Grade Groups). \\ 
+		Adaptado de \cite{hossain2025}.
+	}
+	\label{fig:gleason_patterns}
+\end{figure}
+
+
+\section{Processamento Digital de Imagens}
+
+Segundo \cite{gonzalez2008digital}, uma imagem pode ser definida como uma função bidimensional $f(x,y)$, em que $x$ e $y$ representam as coordenadas espaciais no plano da imagem e o valor de $f(x,y)$ corresponde à intensidade luminosa ou ao nível de cinza do pixel. Sendo assim, uma imagem é representada como uma matriz de \textit{pixels}, onde cada \textit{pixel} possui um valor numérico que representa sua intensidade ou cor, como pode ser observado através da Figura \ref{fig:pdi}. Neste contexto, o Processamento Digital de Imagens (PDI) diz respeito ao conjunto de técnicas computacionais utilizadas para manipular, analisar e extrair informações de imagens digitais, atuando sobre seus valores para realizar transformações ou obter conhecimento a partir deles. 
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figuras/pdi.png}
+	\caption{Ilustração da forma de uma imagem digital.}
+	\label{fig:pdi}
+\end{figure}
+
+As operações de PDI podem ser organizadas em diferentes níveis de abstração.
+Gonzalez e Woods \cite{gonzalez2008digital} distinguem três níveis principais:
+o baixo nível, que envolve operações primitivas como redução de ruído, realce
+de contraste e nitidez, atuando diretamente sobre os valores dos \textit{pixels}; o nível intermediário, que abrange tarefas como segmentação e extração de atributos; e o alto nível, voltado à interpretação semântica das informações extraídas, frequentemente associado à visão computacional. Essa hierarquia evidencia que o PDI não se limita à simples manipulação de imagens, mas constitui a base técnica sobre a qual sistemas de reconhecimento e análise
+automática são construídos.
+
+Na área médica, o PDI desempenha papel fundamental ao viabilizar a análise
+automatizada de imagens clínicas e laboratoriais, como campos de lâminas histológicas \cite{gonzalez2008digital}. Nesse contexto, técnicas de pré-processamento, segmentação e extração de características permitem identificar estruturas de interesse com precisão e
+reprodutibilidade superiores à análise manual, o que reduz a subjetividade do
+examinador e o tempo de diagnóstico. Em particular, a análise de imagens
+microscópicas representa um campo onde o PDI encontra aplicação direta, uma
+vez que a identificação de células, ou outras estruturas biológicas
+em lâminas demanda a detecção de padrões morfológicos sutis em meio a fundos
+complexos e variáveis. Assim, o PDI se torna uma ferramenta essencial na construção de sistemas automatizados de auxílio ao diagnóstico.
+
+
+\section{Redes Neurais Artificiais}
+	
+	As Redes Neurais Artificiais (RNA) são modelos matemáticos inspirados na estrutura biológica do cérebro humano e são compostos por unidades funcionais simples, interconectadas e que operam como processadores paralelos de informação \cite{sengupta2020}. Sua unidade fundamental de processamento é o neurônio artificial, que combina um conjunto de entradas para gerar uma saída única, cujo comportamento é descrito pela equação apresentada na Figura \ref{fig:RNA}.
+	
+	%\begin{equation}
+	%	y = g\left( \sum_{i=1}^{n} x_i w_i + b \right)
+	%	\label{eq:neuronio}
+	%\end{equation}
+	
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.9\textwidth]{figuras/RNA.png}
+		\caption{Representação matemática do modelo de um neurônio artificial.}
+		\label{fig:RNA}
+	\end{figure}
+	
+	
+	Na Figura \ref{fig:RNA}, $x_i$ representa a entrada $i$, $w_i$ o peso associado, $b$ é o termo de \textit{bias} (viés) e $f$ a função de ativação. As funções de ativação são responsáveis por introduzir não linearidade no modelo, sendo determinantes para sua capacidade de aprendizado. Embora funções como a sigmóide e a tangente hiperbólica tenham sido amplamente empregadas, as funções \textit{Rectified Linear Units} (ReLU) e sua variante \textit{Leaky ReLU} tornaram-se predominantes por proporcionarem maior velocidade de convergência durante o treinamento \cite{maas2013}. Essas funções são definidas pelas Equações \ref{eq:relu} e \ref{eq:leaky}, respectivamente:
+	
+	\begin{equation}
+		\sigma(x) = \max(0, x)
+		\label{eq:relu}
+	\end{equation}
+	
+	\begin{equation}
+		\sigma(x) = \max(0.1, x)
+		\label{eq:leaky}
+	\end{equation}
+	
+	\subsection{Multilayer Perceptron (MLP) e Backpropagation}
+	
+	O \textit{Multilayer Perceptron} (MLP) é uma arquitetura clássica de RNA formada por múltiplas camadas de neurônios totalmente conectadas. Uma representação dessa arquitetura pode ser observada na Figura \ref{fig:mlp}. A rede é organizada em três componentes principais: uma camada de entrada, responsável por receber os dados brutos; uma ou mais camadas ocultas, que extraem representações intermediárias por meio de transformações não lineares sucessivas; e uma camada de saída, responsável por produzir a inferência final do modelo. Essa arquitetura em camadas permite que a rede aprenda relações complexas e não lineares entre as variáveis de entrada e saída \cite{goodfellow2016deep}.
+	
+	
+	%Em termos gerais, a rede é composta por uma camada de entrada, responsável por receber os dados, uma ou mais camadas ocultas (\textit{hidden layers}), que realizam o processamento intermediário, e uma camada de saída, responsável por produzir a resposta do modelo. Essa organização em camadas permite que a rede aprenda relações não lineares entre as variáveis de entrada e de saída \cite{goodfellow2016deep}.
+	
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.9\textwidth]{figuras/mlp.png}
+		\caption{Representação da arquitetura do Multilayer Perceptron (MLP).}
+		\label{fig:mlp}
+	\end{figure}
+	
+	O treinamento do MLP ocorre, na maioria dos casos, de forma supervisionada por meio do algoritmo de \textit{backpropagation}. Nesse processo, os pesos da rede são ajustados iterativamente para reduzir o erro entre as saídas do modelo e os valores esperados. Para isso, o erro calculado na camada de saída é propagado de volta às camadas anteriores, permitindo que cada neurônio contribua para o ajuste dos parâmetros da rede \cite{rumelhart1986learning}.
+	
+	%O treinamento do MLP ocorre, na maioria dos casos, de forma supervisionada por meio do algoritmo de \textit{backpropagation}. Nesse processo, os pesos da rede são ajustados iterativamente para reduzir o erro entre as saídas do modelo e os valores esperados. Para isso, o erro calculado na camada de saída é propagado de volta às camadas anteriores, permitindo que cada neurônio contribua para o ajuste dos parâmetros da rede \cite{rumelhart1986learning}.
+	
+	Durante o treinamento, os pesos $w_{ij}$ são atualizados a cada iteração $t$ de acordo com a equação \ref{eq:weight-adjusts}:
+	
+	\begin{equation}
+		w_{ij}(t+1) = w_{ij}(t) + \eta \, \delta_j \, x_i
+		\label{eq:weight-adjusts}
+	\end{equation}
+	
+	Onde $\eta$ representa a taxa de aprendizado, responsável por controlar o \textit{score} de ajuste aplicado aos pesos; $\delta_j$ corresponde ao termo de erro do neurônio $j$; e $x_i$ representa a entrada do neurônio $i$.
+	
+	No caso dos neurônios localizados na camada de saída, o termo de erro é calculado a partir da diferença entre a saída desejada $d_j$ e a saída produzida pela rede $y_j$, conforme equação \ref{eq:weight-output}:
+	
+	\begin{equation}
+		\delta_j = y_j(1 - y_j)(d_j - y_j)
+		\label{eq:weight-output}
+	\end{equation}
+	
+	Já nas camadas ocultas, o erro não é diretamente observado. Nesses casos, ele é obtido a partir da retropropagação dos erros provenientes das camadas subsequentes ($k$), de acordo com a equação \ref{eq:weight-hidden}:
+	
+	\begin{equation}
+		\delta_j = x_j(1 - x_j) \sum_{k} \delta_k w_{jk}
+		\label{eq:weight-hidden}
+	\end{equation}
+	
+	A partir desse mecanismo de propagação do erro e ajuste iterativo dos pesos, a rede passa gradualmente a aprender representações internas dos dados, o que permite melhorar seu desempenho ao longo do processo de treinamento.
+	
+	\section{Aprendizagem Profunda}
+	A Aprendizagem Profunda (\textit{Deep Learning}) é um subcampo da aprendizagem de máquina que utiliza modelos computacionais compostos por múltiplas camadas de processamento para aprender representações hierárquicas dos dados, capturando diferentes níveis de abstração. Esses modelos, geralmente baseados em redes neurais artificiais profundas, têm apresentado desempenho significativo em diversas aplicações, como reconhecimento de fala, reconhecimento de objetos em imagens, processamento de linguagem natural e detecção de padrões complexos em grandes volumes de dados \cite{lecun2015deep}.
+	
+	Nas abordagens tradicionais de aprendizagem de máquina, há uma forte dependência da etapa de engenharia de características (\textit{feature engineering}), na qual especialistas do domínio precisam projetar manualmente as representações dos dados a serem utilizadas pelo modelo. Esse processo envolve a seleção, transformação e extração de atributos relevantes, o que pode demandar grande esforço e conhecimento específico sobre o problema analisado.
+	
+	Em contraste, a aprendizagem profunda reduz essa dependência ao permitir que os próprios modelos aprendam automaticamente representações relevantes diretamente a partir dos dados brutos. Por meio de múltiplas camadas de transformação não linear, as redes profundas conseguem extrair características de baixo, médio e alto nível, tornando o processo de aprendizado mais automatizado e, frequentemente, mais eficiente em tarefas complexas de visão computacional, reconhecimento de padrões e análise de grandes conjuntos de dados.
+	
+	\subsection{Loss Function}
+	
+	A função de perda (\textit{loss function}) é um componente fundamental no treinamento de modelos de aprendizagem profunda, pois quantifica a discrepância entre as previsões do modelo e os rótulos reais. Essa medida de erro orienta o processo de otimização, permitindo ajustar os pesos da rede por meio do algoritmo de \textit{backpropagation} para minimizar o custo global empírico. Embora a entropia cruzada (\textit{cross-entropy}) seja a métrica padrão para classificação multiclasse, cenários do mundo real frequentemente apresentam distribuições de dados severamente desequilibradas ou categorias com ordem intrínseca, o que exige funções de perda especializadas para evitar um ajuste subótimo das fronteiras de decisão.
+	
+	\subsubsection{Focal Loss}	
+	A \textit{Focal Loss} foi projetada especificamente para mitigar o viés decorrente do desequilíbrio extremo entre as classes, um desafio recorrente na classificação de dados raros e de anomalias \cite{focal_loss_iot}. Sua formulação matemática, para um problema de classificação binária, é definida como:
+	
+	\begin{equation}
+		\mathcal{L}_{\text{focal}} = - \alpha_t (1 - p_t)^\gamma \log(p_t)
+	\end{equation}
+	
+	onde $p_t$ representa a probabilidade predita para a classe verdadeira, $\alpha_t \in [0,1]$ é um fator de balanceamento entre classes, e $\gamma \geq 0$ é o parâmetro de focalização que controla a atenuação das amostras fáceis. Para $\gamma = 0$, a função se reduz à entropia cruzada tradicional. À medida que $\gamma$ aumenta, o termo $(1 - p_t)^\gamma$ reduz progressivamente a contribuição de exemplos bem classificados ($p_t \to 1$), concentrando o aprendizado em amostras difíceis e em classes minoritárias \cite{focal_loss_liver}. Dessa forma, a \textit{Focal Loss} evita que o gradiente seja dominado por classes predominantes, favorecendo uma melhor generalização em cenários com distribuições desbalanceadas.
+	
+	
+\subsubsection{Ordinal Loss}
+\label{subsub:ordinal-loss}	
+Em muitos problemas de diagnóstico e análise, as classes não são mutuamente independentes, mas representam uma escala contínua de progressão (como estágios de uma anomalia ou graus de uma patologia), caracterizando um problema de regressão ordinal \cite{imbalanced_ordinal_nn}. Nesses contextos, tratar os rótulos como categorias nominais isoladas descarta informações estruturais essenciais. Um erro de predição entre graus distantes na escala possui um impacto significativamente maior do que erros entre classes adjacentes. Para incorporar essa estrutura ordinal no processo de otimização, pode-se definir explicitamente uma função de perda sensível à distância entre classes.
+
+Uma formulação prática da \textit{Ordinal Loss} baseia-se na comparação entre a classe esperada predita pelo modelo e a classe alvo real. Seja $\mathbf{p} = (p_1, p_2, \dots, p_K)$ o vetor de probabilidades preditas após a função de ativação, e $\mathbf{y} = (y_1, y_2, \dots, y_K)$ a codificação ordinal do rótulo verdadeiro. A classe esperada predita pode ser definida como:
+
+\begin{equation}
+	\hat{c} = \sum_{k=1}^{K} p_k
+\end{equation}
+
+De forma análoga, a classe alvo é dada por:
+
+\begin{equation}
+	c = \sum_{k=1}^{K} y_k
+\end{equation}
+
+A \textit{Ordinal Loss} é então definida como a diferença absoluta normalizada entre essas duas quantidades:
+
+\begin{equation}
+	\mathcal{L}_{ordinal} = \frac{1}{K - 1} \left| \hat{c} - c \right|
+\end{equation}
+
+Para um conjunto de $N$ amostras, a função de perda média é dada por:
+
+\begin{equation}
+	\mathcal{L} = \frac{1}{N} \sum_{i=1}^{N} \frac{\left| \hat{c}_i - c_i \right|}{K - 1}
+	\label{eq:ordinal-loss}
+\end{equation}
+
+Essa formulação penaliza diretamente a distância entre a classe prevista e a classe real, garantindo que erros mais distantes na escala ordinal resultem em penalizações maiores. Dessa forma, o modelo é incentivado a aprender representações que respeitam a estrutura hierárquica dos rótulos, promovendo previsões mais coerentes do ponto de vista ordinal. Adicionalmente, abordagens como a \textit{Ordinal Focal Loss} estendem essa ideia ao incorporar mecanismos de reponderação dinâmica inspirados na \textit{Focal Loss}, permitindo lidar simultaneamente com a estrutura ordinal e o desbalanceamento de classes \cite{focal_loss_iot}.
+	
+\subsection{Redes Neurais Convolucionais}
+
+As Redes Neurais Convolucionais (\textit{Convolutional Neural Networks} - CNNs) constituem uma classe de modelos de aprendizado profundo projetadas especificamente para o processamento de dados com estrutura espacial regular, como imagens digitais. A arquitetura típica de uma CNN intercala camadas convolucionais com camadas de subamostragem (\textit{pooling}), responsáveis por reduzir a dimensionalidade espacial, e é finalizada por uma ou mais camadas totalmente conectadas destinadas à tarefa de classificação ou regressão. A Figura \ref{fig:cnn} apresenta a representação de uma CNN. A composição hierárquica das camadas convolucionais permite que o modelo aprenda representações progressivamente mais abstratas, sendo que, as camadas iniciais tendem a capturar características de baixo nível, como bordas e texturas, enquanto as camadas mais profundas codificam estruturas semânticas mais complexas \cite{lecun1998, goodfellow2016deep}.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figuras/cnn.png}
+	\caption{Representação de uma Rede Neural Convolucional (CNN).}
+	\label{fig:cnn}
+\end{figure}
+
+No domínio da medicina, as CNNs têm se destacado como potenciais ferramentas para análises clínicas, promovendo avanços no que diz respeito a diagnósticos assistidos por computador. Sua capacidade de extrair características relevantes de forma automática, a partir de imagens complexas, as torna particularmente úteis para tarefas onde o processo de execução é laborioso e demanda tempo, foco e repetição. Estudos comparativos demonstraram que modelos baseados em CNNs alcançam desempenho equivalente ou superior ao de especialistas humanos em tarefas específicas de reconhecimento visual médico, como na classificação de lesões dermatológicas \cite{esteva2017dermatologist}. Neste contexto, é possível afirmar que esses modelos podem ser utilizados para auxiliar na análise e classificação de lâminas histopatológicas de câncer de próstata, a fim de promover diagnósticos mais rápidos e precisos, o que influenciará positivamente no tratamento e manejo do paciente.
+	
+	
+\subsection{EfficientNet e o Escalonamento Composto}
+	
+O \textit{EfficientNet}, proposto por \cite{ref-tan2019}, introduz uma abordagem sistemática para o escalonamento de Redes Neurais Convolucionais profundas. Diferentemente de métodos tradicionais, que ampliam apenas uma dimensão da rede, como a profundidade ou a largura, o EfficientNet propõe um método de escalonamento composto (\textit{compound scaling}), no qual múltiplas dimensões da arquitetura são ampliadas de forma conjunta e balanceada.
+
+Especificamente, o método considera três dimensões principais da rede: profundidade ($d$), largura ($w$) e resolução da imagem de entrada ($r$). O escalonamento é controlado por um coeficiente composto $\phi$, que determina o nível global de ampliação do modelo. A partir desse coeficiente, as três dimensões são escaladas segundo as seguintes relações:
+
+\begin{equation}
+	\begin{aligned}
+		\text{profundidade: } & d = \alpha^\phi \\
+		\text{largura: } & w = \beta^\phi \\
+		\text{resolução: } & r = \gamma^\phi
+	\end{aligned}
+\end{equation}
+
+onde $\alpha$, $\beta$ e $\gamma$ são constantes positivas determinadas empiricamente por meio de uma busca em um pequeno espaço de arquiteturas, sujeitas à restrição $\alpha \cdot \beta^2 \cdot \gamma^2 \approx 2$, garantindo que o custo computacional aumente de forma controlada a cada incremento de $\phi$.
+
+Como ilustrado na Figura \ref{fig:efficientnet_scaling}, esse mecanismo de escalonamento composto ajusta a largura (número de canais), a profundidade (número de camadas) e a resolução (dimensão da entrada) de forma proporcional. Essa abordagem permite aumentar a capacidade representacional da rede de maneira significativamente mais eficiente, alcançando um melhor desempenho preditivo com um menor número de parâmetros e um custo computacional reduzido, quando comparada aos métodos tradicionais de escalonamento unidimensional.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=1\textwidth]{figuras/compound_scale.png}
+	\caption{Comparação entre diferentes métodos de escalonamento. \\
+	Adaptado de \cite{ref-tan2019}.}
+	\label{fig:efficientnet_scaling}
+\end{figure}
+
+A arquitetura base, denominada EfficientNet-B0, foi obtida por meio de \textit{Neural Architecture Search} (NAS). A partir dessa arquitetura inicial, modelos maiores, EfficientNet-B1 até EfficientNet-B7, são gerados aplicando-se progressivamente o coeficiente de escalonamento $\phi$, resultando em redes com diferentes compromissos entre precisão e custo computacional. A Tabela \ref{tab:efficientnet_full} apresenta uma comparação entre as variantes do EfficientNet e arquiteturas clássicas, evidenciando a eficiência do método proposto em termos de acurácia e custo computacional.
+	
+\begin{table*}[htbp]
+	\centering
+	\begin{tabular}{lcccc}
+		\toprule
+		\textbf{Modelo} & \textbf{Top-1 (\%)} & \textbf{Top-5 (\%)} & \textbf{\#Params (M)} & \textbf{FLOPs (B)} \\
+		\midrule
+		
+		\textbf{EfficientNet-B0} & \textbf{77.1} & \textbf{93.3} & \textbf{5.3} & \textbf{0.39} \\
+		ResNet-50                & 76.0 & 93.0 & 26  & 4.1 \\
+		DenseNet-169             & 76.2 & 93.2 & 14  & 3.5 \\
+		
+		\midrule
+		\textbf{EfficientNet-B1} & \textbf{79.1} & \textbf{94.4} & \textbf{7.8} & \textbf{0.70} \\
+		ResNet-152               & 77.8 & 93.8 & 60  & 11.0 \\
+		DenseNet-264             & 77.9 & 93.9 & 34  & 6.0 \\
+		Inception-v3             & 78.8 & 94.4 & 24  & 5.7 \\
+		Xception                 & 79.0 & 94.5 & 23  & 8.4 \\
+		
+		\midrule
+		\textbf{EfficientNet-B2} & \textbf{80.1} & \textbf{94.9} & \textbf{9.2} & \textbf{1.0} \\
+		Inception-v4             & 80.0 & 95.0 & 48  & 13 \\
+		Inception-ResNet-v2      & 80.1 & 95.1 & 56  & 13 \\
+		
+		\midrule
+		\textbf{EfficientNet-B3} & \textbf{81.6} & \textbf{95.7} & \textbf{12} & \textbf{1.8} \\
+		ResNeXt-101              & 80.9 & 95.6 & 84  & 32 \\
+		PolyNet                  & 81.3 & 95.8 & 92  & 35 \\
+		
+		\midrule
+		\textbf{EfficientNet-B4} & \textbf{82.9} & \textbf{96.4} & \textbf{19} & \textbf{4.2} \\
+		SENet                    & 82.7 & 96.2 & 146 & 42 \\
+		NASNet-A                 & 82.7 & 96.2 & 89  & 24 \\
+		AmoebaNet-A              & 82.8 & 96.1 & 87  & 23 \\
+		PNASNet                  & 82.9 & 96.2 & 86  & 23 \\
+		
+		\midrule
+		\textbf{EfficientNet-B5} & \textbf{83.6} & \textbf{96.7} & \textbf{30} & \textbf{9.9} \\
+		AmoebaNet-C              & 83.5 & 96.5 & 155 & 41 \\
+		
+		\midrule
+		\textbf{EfficientNet-B6} & \textbf{84.0} & \textbf{96.8} & \textbf{43} & \textbf{19} \\
+		
+		\midrule
+		\textbf{EfficientNet-B7} & \textbf{84.3} & \textbf{97.0} & \textbf{66} & \textbf{37} \\
+		GPipe                    & 84.3 & 97.0 & 557 & - \\
+		
+		\bottomrule
+	\end{tabular}
+	\caption{Resultados de desempenho do EfficientNet no ImageNet. Todos os modelos EfficientNet são derivados do EfficientNet-B0 utilizando escalonamento composto. \\
+	Adaptado de \cite{ref-tan2019}.}
+	\label{tab:efficientnet_full}
+\end{table*}
+
+\section{Ensemble Learning}
+	
+\textit{Ensemble learning} consiste na combinação de múltiplos classificadores com o objetivo de melhorar a capacidade preditiva e a robustez do modelo final. Em vez de utilizar um único classificador monolítico treinado simultaneamente para todas as classes, essa abordagem integra as respostas de diversos modelos, explorando sua diversidade para reduzir erros, equilibrar viés e variância e aumentar a capacidade de generalização \cite{novotny2025eocc}.
+
+Uma estratégia amplamente empregada nesse contexto é o treinamento de especialistas, no qual modelos individuais são treinados para distinguir uma classe ou um subconjunto de classes específicas. Dessa forma, o problema de classificação é decomposto em subproblemas menores, e a decisão final é obtida a partir da combinação das saídas desses modelos especializados. Essa decomposição permite capturar diferentes perspectivas sobre o espaço de características e explorar as complementaridades entre os classificadores.
+
+Uma extensão desse paradigma é o uso de conjuntos baseados em classificadores \textit{One-Class Classifiers}, formando os chamados Ensembles of One-Class Classifiers (EOCC). Nesse cenário, cada classificador é treinado exclusivamente com dados de uma única classe, aprendendo suas características intrínsecas sem depender de informações interclasse. Durante a inferência, cada modelo produz um escore de confiança ou probabilidade associado à classe modelada, e a decisão final depende da estratégia utilizada para combinar essas saídas \cite{novotny2025eocc}.
+
+Outra abordagem amplamente explorada na literatura consiste no treinamento de múltiplos classificadores, seguida da aplicação de regras formais de combinação para determinar a classe final da predição. Nesse contexto, a decisão global pode ser obtida por meio de estratégias como a votação majoritária (\textit{majority voting}), a média ou a soma ponderada de probabilidades (\textit{soft voting}), o produto de probabilidades, regras baseadas em ranking ou ainda por meio de um meta-aprendiz, caracterizando o método conhecido como \textit{stacking}. Diferentemente das abordagens baseadas apenas na especialização por classe, esses métodos buscam explorar explicitamente a diversidade estatística entre os modelos — seja ela decorrente de diferentes arquiteturas, subconjuntos de dados, inicializações ou estratégias de treinamento — a fim de reduzir o erro generalizado do sistema.
+
+Do ponto de vista teórico, a eficácia desses métodos está associada à redução da variância (como em \textit{bagging}), à redução do viés (como em \textit{boosting}) ou ao equilíbrio entre ambos, dependendo da estratégia adotada. Trabalhos clássicos demonstram que, sob hipóteses de independência parcial entre os classificadores, a combinação tende a produzir desempenho superior ao de modelos individuais \cite{dietterich2000ensemble, kuncheva2004combining}. Além disso, métodos como o \textit{stacked generalization} formalizam o aprendizado da regra de combinação por meio de um segundo nível de modelagem, permitindo que o próprio sistema aprenda a ponderar as contribuições de cada classificador base \cite{wolpert1992stacked}.
+
+
+\section{Métricas de Desempenho}
+Foram utilizados, como métricas de avaliação, a acurácia e o Kappa Quadrático Ponderado. A acurácia mede a capacidade de um modelo de classificar corretamente as instâncias, distinguindo adequadamente entre classes positivas e negativas, como, por exemplo, pacientes com a doença e indivíduos saudáveis \cite{baratloo2015part}.
+
+Essa métrica é calculada como a proporção de classificações corretas em relação ao número total de instâncias avaliadas, considerando tanto os \textit{verdadeiros positivos} (\textit{True Positives} - TP) quanto os \textit{verdadeiros negativos} (\textit{True Negatives} - TN) \cite{baratloo2015part}. Assim, a acurácia pode ser definida matematicamente pela seguinte expressão:
+
+\begin{equation}
+	\text{Acurácia} = \frac{TP + TN}{TP + TN + FP + FN}
+\end{equation}
+
+Onde \(TP\) representa os verdadeiros positivos, \(TN\) os verdadeiros negativos, \(FP\) os falsos positivos (\textit{False Positives}) e \(FN\) os falsos negativos (\textit{False Negatives}).
+
+O coeficiente Kappa Quadrático Ponderado mede o grau de concordância entre as classes preditas e as reais, considerando a concordância esperada ao acaso \cite{ref-cohen1968}. Essa métrica pode ser expressa matematicamente como:
+
+\begin{equation}
+	\kappa = 1 - \frac{\sum_{i=1}^{N}\sum_{j=1}^{N} w_{ij} O_{ij}}
+	{\sum_{i=1}^{N}\sum_{j=1}^{N} w_{ij} E_{ij}}
+\end{equation}
+
+Onde \(O_{ij}\) representa a matriz de confusão observada, \(E_{ij}\) corresponde à matriz de concordância esperada ao acaso, \(N\) é o número de categorias e \(w_{ij}\) é o peso atribuído à discordância entre as classes \(i\) e \(j\). No caso do Kappa Quadrático Ponderado, os pesos são definidos como:
+
+\begin{equation}
+	w_{ij} = \frac{(i - j)^2}{(N - 1)^2}
+\end{equation}
+
+Essa ponderação penaliza de forma mais severa erros entre classes mais distantes, tornando a métrica especialmente adequada para problemas de classificação ordinal.
+
+A variabilidade das métricas de desempenho e os respectivos intervalos de confiança foram estimados por meio de \textit{bootstrap} não paramétrico \cite{efron1979bootstrap}. Com base nas predições do conjunto de teste, foram geradas 1.000 reamostragens com reposição, preservando-se o tamanho do conjunto original. Em cada reamostragem, os indicadores de desempenho foram recalculados, o que permitiu estimar a distribuição empírica das métricas. A média, o desvio padrão e o intervalo de confiança de 90\% foram obtidos pelo método dos percentis, utilizando os quantis de 5\% e 95\%. Essa abordagem permite quantificar a incerteza das estimativas sem assumir pressupostos paramétricos sobre a distribuição dos dados.

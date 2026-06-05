@@ -1,0 +1,354 @@
+\providecommand{\abntreprintinfo}[1]{%
+ \citeonline{#1}}
+\setlength{\labelsep}{0pt}\begin{thebibliography}{}
+\providecommand{\abntrefinfo}[3]{}
+\providecommand{\abntbstabout}[1]{}
+\abntbstabout{v-1.9.7 }
+
+\bibitem[Al-Turaiki et al. 2021]{focal_loss_iot}
+\abntrefinfo{Al-Turaiki et al.}{AL-TURAIKI et al.}{2021}
+{AL-TURAIKI, I. et al. A deep learning approach for intrusion detection in
+  internet of things using focal loss function.
+\textbf{Internet of Things}, Elsevier, 2021.}
+
+\bibitem[Albahri et al. 2022]{expert2022review}
+\abntrefinfo{Albahri et al.}{ALBAHRI et al.}{2022}
+{ALBAHRI, O.~S.; ALBAHRI, A.~S.; MOHAMMED, K.~I.; ZAIDAN, A.; ZAIDAN, B.~B.;
+  HASHIM, M.; SALMAN, O.~H.; ALAA, M.; ALSALEM, M.~A. Expert system research
+  for prostate cancer: A literature review.
+\textbf{Computers in Biology and Medicine}, Elsevier, v.~145, p. 105487, 2022.}
+
+\bibitem[Ali et al. 2023]{ali2023entropy}
+\abntrefinfo{Ali et al.}{ALI et al.}{2023}
+{ALI, I.; KHAN, A.; KHAN, M.; AHMAD, R.; ULLAH, I. Shannon entropy in
+  artificial intelligence and its applications based on information theory.
+\textbf{Entropy}, v.~25, n.~2, p.~364, 2023.}
+
+\bibitem[Alici-Karaca e Akay 2024]{alici2024efficient}
+\abntrefinfo{Alici-Karaca e Akay}{ALICI-KARACA; AKAY}{2024}
+{ALICI-KARACA, D.; AKAY, B. An efficient deep learning model for prostate
+  cancer diagnosis.
+\textbf{IEEE Access}, IEEE, v.~12, p. 150776--150790, 2024.}
+
+\bibitem[Arvaniti et al. 2018]{pyramidalcnn}
+\abntrefinfo{Arvaniti et al.}{ARVANITI et al.}{2018}
+{ARVANITI, E.; FRICKER, K.~S.; MORET, M.; RUPP, N.; HERMANNS, T.; FANKHAUSER,
+  C.; WEY, N.; WILD, P.~J.; R{\"U}SCHOFF, J.; CLAASSEN, M. A pyramidal
+  cnn-based gleason grading system using digitized prostate biopsy specimens.
+\textbf{IEEE Transactions on Medical Imaging}, IEEE, v.~37, n.~3, p. xxx--xxx,
+  2018.}
+
+\bibitem[Baccianella, Esuli e Sebastiani 2020]{imbalanced_ordinal_nn}
+\abntrefinfo{Baccianella, Esuli e Sebastiani}{BACCIANELLA; ESULI;
+  SEBASTIANI}{2020}
+{BACCIANELLA, S.; ESULI, A.; SEBASTIANI, F. Neural network for ordinal
+  classification of imbalanced data.
+\textbf{Pattern Recognition Letters}, Elsevier, 2020.}
+
+\bibitem[Baratloo et al. 2015]{baratloo2015part}
+\abntrefinfo{Baratloo et al.}{BARATLOO et al.}{2015}
+{BARATLOO, A.; HOSSEINI, M.; NEGIDA, A.; ASHAL, G. E. Part 1: Simple definition
+  and calculation of accuracy, sensitivity and specificity.
+\textbf{Emergency}, Shahid Beheshti University of Medical Sciences, v.~3, n.~2,
+  p. 48--49, 2015.}
+
+\bibitem[Bergengren et al. 2023]{bergengren2023update}
+\abntrefinfo{Bergengren et al.}{BERGENGREN et al.}{2023}
+{BERGENGREN, O. et al. 2022 update on prostate cancer epidemiology and risk
+  factors—a systematic review.
+\textbf{European Urology}, v.~84, n.~2, p. 191--206, 2023.}
+
+\bibitem[Bhattacharyya, Pal e Mitra 2026]{bhattacharyya2026tsor}
+\abntrefinfo{Bhattacharyya, Pal e Mitra}{BHATTACHARYYA; PAL; MITRA}{2026}
+{BHATTACHARYYA, R.; PAL, S.; MITRA, S. Efficient self-supervised grading of
+  prostate cancer pathology.
+\textbf{IEEE Transactions on Systems, Man, and Cybernetics: Systems}, 2026.}
+
+\bibitem[Bhattacharyya et al. 2024]{bhattacharyya2024efficient}
+\abntrefinfo{Bhattacharyya et al.}{BHATTACHARYYA et al.}{2024a}
+{BHATTACHARYYA, R.; ROY, P.; BANERJI, S.; MITRA, S. Efficient grading of
+  prostate cancer wsi with deep learning. In:  SPIE. \textbf{Medical Imaging
+  2024: Digital and Computational Pathology}. [S.l.], 2024. v. 12933, p.
+  1293305.}
+
+\bibitem[Bhattacharyya et al. 2024]{bhattacharyya2024wsi}
+\abntrefinfo{Bhattacharyya et al.}{BHATTACHARYYA et al.}{2024b}
+{BHATTACHARYYA, R.; ROY, P.; BANERJI, S.; MITRA, S. Efficient grading of
+  prostate cancer wsi with deep learning. In:  SPIE. \textbf{Medical Imaging
+  2024: Digital and Computational Pathology}. [S.l.], 2024.}
+
+\bibitem[Bray et al. 2024]{JournalStatistic2024}
+\abntrefinfo{Bray et al.}{BRAY et al.}{2024}
+{BRAY, F.; LAVERSANNE, M.; SUNG, H.; FERLAY, J.; SIEGEL, R.~L.; SOERJOMATARAM,
+  I.; JEMAL, A. Global cancer statistics 2022: Globocan estimates of incidence
+  and mortality worldwide for 36 cancers in 185 countries.
+\textbf{CA: A Cancer Journal for Clinicians}, v.~74, n.~3, p. 229--263, 2024.}
+
+\bibitem[Bulten et al. 2020]{ref-bulten2020}
+\abntrefinfo{Bulten et al.}{BULTEN et al.}{2020}
+{BULTEN, W.; PINCKAERS, H.; BOVEN, H. van; VINK, R.; BEL, T. de; GINNEKEN, B.
+  van; LAAK, J. van~der; KAA, C. Hulsbergen-van~de; LITJENS, G. Automated
+  deep-learning system for {Gleason} grading of prostate cancer using biopsies:
+  a diagnostic study.
+\textbf{The Lancet Oncology}, v.~21, n.~2, p. 233--241, 2020.}
+
+\bibitem[Campanella et al. 2019]{ref-campanella2019}
+\abntrefinfo{Campanella et al.}{CAMPANELLA et al.}{2019}
+{CAMPANELLA, G.; HANNA, M.~G.; GENESLAW, L.; MIRAFLOR, A.; SILVA, V. W.~K.;
+  BUSAM, K.~J.; BROGI, E.; REUTER, V.~E.; KLIMSTRA, D.~S.; FUCHS, T.~J.
+  Clinical-grade computational pathology using weakly supervised deep learning
+  on whole slide images.
+\textbf{Nature Medicine}, v.~25, n.~9, p. 1301--1309, 2019.}
+
+\bibitem[Chen e Zhou 2016]{chen2016}
+\abntrefinfo{Chen e Zhou}{CHEN; ZHOU}{2016}
+{CHEN, N.; ZHOU, Q. The evolving gleason grading system.
+\textbf{Chinese Journal of Cancer Research}, v.~28, n.~1, p. 58--64, 2016.}
+
+\bibitem[Cinar e Cinar 2025]{cinar2025assessment}
+\abntrefinfo{Cinar e Cinar}{CINAR; CINAR}{2025}
+{CINAR, I.; CINAR, E. Assessment of interobserver variability in gleason
+  grading for prostate carcinoma.
+\textbf{North Clin Istanbul}, v.~12, n.~3, p. 337--343, 2025.}
+
+\bibitem[Cohen 1968]{ref-cohen1968}
+\abntrefinfo{Cohen}{COHEN}{1968}
+{COHEN, J. Weighted kappa: Nominal scale agreement with provision for scaled
+  disagreement or partial credit.
+\textbf{Psychological Bulletin}, v.~70, n.~4, p. 213--220, 1968.}
+
+\bibitem[Crawford 2003]{crawford2003epidemiology}
+\abntrefinfo{Crawford}{CRAWFORD}{2003}
+{CRAWFORD, E.~D. Epidemiology of prostate cancer.
+\textbf{Urology}, v.~62, n.~6, p. 3--12, 2003.}
+
+\bibitem[Dietterich 2000]{dietterich2000ensemble}
+\abntrefinfo{Dietterich}{DIETTERICH}{2000}
+{DIETTERICH, T.~G. Ensemble methods in machine learning.
+\textbf{International Workshop on Multiple Classifier Systems}, Springer, p.
+  1--15, 2000.}
+
+\bibitem[Efron 1979]{efron1979bootstrap}
+\abntrefinfo{Efron}{EFRON}{1979}
+{EFRON, B. Bootstrap methods: Another look at the jackknife.
+\textbf{The Annals of Statistics}, Institute of Mathematical Statistics, v.~7,
+  n.~1, p. 1--26, 1979.}
+
+\bibitem[Epstein et al. 2016]{ref-epstein2016}
+\abntrefinfo{Epstein et al.}{EPSTEIN et al.}{2016}
+{EPSTEIN, J.~I.; EGEVAD, L.; AMIN, M.~B.; DELAHUNT, B.; SRIGLEY, J.~R.;
+  HUMPHREY, P.~A. The 2014 {International Society of Urological Pathology
+  (ISUP)} consensus conference on gleason grading of prostatic carcinoma:
+  Definition of grading patterns and proposal for a new grading system.
+\textbf{The American Journal of Surgical Pathology}, v.~40, n.~2, p. 244--252,
+  2016.}
+
+\bibitem[Esteva et al. 2017]{esteva2017dermatologist}
+\abntrefinfo{Esteva et al.}{ESTEVA et al.}{2017}
+{ESTEVA, A.; KUPREL, B.; NOVOA, R.~A.; KO, J.; SWETTER, S.~M.; BLAU, H.~M.;
+  THRUN, S. Dermatologist-level classification of skin cancer with deep neural
+  networks.
+\textbf{nature}, Nature Publishing Group UK London, v.~542, n.~7639, p.
+  115--118, 2017.}
+
+\bibitem[Gonzalez e Woods 2008]{gonzalez2008digital}
+\abntrefinfo{Gonzalez e Woods}{GONZALEZ; WOODS}{2008}
+{GONZALEZ, R.; WOODS, R. \textbf{Digital image processing}. [S.l.]: Pearson,
+  Prentice Hall, 2008. 954~p.}
+
+\bibitem[Goodfellow, Bengio e Courville 2016]{goodfellow2016deep}
+\abntrefinfo{Goodfellow, Bengio e Courville}{GOODFELLOW; BENGIO;
+  COURVILLE}{2016}
+{GOODFELLOW, I.; BENGIO, Y.; COURVILLE, A. \textbf{Deep learning}. [S.l.]: MIT
+  press, 2016. 800~p.}
+
+\bibitem[Hammerich, Ayala e Wheeler 2009]{hammerich_anatomy}
+\abntrefinfo{Hammerich, Ayala e Wheeler}{HAMMERICH; AYALA; WHEELER}{2009}
+{HAMMERICH, K.~H.; AYALA, G.~E.; WHEELER, T.~M. Anatomy of the prostate gland
+  and surgical pathology of prostate cancer. In:  HRICAK, H.; SCARDINO, P.~T.
+  (Ed.). \textbf{Prostate Cancer}. [S.l.]: Cambridge University Press, 2009.}
+
+\bibitem[Han et al. 2021]{ordinal_cnn}
+\abntrefinfo{Han et al.}{HAN et al.}{2021}
+{HAN, S. et al. Ordinal convolutional neural networks for predicting rdoc
+  positive valence psychiatric symptom severity scores.
+\textbf{Psychiatry Research: Neuroimaging}, Elsevier, 2021.}
+
+\bibitem[Hossain et al. 2025]{hossain2025}
+\abntrefinfo{Hossain et al.}{HOSSAIN et al.}{2025}
+{HOSSAIN, M.~S.; RAHMAN, M.~S.; AHMED, M.; HUSSEN, A.; ULLAH, Z.; JAMJOOM, M.
+  Automated gleason grading of prostate cancer from low-resolution
+  histopathology images using an ensemble network of cnn and transformer
+  models.
+\textbf{Computers, Materials \& Continua}, v.~84, n.~2, p. 3194--3215, 2025.}
+
+\bibitem[Hu, Shen e Sun 2018]{ref-hu2018}
+\abntrefinfo{Hu, Shen e Sun}{HU; SHEN; SUN}{2018}
+{HU, J.; SHEN, L.; SUN, G. Squeeze-and-excitation networks. In:
+  \textbf{Proceedings of the IEEE Conference on Computer Vision and Pattern
+  Recognition (CVPR)}. Salt Lake City, UT, USA: [s.n.], 2018. p. 7132--7141.}
+
+\bibitem[Ikromjanov et al. 2021]{ikromjanov2021vit_prostate}
+\abntrefinfo{Ikromjanov et al.}{IKROMJANOV et al.}{2021}
+{IKROMJANOV, K.; SUMON, R.~I.; BHATTACHARJEE, S.; KIM, H.-C.; HWANG, Y.-B.;
+  CHOI, H.-K. Whole slide image analysis and detection of prostate cancer using
+  vision transformers. In:  \textbf{Proceedings of the International
+  Conference/Publication on Medical Imaging and AI}. [S.l.: s.n.], 2021.}
+
+\bibitem[Kabir et al. 2025]{kabir2025automating}
+\abntrefinfo{Kabir et al.}{KABIR et al.}{2025}
+{KABIR, S.; SARMUN, R.; SAADY, R.~M. A.; VRANIC, S.; MURUGAPPAN, M.; CHOWDHURY,
+  M. E.~H. Automating prostate cancer grading: A novel deep learning framework
+  for automatic prostate cancer grade assessment using classification and
+  segmentation.
+\textbf{Journal of Imaging Informatics in Medicine}, v.~38, p. 3992--4014,
+  2025.}
+
+\bibitem[Kosoko et al. 2024]{kosoko2024xai_prostate}
+\abntrefinfo{Kosoko et al.}{KOSOKO et al.}{2024}
+{KOSOKO, I.; GARG, A.; JAIN, S.; HEWAGE, P. Leveraging deep learning and
+  explainable ai for diagnosis of prostate cancer. In:  \textbf{Proceedings of
+  the International Conference on Applied Artificial Intelligence in Medical
+  Imaging}. Bolton, United Kingdom: [s.n.], 2024.}
+
+\bibitem[Kuncheva 2004]{kuncheva2004combining}
+\abntrefinfo{Kuncheva}{KUNCHEVA}{2004}
+{KUNCHEVA, L.~I. \textbf{Combining Pattern Classifiers: Methods and
+  Algorithms}. [S.l.]: Wiley-Interscience, 2004.}
+
+\bibitem[LeCun, Bengio e Hinton 2015]{lecun2015deep}
+\abntrefinfo{LeCun, Bengio e Hinton}{LECUN; BENGIO; HINTON}{2015}
+{LECUN, Y.; BENGIO, Y.; HINTON, G. Deep learning.
+\textbf{Nature}, Nature Publishing Group, v.~521, n.~7553, p. 436--444, 2015.}
+
+\bibitem[LeCun et al. 1998]{lecun1998}
+\abntrefinfo{LeCun et al.}{LECUN et al.}{1998}
+{LECUN, Y.; BOTTOU, L.; BENGIO, Y.; HAFFNER, P. Gradient-based learning applied
+  to document recognition.
+\textbf{Proceedings of the IEEE}, v.~86, n.~11, p. 2278--2324, 1998.}
+
+\bibitem[Lin et al. 2022]{focal_loss_liver}
+\abntrefinfo{Lin et al.}{LIN et al.}{2022}
+{LIN, J. et al. A focal loss and sequential analytics approach for liver
+  disease classification.
+\textbf{Healthcare Analytics}, 2022.}
+
+\bibitem[Maas, Hannun e Ng 2013]{maas2013}
+\abntrefinfo{Maas, Hannun e Ng}{MAAS; HANNUN; NG}{2013}
+{MAAS, A.~L.; HANNUN, A.~Y.; NG, A.~Y. Rectifier nonlinearities improve neural
+  network acoustic models. In:  \textbf{Proc. ICML}. [S.l.: s.n.], 2013. v.~30,
+  n.~1, p.~3.}
+
+\bibitem[Matlaga, Eskew e McCullough 2003]{matlaga2003prostate}
+\abntrefinfo{Matlaga, Eskew e McCullough}{MATLAGA; ESKEW; MCCULLOUGH}{2003}
+{MATLAGA, B.~R.; ESKEW, L.~A.; MCCULLOUGH, D.~L. Prostate biopsy: indications
+  and technique.
+\textbf{The Journal of Urology}, Elsevier, v.~169, n.~1, p. 12--19, 2003.}
+
+\bibitem[Nagpal et al. 2019]{ref-nagpal2019}
+\abntrefinfo{Nagpal et al.}{NAGPAL et al.}{2019}
+{NAGPAL, K.; FOOTE, D.; LIU, Y.; CHEN, P. H.~C.; WULCZYN, E.; TAN, F.; OLSON,
+  N.; SMITH, J.~L.; MOHTASHAMIAN, A.; WREN, J.~H.; CORRADO, G.~S.; MACDONALD,
+  L.; PENG, L.~H.; AMIN, M.~B.; EVANS, A.~J.; SANGOI, A.~R.; MERMEL, C.~H.;
+  HIPP, J.~D.; STUMPE, M.~C. Development and validation of a deep learning
+  algorithm for improving {Gleason} scoring of prostate cancer.
+\textbf{npj Digital Medicine}, v.~2, p.~48, 2019.}
+
+\bibitem[{National Cancer Institute} 2024]{nci2024prostate}
+\abntrefinfo{{National Cancer Institute}}{{National Cancer Institute}}{2024}
+{{National Cancer Institute}. \textbf{Prostate Cancer Prevention
+  (PDQ®)–Patient Version}. National Institutes of Health, 2024.
+Acesso em: 08 mar. 2025.
+Dispon{\'\i}vel em:
+  \url{https://www.cancer.gov/types/prostate/patient/prostate-prevention-pdq}.}
+
+\bibitem[Neumaier 2023]{neumaier2023biopsia}
+\abntrefinfo{Neumaier}{NEUMAIER}{2023}
+{NEUMAIER, M. \textbf{Biópsia da Próstata - Entenda}. Curitiba, PR, Brasil,
+  2023.
+Acesso em: 8 mar. 2026.
+Dispon{\'\i}vel em: \url{https://urologia.curitiba.br/biopsia-de-prostata/}.}
+
+\bibitem[Novotny et al. 2025]{novotny2025eocc}
+\abntrefinfo{Novotny et al.}{NOVOTNY et al.}{2025}
+{NOVOTNY, A.; BEBIS, G.; TAVAKKOLI, A.; NICOLESCU, M. Ensembles of deep
+  one-class classifiers for multi-class image classification.
+\textbf{Machine Learning with Applications}, Elsevier, v.~19, p. 100621, 2025.}
+
+\bibitem[Ozkan et al. 2016]{Ozkan2016Gleason}
+\abntrefinfo{Ozkan et al.}{OZKAN et al.}{2016}
+{OZKAN, T.~A.; ERUYAR, A.~T.; CEBECI, O.~O.; MEMIK, O.; OZCAN, L.; KUSKONMAZ,
+  I. Interobserver variability in gleason histological grading of prostate
+  cancer.
+\textbf{Scandinavian Journal of Urology}, v.~50, n.~6, p. 420--424, 2016.
+Epub 2016 Jul 14.
+Dispon{\'\i}vel em: \url{https://doi.org/10.1080/21681805.2016.1206619}.}
+
+\bibitem[{PANDA Challenge} 2020]{ref-panda2020}
+\abntrefinfo{{PANDA Challenge}}{{PANDA Challenge}}{2020}
+{{PANDA Challenge}. \textbf{Prostate {cANcer} graDe Assessment Challenge}.
+  [S.l.]: Kaggle, 2020.
+  \url{https://www.kaggle.com/c/prostate-cancer-grade-assessment}.
+Accessed: 2024-01-01.}
+
+\bibitem[Perdana et al. 2016]{perdana2016}
+\abntrefinfo{Perdana et al.}{PERDANA et al.}{2016}
+{PERDANA, N.; MOCHTAR, C.; UMBAS, R.; HAMID, A. The risk factors of prostate
+  cancer and its prevention: a literature review.
+\textbf{Acta Medica Indonesiana}, v.~48, n.~3, p. 228--238, 2016.}
+
+\bibitem[placeholder 2023]{ordinal_loss_base}
+\abntrefinfo{placeholder}{PLACEHOLDER}{2023}
+{PLACEHOLDER, A. Ordinal loss methodology and applications.
+\textbf{Journal Placeholder}, 2023.}
+
+\bibitem[Rawla 2019]{rawla2019epidemiology}
+\abntrefinfo{Rawla}{RAWLA}{2019}
+{RAWLA, P. Epidemiology of prostate cancer.
+\textbf{World Journal of Oncology}, v.~10, n.~2, p. 63--89, 2019.}
+
+\bibitem[Rebello et al. 2021]{rebello2021prostate}
+\abntrefinfo{Rebello et al.}{REBELLO et al.}{2021}
+{REBELLO, R.~J. et al. Prostate cancer.
+\textbf{Nature Reviews Disease Primers}, v.~7, n.~1, p.~9, 2021.}
+
+\bibitem[Rumelhart, Hinton e Williams 1986]{rumelhart1986learning}
+\abntrefinfo{Rumelhart, Hinton e Williams}{RUMELHART; HINTON; WILLIAMS}{1986}
+{RUMELHART, D.~E.; HINTON, G.~E.; WILLIAMS, R.~J. Learning representations by
+  back-propagating errors.
+\textbf{Nature}, v.~323, p. 533--536, 1986.}
+
+\bibitem[Sengupta et al. 2020]{sengupta2020}
+\abntrefinfo{Sengupta et al.}{SENGUPTA et al.}{2020}
+{SENGUPTA, S.; BASAK, S.; SAIKIA, P.; PAUL, S.; TSALAVOUTIS, V.; ATIAH, F.;
+  RAVI, V.; PETERS, A. A review of deep learning with special emphasis on
+  architectures, applications and recent trends.
+\textbf{Knowledge-Based Systems}, p. 105596, 2020.
+ISSN 0950-7051.}
+
+\bibitem[Siegel, Giaquinto e Jemal 2024]{ref_siegel2024}
+\abntrefinfo{Siegel, Giaquinto e Jemal}{SIEGEL; GIAQUINTO; JEMAL}{2024}
+{SIEGEL, R.~L.; GIAQUINTO, A.~N.; JEMAL, A. Cancer statistics, 2024.
+\textbf{CA: A Cancer Journal for Clinicians}, v.~74, n.~1, p. 12--49, 2024.}
+
+\bibitem[Tan e Le 2019]{ref-tan2019}
+\abntrefinfo{Tan e Le}{TAN; LE}{2019}
+{TAN, M.; LE, Q.~V. {EfficientNet}: Rethinking model scaling for convolutional
+  neural networks. In:  \textbf{Proceedings of the 36th International
+  Conference on Machine Learning}. Long Beach, CA, USA: [s.n.], 2019. p.
+  6105--6114.}
+
+\bibitem[Wolpert 1992]{wolpert1992stacked}
+\abntrefinfo{Wolpert}{WOLPERT}{1992}
+{WOLPERT, D.~H. Stacked generalization.
+\textbf{Neural Networks}, Elsevier, v.~5, n.~2, p. 241--259, 1992.}
+
+\bibitem[Xiang et al. 2023]{Xiang2023Prostate}
+\abntrefinfo{Xiang et al.}{XIANG et al.}{2023}
+{XIANG, J.; WANG, X.; WANG, X.; ZHANG, J.; YANG, S.; YANG, W.; HAN, X.; LIU, Y.
+  Automatic diagnosis and grading of prostate cancer with weakly supervised
+  learning on whole slide images.
+\textbf{Computers in Biology and Medicine}, Elsevier, v.~152, p. 106340, 2023.
+ISSN 0010-4825.}
+
+\end{thebibliography}

@@ -1,0 +1,179 @@
+Esta seção apresenta o ambiente de implementação, a seleção do melhor pipeline de configurações e o impacto da função de perda híbrida Ordinal-Focal.
+
+\subsection{Ambiente de Implementação}
+Os experimentos foram conduzidos em uma estação Linux com GPU RTX 3060, CPU AMD Ryzen 5 5600X e 32 GB de RAM DDR4. Além disso, utilizou-se PyTorch, CUDA e OpenSlide para a leitura de WSIs e a extração de \textit{patches}.
+
+\subsection{Etapa inicial - Configurando hiperparâmetros}
+\label{subsec:hiper}
+A etapa inicial de treinamento, conduzida conforme descrito na Seção~\ref{sec:method}, permitiu definir a melhor configuração de hiperparâmetros do modelo. Os valores avaliados e a configuração selecionada são apresentados na Tabela~\ref{tab:hiperparametros_gridsearch}.
+
+\begin{table}[htb]
+\centering
+\begin{tabular}{lll}
+\toprule
+\textbf{Parâmetro} & \textbf{Valores avaliados} & \textbf{Valor selecionado} \\
+\midrule
+Taxa de aprendizado & $3\times10^{-4}$, $3\times10^{-3}$, $1\times10^{-4}$ & $3\times10^{-4}$ \\
+Número de épocas & 50 & 50 \\
+Camadas descongeladas (fine-tuning) & 100, 150 & 150 \\
+\textit{Dropout} & 0.4, 0.5, 0.6 & 0.4 \\
+Tamanho do \textit{batch} & 2 & 2 \\
+Função de perda & BCE & BCE \\
+Otimizador & Adam & Adam \\
+\bottomrule
+\end{tabular}
+\caption{Hiperparâmetros avaliados e configuração selecionada após a busca em grade.}
+\label{tab:hiperparametros_gridsearch}
+\end{table}
+
+\subsection{Impacto da Remoção de Ruído e Formulações de Perda}
+
+A Tabela~\ref{tab:impacto_loss_expandido} apresenta a evolução incremental do desempenho da \textit{EfficientNet-B0}. As estratégias foram aplicadas cumulativamente, de modo que cada configuração incorpora as melhorias da etapa anterior.
+
+Inicialmente, a remoção de ruído foi aplicada ao modelo \textit{baseline}, elevando o $\kappa_{\text{quad}}$ de $0{,}826$ para $0{,}833$. Esse resultado indica que a correção de inconsistências no conjunto de dados contribuiu para maior estabilidade no treinamento. Na sequência, mantendo a remoção de ruído, a substituição da BCE pela perda ordinal promoveu um salto para $0{,}851$. Esse avanço demonstra que a modelagem explícita da relação de ordem entre as classes melhora a qualidade das predições. Essa configuração também apresentou o menor desvio padrão ($0{,}009$), indicando maior estabilidade. Por fim, a estratégia híbrida foi aplicada à formulação ordinal, resultando no melhor desempenho observado ($\kappa_{\text{quad}} = 0{,}856$). A combinação permitiu tratar simultaneamente a estrutura ordinal das classes e o desbalanceamento do conjunto de dados. No total, a sequência de refinamentos resultou em um ganho absoluto de 3\% em relação ao modelo \textit{baseline}.
+
+\begin{table}[!htb]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{lcccccc}
+			\toprule
+			& \multicolumn{3}{c}{\textbf{Kappa Quadrático}} & \multicolumn{3}{c}{\textbf{Acurácia (\%)}} \\
+			\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+			\textbf{Configuração} & \textbf{Resultado} & \textbf{Std} & \textbf{CI 95\%} & \textbf{Resultado} & \textbf{Std} & \textbf{CI 95\%} \\
+			\midrule
+			
+			\quad BCE (\textit{baseline}) 
+			& 0,826 & 0,012 & [0,806; 0,846] 
+			& 0,592 & 0,012 & [0,572; 0,612] \\
+			
+			\quad BCE + Remoção de Ruído 
+			& 0,833 & 0,013 & [0,812; 0,853] 
+			& 0,638 & 0,116 & [0,619; 0,657] \\
+			
+			\quad Perda Ordinal 
+			& 0,851 & \textbf{0,009} & [0,833; 0,869] 
+			& 0,608 & 0,126 & [0,587, 0,628] \\
+			
+			\quad \textbf{Ordinal + Focal (Híbrida)} 
+			& \textbf{0,856} & 0,011 & [0,833; 0,876] 
+			& \textbf{0,669 }& 0, 011 & [0,635; 0,683]\\
+			
+			\bottomrule
+		\end{tabular}%
+	}
+	\caption{Impacto da formulação da função de perda no desempenho da EfficientNet-B0}
+	\label{tab:impacto_loss_expandido}
+\end{table}
+
+A incorporação da perda focal ordinal ao treinamento resultou em melhorias no desempenho do modelo. Embora o coeficiente kappa tenha apresentado aumento modesto (aproximadamente 0,5\%), a análise conjunta com a acurácia revela um ganho superior a 6 pontos percentuais. Esse aumento indica que o modelo treinado com perda focal foi mais preciso nas predições exatas. Essa conclusão é reforçada pela análise das matrizes de confusão apresentadas na Figura~\ref{fig:cm_ordinal_focal}. O modelo sem perda focal (Figura~\ref{subfig:ordinal}) apresenta valores mais baixos na diagonal principal, especialmente para a classe ISUP 3, cuja taxa de acerto foi de 0,365, com grande dispersão para ISUP 2 (0,303) e ISUP 4 (0,212). Já o modelo com perda focal ordinal (Figura~\ref{subfig:ordinal_focal}) apresenta melhorias consistentes em diversas classes, incluindo ISUP 0 (0,857 vs.\ 0,711), ISUP 3 (0,492 vs.\ 0,365) e ISUP 4 (0,652 vs.\ 0,498), evidenciando maior capacidade discriminativa, inclusive nas classes intermediárias, que são tradicionalmente mais difíceis de classificar.
+
+
+\begin{figure}[!htb]
+	\centering
+	\subfloat[\centering Ordinal]{
+		\includegraphics[width=0.47\textwidth]{images/cm_ordinal.png} 
+		\label{subfig:ordinal}
+	}%
+	\hspace{0.2cm} % espaço menor entre as figuras
+	\subfloat[\centering Ordinal Focal]{
+		\includegraphics[width=0.47\textwidth]{images/cm_ordinal_focal.png} 
+		\label{subfig:ordinal_focal}
+	}%
+	\caption{Matrizes de confusão normalizadas dos modelos treinados com perda ordinal 
+		(esquerda) e perda ordinal-focal (direita).}
+	\label{fig:cm_ordinal_focal}
+\end{figure}
+
+
+
+\subsection{Comparação entre Arquiteturas EfficientNet}
+
+Após a definição da melhor combinação de hiperparâmetros e da função de perda utilizando a EfficientNet-B0, a mesma configuração experimental foi aplicada às variantes EfficientNet-B3 e EfficientNet-B7, que representam modelos de complexidade intermediária e elevada, respectivamente. O objetivo foi avaliar se o refinamento metodológico desenvolvido para o modelo base produziria ganhos adicionais quando empregado em arquiteturas com maior capacidade representacional dentro da mesma família.
+
+Os resultados estão apresentados na Tabela~\ref{tab:comparacao_arquiteturas}. Observa-se que a EfficientNet-B0 apresentou o melhor desempenho tanto no kappa quadrático quanto na acurácia. As arquiteturas mais profundas (B3 e B7) não apresentaram ganho estatisticamente relevante, havendo, inclusive, leve degradação nos valores médios das métricas avaliadas. Tal comportamento pode estar associado ao tamanho da base de dados ou à maior propensão ao sobreajuste em modelos com maior número de parâmetros. Assim, a EfficientNet-B0 demonstrou ter o melhor equilíbrio entre desempenho preditivo, estabilidade estatística e custo computacional. 
+
+\begin{table}[h]
+\centering
+\resizebox{0.85\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+ & \multicolumn{3}{c}{\textbf{Kappa Quadrático}} & \multicolumn{3}{c}{\textbf{Acurácia (\%)}} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+\textbf{Arquitetura} & \textbf{Resultado} & \textbf{Std} & \textbf{CI 95\%} & \textbf{Resultado} & \textbf{Std} & \textbf{CI 95\%} \\
+\midrule
+\textbf{EfficientNet-B0} & \textbf{0,856} & 0,011 & [0,833; 0,876] & \textbf{0,669} & 0,119 & [0,635; 0,683] \\
+EfficientNet-B3          & 0,846 & 0,010 & [0,829; 0,861] & 0,659 & 0,125 & [0,554; 0,594] \\
+EfficientNet-B7          & 0,844 & 0,011 & [0,821; 0,865] & 0,602 & 0,112 & [0,578; 0,628] \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Comparação de desempenho entre as variantes da EfficientNet.}
+\label{tab:comparacao_arquiteturas}
+\end{table}
+
+No contexto clínico, os modelos demonstraram desempenho globalmente satisfatório, com predominância de erros entre classes adjacentes, comportamento esperado em problemas de classificação ordinal, como o sistema ISUP. Observa-se que as maiores taxas de confusão concentram-se nas classes intermediárias (ISUP 2, ISUP 3 e ISUP 4), conforme evidenciado na Tabela~\ref{tab:isup}, sugerindo que os modelos conseguem, em grande parte, preservar a proximidade semântica entre os graus de agressividade tumoral. 
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llcccccc}
+\toprule
+\textbf{Modelo} & \textbf{Classe Real} & \textbf{Prev. ISUP 0} & \textbf{Prev. ISUP 1} & \textbf{Prev. ISUP 2} & \textbf{Prev. ISUP 3} & \textbf{Prev. ISUP 4} & \textbf{Prev. ISUP 5} \\
+\midrule
+\multirow{6}{*}{B0}
+ & ISUP 0 & \textbf{0,857} & 0,088 & 0,014 & 0,021 & 0,021 & 0,000 \\
+ & ISUP 1 & 0,095 & \textbf{0,693} & 0,188 & 0,022 & 0,003 & 0,000 \\
+ & ISUP 2 & 0,015 & 0,230 & \textbf{0,485} & 0,230 & 0,040 & 0,000 \\
+ & ISUP 3 & 0,027 & 0,032 & 0,146 & \textbf{0,492} & 0,270 & 0,032 \\
+ & ISUP 4 & 0,037 & 0,016 & 0,048 & 0,134 & \textbf{0,652} & 0,112 \\
+ & ISUP 5 & 0,033 & 0,011 & 0,016 & 0,065 & 0,380 & \textbf{0,495} \\
+\midrule
+\multirow{6}{*}{B3}
+ & ISUP 0 & \textbf{0,818} & 0,152 & 0,009 & 0,012 & 0,007 & 0,002 \\
+ & ISUP 1 & 0,075 & \textbf{0,708} & 0,200 & 0,010 & 0,007 & 0,000 \\
+ & ISUP 2 & 0,015 & 0,195 & \textbf{0,530} & 0,210 & 0,050 & 0,000 \\
+ & ISUP 3 & 0,038 & 0,043 & 0,205 & \textbf{0,432} & 0,216 & 0,065 \\
+ & ISUP 4 & 0,037 & 0,053 & 0,059 & 0,134 & \textbf{0,572} & 0,144 \\
+ & ISUP 5 & 0,049 & 0,005 & 0,027 & 0,076 & 0,201 & \textbf{0,641} \\
+\midrule
+\multirow{6}{*}{B7}
+ & ISUP 0 & \textbf{0,788} & 0,173 & 0,023 & 0,007 & 0,007 & 0,002 \\
+ & ISUP 1 & 0,140 & \textbf{0,640} & 0,203 & 0,018 & 0,000 & 0,000 \\
+ & ISUP 2 & 0,015 & 0,215 & \textbf{0,525} & 0,195 & 0,050 & 0,000 \\
+ & ISUP 3 & 0,022 & 0,059 & 0,178 & \textbf{0,357} & 0,297 & 0,086 \\
+ & ISUP 4 & 0,043 & 0,053 & 0,059 & 0,241 & \textbf{0,433} & 0,171 \\
+ & ISUP 5 & 0,033 & 0,022 & 0,011 & 0,082 & 0,266 & \textbf{0,587} \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Previsões por Modelo e Classe Real (ISUP)}
+\label{tab:isup}
+\end{table}
+
+\subsection{Discussão}
+
+Com base nos experimentos realizados, a função de perda híbrida demonstrou impacto direto na robustez do treinamento, elevando a acurácia do \textit{baseline} de 0,592 para 0,669 (+7 p.p.) e o $\kappa_{\text{quad}}$ de 0,826 para 0,856 (+3 p.p.), conforme apresentado na Tabela~\ref{tab:impacto_loss_expandido}. 
+
+A análise comparativa com trabalhos anteriores (Tabela~\ref{tab:comparacao_estado_arte}) evidencia que, embora alguns estudos reportem métricas absolutas elevadas, frequentemente o fazem em cenários simplificados, com validações menos desafiadoras ou com métricas isoladas. Por exemplo, \cite{Xiang2023Prostate} obteve $\kappa=0,931$ em validação interna, porém 0,801 em validação externa; em contraste, nosso modelo alcança $\kappa=0,856$ diretamente nos dados públicos ruidosos do PANDA, indicando maior robustez prática. De forma semelhante, \cite{afifi2024prostate} reportou acurácia de 91,80\%, mas $\kappa=0,608$, o que sugere discrepâncias ordinais relevantes.
+
+Diferentemente dessas abordagens, o modelo proposto realiza a graduação completa dos seis níveis ISUP (0–5), incorpora explicitamente a natureza ordinal da doença por meio de uma função de perda sensível à hierarquia e reduz erros extremos, entregando um equilíbrio superior entre desempenho estatístico, coerência clínica e capacidade de generalização.
+
+\begin{table}[htb]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{lllccl}
+			\toprule
+			\textbf{Trabalho} & \textbf{Banco de Dados} & \textbf{Abordagem / Modelo} & \textbf{Tarefa} & \textbf{Acurácia} & \textbf{Kappa} \\ 
+			\midrule
+			\cite{Xiang2023Prostate} & PANDA & ResNet50 + GCN & ISUP (6 níveis) & - & 0.931 (Int.) / 0.801 (Ext.) \\
+			\cite{alici2024efficient} & DiagSet & EfficientNet-B4 + ECA & Binária / 4 classes & 0,961\% / 0,948\% & - \\
+			\cite{kosoko2024xai_prostate} & SICAPv2 & VGG19 & Escore de Gleason & 0,780\% & - \\
+			\cite{afifi2024prostate} & PANDA & InceptionResNetV2 & Escore de Gleason & 0,918\% & 0.608 \\ 
+			\midrule
+			\textbf{Abordagem Proposta} & \textbf{PANDA} & \textbf{EfficienetNet-B0 + Ordinal Focal Loss} & \textbf{ISUP (6 níveis)} & \textbf{0,669\%} & \textbf{0.856} \\ 
+			\bottomrule
+		\end{tabular}%
+	}
+	\caption{Comparação do modelo proposto com trabalhos recentes da literatura.}
+	\label{tab:comparacao_estado_arte}
+\end{table}

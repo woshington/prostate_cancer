@@ -1,0 +1,44 @@
+Optuna best: gamma=1.6568, w_focal=0.2895, w_ord=0.4467, lr=1.11e-04
+epoch: 1 | lr: 1.11e-04 | train_loss: 0.06814 | val_loss: nan | val_acc: 0.5931 | val_kappa: 0.8070
+epoch: 2 | lr: 1.11e-04 | train_loss: 0.05797 | val_loss: nan | val_acc: 0.5693 | val_kappa: 0.8141
+epoch: 3 | lr: 1.11e-04 | train_loss: 0.05089 | val_loss: nan | val_acc: 0.6038 | val_kappa: 0.8211
+epoch: 4 | lr: 1.11e-04 | train_loss: 0.04422 | val_loss: nan | val_acc: 0.6203 | val_kappa: 0.8179
+epoch: 5 | lr: 1.11e-04 | train_loss: 0.04053 | val_loss: nan | val_acc: 0.6174 | val_kappa: 0.8293
+epoch: 6 | lr: 1.11e-04 | train_loss: 0.03745 | val_loss: nan | val_acc: 0.6440 | val_kappa: 0.8353
+epoch: 7 | lr: 1.11e-04 | train_loss: 0.03545 | val_loss: nan | val_acc: 0.5716 | val_kappa: 0.7628
+epoch: 8 | lr: 1.11e-04 | train_loss: 0.03179 | val_loss: nan | val_acc: 0.6423 | val_kappa: 0.8441
+epoch: 9 | lr: 1.11e-04 | train_loss: 0.02885 | val_loss: nan | val_acc: 0.6457 | val_kappa: 0.8287
+epoch: 10 | lr: 1.11e-04 | train_loss: 0.02692 | val_loss: nan | val_acc: 0.6446 | val_kappa: 0.8398
+epoch: 11 | lr: 1.11e-04 | train_loss: 0.02442 | val_loss: nan | val_acc: 0.5716 | val_kappa: 0.8054
+epoch: 12 | lr: 1.11e-04 | train_loss: 0.02248 | val_loss: nan | val_acc: 0.6435 | val_kappa: 0.8452
+epoch: 13 | lr: 1.11e-04 | train_loss: 0.02147 | val_loss: nan | val_acc: 0.6016 | val_kappa: 0.8241
+epoch: 14 | lr: 1.11e-04 | train_loss: 0.01984 | val_loss: nan | val_acc: 0.6525 | val_kappa: 0.8510
+epoch: 15 | lr: 1.11e-04 | train_loss: 0.01887 | val_loss: nan | val_acc: 0.6570 | val_kappa: 0.8393
+epoch: 16 | lr: 1.11e-04 | train_loss: 0.01747 | val_loss: nan | val_acc: 0.6650 | val_kappa: 0.8455
+epoch: 17 | lr: 1.11e-04 | train_loss: 0.01648 | val_loss: nan | val_acc: 0.6865 | val_kappa: 0.8540
+epoch: 18 | lr: 1.11e-04 | train_loss: 0.01517 | val_loss: nan | val_acc: 0.6423 | val_kappa: 0.8359
+epoch: 19 | lr: 1.11e-04 | train_loss: 0.01396 | val_loss: nan | val_acc: 0.6814 | val_kappa: 0.8596
+epoch: 20 | lr: 1.11e-04 | train_loss: 0.01289 | val_loss: nan | val_acc: 0.6038 | val_kappa: 0.8084
+epoch: 21 | lr: 1.11e-04 | train_loss: 0.01198 | val_loss: nan | val_acc: 0.6706 | val_kappa: 0.8538
+epoch: 22 | lr: 1.11e-04 | train_loss: 0.01100 | val_loss: nan | val_acc: 0.6644 | val_kappa: 0.8553
+epoch: 23 | lr: 1.11e-04 | train_loss: 0.00986 | val_loss: nan | val_acc: 0.6638 | val_kappa: 0.8561
+epoch: 24 | lr: 1.11e-04 | train_loss: 0.00903 | val_loss: nan | val_acc: 0.6786 | val_kappa: 0.8627
+epoch: 25 | lr: 1.11e-04 | train_loss: 0.00895 | val_loss: nan | val_acc: 0.6514 | val_kappa: 0.8471
+epoch: 26 | lr: 1.11e-04 | train_loss: 0.00768 | val_loss: nan | val_acc: 0.6836 | val_kappa: 0.8663
+epoch: 27 | lr: 1.11e-04 | train_loss: 0.00738 | val_loss: nan | val_acc: 0.6859 | val_kappa: 0.8598
+epoch: 28 | lr: 1.11e-04 | train_loss: 0.00627 | val_loss: nan | val_acc: 0.6802 | val_kappa: 0.8570
+epoch: 29 | lr: 1.11e-04 | train_loss: 0.00565 | val_loss: nan | val_acc: 0.6701 | val_kappa: 0.8561
+epoch: 30 | lr: 1.11e-04 | train_loss: 0.00532 | val_loss: nan | val_acc: 0.6819 | val_kappa: 0.8610
+epoch: 31 | lr: 1.11e-04 | train_loss: 0.00458 | val_loss: nan | val_acc: 0.6961 | val_kappa: 0.8572
+epoch: 32 | lr: 1.11e-04 | train_loss: 0.00441 | val_loss: nan | val_acc: 0.6865 | val_kappa: 0.8576
+epoch: 33 | lr: 1.11e-04 | train_loss: 0.00406 | val_loss: nan | val_acc: 0.6933 | val_kappa: 0.8607
+epoch: 34 | lr: 1.11e-04 | train_loss: 0.00371 | val_loss: nan | val_acc: 0.6265 | val_kappa: 0.8403
+epoch: 35 | lr: 1.11e-04 | train_loss: 0.00330 | val_loss: nan | val_acc: 0.6050 | val_kappa: 0.8278
+epoch: 36 | lr: 1.11e-04 | train_loss: 0.00287 | val_loss: nan | val_acc: 0.6978 | val_kappa: 0.8643
+
+=== TEST RESULTS ===
+Bootstrap resamples: 1000
+acc=0.6591 ± 0.0121  [0.6340 – 0.6830]
+kappa=0.8537 ± 0.0113  [0.8311 – 0.8748]
+f1=0.6152 ± 0.0127  [0.5881 – 0.6393]
+gamma=1.6568 | w_focal=0.2895 | w_ord=0.4467 | lr=1.11e-04

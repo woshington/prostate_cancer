@@ -1,0 +1,63 @@
+\changetocdepth {4}
+\babel@toc {brazil}{}\relax 
+\babel@toc {brazil}{}\relax 
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {1}\MakeTextUppercase []{Introdução}}{14}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Objetivo Geral}{15}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Objetivos Específicos}{15}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Organização do Trabalho}{16}{section.1.3}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {2}\MakeTextUppercase []{Trabalhos Relacionados}}{17}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Abordagens Baseadas em WSI}{17}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Abordagens Baseadas em Patches}{19}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Limitações da Literatura e Lacunas de Pesquisa}{20}{section.2.3}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {3}\MakeTextUppercase []{Fundamentação Teórica}}{22}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Câncer de Próstata}{22}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Biópsia da Próstata}{24}{subsection.3.1.1}%
+\contentsline {section}{\numberline {3.2}Sistema de Graduação Gleason}{25}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Processamento Digital de Imagens}{28}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Redes Neurais Artificiais}{29}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Multilayer Perceptron (MLP) e Backpropagation}{30}{subsection.3.4.1}%
+\contentsline {section}{\numberline {3.5}Aprendizagem Profunda}{31}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Loss Function}{32}{subsection.3.5.1}%
+\contentsline {subsubsection}{\numberline {3.5.1.1}Focal Loss}{32}{subsubsection.3.5.1.1}%
+\contentsline {subsubsection}{\numberline {3.5.1.2}Ordinal Loss}{32}{subsubsection.3.5.1.2}%
+\contentsline {subsection}{\numberline {3.5.2}Redes Neurais Convolucionais}{33}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}EfficientNet e o Escalonamento Composto}{34}{subsection.3.5.3}%
+\contentsline {section}{\numberline {3.6}Ensemble Learning}{36}{section.3.6}%
+\contentsline {section}{\numberline {3.7}Métricas de Desempenho}{38}{section.3.7}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {4}\MakeTextUppercase []{Método Proposto}}{40}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Materiais}{41}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Pré-processamento}{43}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Filtragem de Ruído Baseada em Entropia}{44}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Extração de Patches}{45}{subsection.4.2.2}%
+\contentsline {section}{\numberline {4.3}Treinamento e Modelos}{46}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Avaliação do Ensemble}{47}{section.4.4}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {5}\MakeTextUppercase []{Resultados}}{49}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Ambiente Experimental}{49}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Configuração de Hiperparâmetros}{49}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Impacto da Filtragem de Ruído e Funções de Perda}{50}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Comparação entre Arquiteturas EfficientNet}{54}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Avaliação do \textit {Ensemble}}{55}{section.5.5}%
+\contentsline {section}{\numberline {5.6}Comparação com trabalhos relacionados}{56}{section.5.6}%
+\contentsline {section}{\numberline {5.7}Discussão}{57}{section.5.7}%
+\contentsline {section}{\numberline {5.8}Estudo de Caso 1 - Erro clinicamente grave}{58}{section.5.8}%
+\contentsline {section}{\numberline {5.9}Estudo de Caso 2 - Erro adjacente}{59}{section.5.9}%
+\contentsline {section}{\numberline {5.10}Estudo de Caso 3 - Concordância unânime em lesão homogênea}{60}{section.5.10}%
+\contentsline {section}{\numberline {5.11}Estudo de Caso 4 - Discordância entre modelos}{61}{section.5.11}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {6}\MakeTextUppercase []{Conclusão}}{63}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Contribuições}{63}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Próximas Atividades}{64}{section.6.2}%
+\vspace {\cftbeforechapterskip }
+\vspace {\cftbeforechapterskip }
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\contentsline {chapter}{\MakeTextUppercase []{Refer\^encias}}{65}{section*.46}%

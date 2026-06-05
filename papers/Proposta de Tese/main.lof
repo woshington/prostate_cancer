@@ -1,0 +1,23 @@
+\babel@toc {brazil}{}\relax 
+\babel@toc {brazil}{}\relax 
+\contentsline {figure}{\numberline {1}{\ignorespaces Glândula Prostática}}{23}{figure.caption.14}%
+\contentsline {figure}{\numberline {2}{\ignorespaces Ilustração de biópsia com auxílio de TRUS. Fonte: \cite {neumaier2023biopsia}. }}{25}{figure.caption.16}%
+\contentsline {figure}{\numberline {3}{\ignorespaces Representação esquemática dos padrões arquiteturais do sistema de Gleason e sua correspondência aos grupos prognósticos (Grade Groups). Adaptado de \cite {hossain2025}. }}{27}{figure.caption.17}%
+\contentsline {figure}{\numberline {4}{\ignorespaces Ilustração da forma de uma imagem digital.}}{28}{figure.caption.18}%
+\contentsline {figure}{\numberline {5}{\ignorespaces Representação matemática do modelo de um neurônio artificial.}}{29}{figure.caption.19}%
+\contentsline {figure}{\numberline {6}{\ignorespaces Representação da arquitetura do Multilayer Perceptron (MLP).}}{30}{figure.caption.20}%
+\contentsline {figure}{\numberline {7}{\ignorespaces Representação de uma Rede Neural Convolucional (CNN).}}{34}{figure.caption.21}%
+\contentsline {figure}{\numberline {8}{\ignorespaces Comparação entre diferentes métodos de escalonamento. Adaptado de \cite {ref-tan2019}.}}{35}{figure.caption.22}%
+\contentsline {figure}{\numberline {9}{\ignorespaces Etapas do Método Proposto}}{41}{figure.caption.24}%
+\contentsline {figure}{\numberline {10}{\ignorespaces Exemplo de um artefato visual presente em uma WSI do conjunto de dados PANDA. À esquerda, apresenta-se a lâmina completa, com a região de interesse destacada em vermelho. À direita, uma visão ampliada da região selecionada revela uma marca de caneta sobre o tecido prostático. Fonte: Elaborado pelo autor. }}{43}{figure.caption.25}%
+\contentsline {figure}{\numberline {11}{\ignorespaces Distribuição de amostras no conjunto de dados PANDA}}{43}{figure.caption.26}%
+\contentsline {figure}{\numberline {12}{\ignorespaces Imagem de exemplo do conjunto de dados PANDA evidenciando a vasta área sem tecido.}}{45}{figure.caption.27}%
+\contentsline {figure}{\numberline {13}{\ignorespaces Ilustração da extração de \textit {patches} em diferentes tamanhos: 5$\times $5 (à esquerda), 6$\times $6 (no centro) e 7$\times $7 (à direita).}}{46}{figure.caption.28}%
+\contentsline {figure}{\numberline {14}{\ignorespaces Desempenho com diferentes limiares de remoção de ruído sobre os \textit {hard samples}}}{51}{figure.caption.30}%
+\contentsline {figure}{\numberline {15}{\ignorespaces Imagem identificada como ruído pelo método de filtragem}}{52}{figure.caption.31}%
+\contentsline {figure}{\numberline {16}{\ignorespaces Matrizes de confusão normalizadas obtidas para o modelo treinado com a função de perda BCE (à esquerda) e com a função de perda ordinal (à direita).}}{53}{figure.caption.32}%
+\contentsline {figure}{\numberline {17}{\ignorespaces Matrizes de confusão normalizadas para modelos treinados com perda ordinal e perda focal ordinal.}}{54}{figure.caption.34}%
+\contentsline {figure}{\numberline {18}{\ignorespaces Exemplo de WSI classificada incorretamente.}}{59}{figure.caption.38}%
+\contentsline {figure}{\numberline {19}{\ignorespaces Exemplo de WSI com erro adjacente (ISUP 5 classificada como ISUP 4).}}{60}{figure.caption.39}%
+\contentsline {figure}{\numberline {20}{\ignorespaces Exemplo de WSI com predição correta e unânime pelo \textit {ensemble}.}}{60}{figure.caption.40}%
+\contentsline {figure}{\numberline {21}{\ignorespaces Exemplo de WSI com discordância (ISUP 5 Real vs Predições 0, 3 e 5).}}{61}{figure.caption.41}%

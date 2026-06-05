@@ -1,0 +1,64 @@
+Ensemble: V2S + B0 + B3 + SWA + B0-MIL + SwinMIL
+================================================================================
+
+Alpha MIL ótimo (val): 0.05  QWK_val=0.8844
+Pesos QWK-calibrados:
+  B0          QWK_val=0.8651  peso=0.1997
+  V2S         QWK_val=0.8804  peso=0.2032
+  B3          QWK_val=0.8656  peso=0.1998
+  SWA         QWK_val=0.8589  peso=0.1983
+  MIL-B0      QWK_val=0.8581  peso=0.1981
+  SwinMIL     QWK_val=0.0040  peso=0.0009
+
+Bootstrap resamples: 1000
+
+Modelo / Estratégia                             Accuracy        QWK   F1-Macro
+--------------------------------------------------------------------------------
+Six-Weighted-Mean                                 72.72%     0.8810     0.6787
+CNN-Mean(4)                                       72.21%     0.8801     0.6773
+CNN-B0+V2S                                        72.18%     0.8791     0.6731
+Alpha-0.05                                        72.46%     0.8786     0.6776
+V2S                                               71.38%     0.8733     0.6751
+Six-Median                                        72.19%     0.8724     0.6679
+Six-Trimmed-Mean                                  72.19%     0.8720     0.6647
+All6-Mean                                         71.57%     0.8667     0.6547
+Six-Mean                                          71.57%     0.8667     0.6547
+B0                                                68.09%     0.8590     0.6163
+Six-Majority-Vote                                 72.48%     0.8579     0.6737
+Six-Conf-Weighted                                 71.58%     0.8573     0.6556
+SWA                                               65.34%     0.8520     0.5906
+Six-Temp-2.0                                      69.82%     0.8496     0.6219
+Six-Temp-0.5                                      69.82%     0.8496     0.6219
+B3                                                66.02%     0.8488     0.6183
+MIL-B0                                            66.19%     0.8446     0.6046
+Six-Rank-Avg                                      61.16%     0.8336     0.4769
+Six-Geometric-Mean                                52.96%     0.4779     0.3160
+MIL-Mean(2)                                       44.09%     0.2716     0.2077
+SwinMIL                                           27.23%     0.0026     0.0738
+
+================================================================================
+Melhor: Six-Weighted-Mean  QWK=0.8810
+
+Classification Report (melhor):
+              precision    recall  f1-score   support
+
+      ISUP 0     0.8644    0.9401    0.9007       434
+      ISUP 1     0.8026    0.7625    0.7821       400
+      ISUP 2     0.5455    0.5700    0.5575       200
+      ISUP 3     0.5575    0.5243    0.5404       185
+      ISUP 4     0.5364    0.6310    0.5799       187
+      ISUP 5     0.8444    0.6196    0.7147       184
+
+    accuracy                         0.7270      1590
+   macro avg     0.6918    0.6746    0.6792      1590
+weighted avg     0.7321    0.7270    0.7265      1590
+
+Confusion Matrix:
+[[408  21   2   1   2   0]
+ [ 38 305  53   4   0   0]
+ [  2  39 114  37   8   0]
+ [  5   9  27  97  43   4]
+ [ 11   4  11  26 118  17]
+ [  8   2   2   9  49 114]]
+
+Delta vs melhor histórico (0.8754): +0.0056

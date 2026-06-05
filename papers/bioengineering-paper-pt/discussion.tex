@@ -1,0 +1,119 @@
+A classificação automatizada dos grupos de grau ISUP enfrenta desafios significativos devido à alta similaridade visual entre graus adjacentes, à subjetividade inerente à avaliação humana e ao desbalanceamento natural dos conjuntos de dados clínicos. Os resultados deste estudo demonstram que a combinação de uma função de perda com penalização ordinal e técnicas de filtragem de ruído constitui uma abordagem robusta para superar essas limitações.
+
+\subsection{Desempenho e Comparação com Trabalhos Relacionados}
+
+Os estudos apresentados na Tabela~\ref{tab:comparacao_estado_arte} destacam diferentes trade-offs entre complexidade do modelo, formulação da tarefa e aplicabilidade clínica. Abordagens iniciais, como \cite{pyramidalcnn}, dependem de pipelines computacionalmente intensivos que processam milhões de patches e múltiplas CNNs, limitando a escalabilidade. De forma semelhante, \cite{ikromjanov2021vit_prostate} e \cite{kosoko2024xai_prostate} operam no nível de patch, simplificando o problema e ignorando o contexto global do tecido, que é essencial para uma classificação confiável de imagens de lâmina inteira (WSI).
+
+Outros trabalhos adotam arquiteturas mais complexas no nível de WSI. Por exemplo, \cite{Xiang2023Prostate} combina modelos convolucionais e baseados em grafos, alcançando um alto Kappa interno (0.931), mas com queda significativa na validação externa (0.801), indicando sensibilidade a mudanças de domínio. De forma semelhante, \cite{bhattacharyya2024wsi} reporta um Kappa competitivo (0.881) utilizando um ensemble baseado em múltiplas instâncias (MIL); no entanto, esse resultado é obtido sob um esquema de balanceamento artificial aplicado antes da divisão do conjunto de dados, o que altera a distribuição natural dos dados. Como o desbalanceamento de classes é intrínseco à classificação do câncer de próstata, essa estratégia pode levar a uma superestimação do desempenho e a uma menor robustez em cenários reais. Da mesma forma, \cite{bhattacharyya2026tsor} alcança um Kappa de 0.884 utilizando aprendizado auto-supervisionado, mas depende de subconjuntos curados, o que pode impactar a generalização.
+
+Além disso, \cite{kabir2025automating} incorpora uma etapa de segmentação com DeepLabV3 seguida por um classificador Random Forest, alcançando um alto Kappa (0.921). No entanto, essa abordagem depende de anotações em nível de pixel, limitando sua escalabilidade. Por outro lado, \cite{alici2024efficient} reporta uma acurácia muito elevada (até 0.961), mas aborda uma tarefa simplificada (binária ou com número reduzido de classes), tornando a comparação com a classificação completa ISUP menos significativa.
+
+Em contraste, o método proposto alcança um Kappa de 0.857 utilizando uma arquitetura relativamente simples e computacionalmente eficiente, a EfficientNet-B0. O método aborda o problema completo de classificação ISUP no nível de WSI, sem depender de anotações em nível de pixel, balanceamento artificial ou simplificação da tarefa. O uso da função de perda Ordinal Focal incentiva erros entre classes adjacentes, melhorando a consistência clínica. Embora o modelo proposto apresente menor acurácia do que algumas abordagens simplificadas, ele fornece uma avaliação mais realista e clinicamente relevante, oferecendo um melhor equilíbrio entre desempenho, robustez e aplicabilidade prática.
+
+\begin{table}[htb]
+	\centering
+	\scriptsize
+	\setlength{\tabcolsep}{3pt}
+	\renewcommand{\arraystretch}{1.0}
+	
+	\resizebox{\linewidth}{!}{
+		\begin{tabular}{llllccc}
+			\toprule
+			\textbf{Estudo} & \textbf{Dataset} & \textbf{Modelo} & \textbf{Nível} & \textbf{Tarefa} & \textbf{Acc.} & \textbf{Kappa} \\
+			\midrule
+			
+			\cite{pyramidalcnn} 
+			& Radboud 
+			& Pyramidal CNN 
+			& Patch $\rightarrow$ WSI 
+			& Gleason / GG 
+			& 0.773 
+			& - \\
+			
+			\cite{ikromjanov2021vit_prostate} 
+			& PANDA 
+			& ViT 
+			& Patch
+			& Gleason 
+			& 0.800 
+			& - \\
+			
+			\cite{Xiang2023Prostate} 
+			& PANDA 
+			& ResNet50 + GCN 
+			& WSI
+			& ISUP (6) 
+			& - 
+			& 0.931 (Int.) / 0.801 (Ext.) \\
+			
+			\cite{alici2024efficient}
+			& DiagSet 
+			& EffNet-B4 + ECA 
+			& Patch
+			& Binário / 4 classes 
+			& 0.961 / 0.948 
+			& - \\
+			
+			\cite{kosoko2024xai_prostate}
+			& SICAPv2 
+			& VGG19 
+			& Patch
+			& Gleason 
+			& 0.780 
+			& - \\			
+			
+			\cite{bhattacharyya2024wsi}
+			& PANDA
+			& EffNet-B1 + MIL + Ensemble
+			& WSI
+			& ISUP (6)
+			& -
+			& 0.881 \\ 
+			
+			\cite{kabir2025automating}
+			& PANDA
+			& EffNet-B0 + DeepLabV3 + RF
+			& WSI + Seg
+			& ISUP (6)
+			& -
+			& 0.921 \\
+			
+			\cite{bhattacharyya2026tsor}
+			& PANDA / SICAPv2
+			& TSOR
+			& WSI
+			& ISUP (6)
+			& -
+			& 0.884 \\ 
+			
+			\midrule
+			
+			\textbf{Proposto (Base)} 
+			& \textbf{PANDA} 
+			& \textbf{EffNet-B0 + Ordinal Focal Loss} 
+			& \textbf{WSI}
+			& \textbf{ISUP (6)} 
+			& \textbf{0.669} 
+			& \textbf{0.857} \\		
+			
+			\bottomrule
+		\end{tabular}
+	}
+	
+	\caption{Comparação entre o método proposto e trabalhos recentes.}
+	\label{tab:comparacao_estado_arte}
+\end{table}
+
+\subsection{Impacto da Função de Perda Ordinal e da Filtragem de Ruído}
+
+A transição da função de perda BCE para a formulação híbrida (ordinal + focal) produziu a maior melhoria no desempenho do modelo. Do ponto de vista clínico, distinguir entre ISUP 2 e ISUP 3 possui implicações prognósticas diferentes quando comparado a uma confusão entre ISUP 1 e ISUP 5. A função de perda ordinal incentiva o modelo a respeitar essa relação hierárquica entre as classes. Além disso, a estratégia de filtragem baseada em entropia reforçou a importância da qualidade dos dados de treinamento. A remoção de amostras com alta incerteza reduziu a influência de rótulos potencialmente ruidosos e melhorou o desempenho do modelo, sem a necessidade de expansão do conjunto de dados.
+
+\subsection{Eficiência Computacional e Seleção da Arquitetura}
+
+Ao comparar arquiteturas da família EfficientNet, o aumento da complexidade do modelo não resultou em melhoria de desempenho; pelo contrário, foi observada uma leve degradação nas variantes mais profundas (como mostrado na Tabela~\ref{tab:comparacao_arquiteturas}). A EfficientNet-B0 apresentou o melhor equilíbrio entre desempenho preditivo e estabilidade estatística. Esses resultados sugerem que arquiteturas mais complexas (como B3 e B7) podem ser mais suscetíveis ao overfitting nesse contexto ou podem exigir ajustes mais refinados para atingir seu potencial máximo. Para aplicações práticas em laboratórios de patologia, a escolha da EfficientNet-B0 é vantajosa devido ao menor custo computacional e menor tempo de inferência.
+
+\subsection{Limitações e Trabalhos Futuros}
+
+Apesar dos resultados promissores, uma limitação importante deste estudo é a ausência de validação externa em dados provenientes de instituições independentes. Embora o conjunto PANDA inclua amostras de dois centros diferentes, ambos são incorporados no processo de treinamento, o que não reflete completamente cenários reais de implantação com condições de aquisição não vistas. Estudos anteriores demonstraram que modelos treinados no PANDA podem apresentar queda significativa de desempenho em validação externa (por exemplo, uma redução de aproximadamente 0.13 no Kappa de Cohen reportada em \cite{Xiang2023Prostate}). Portanto, a capacidade de generalização do modelo proposto para diferentes ambientes clínicos permanece incerta, e os resultados apresentados devem ser interpretados como desempenho interno.
+
+Trabalhos futuros devem priorizar a avaliação em conjuntos de dados externos para verificar robustez e aplicabilidade clínica. Além disso, arquiteturas baseadas em transformadores e estratégias de ensemble podem ser exploradas para melhorar ainda mais o desempenho e a estabilidade.

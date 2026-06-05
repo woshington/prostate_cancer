@@ -1,0 +1,64 @@
+\documentclass[12pt]{article}
+
+\usepackage{sbc-template}
+\usepackage{graphicx,url}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{subfig}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\sloppy
+
+\title{Classificação de Graus ISUP em Imagens Histopatológicas de Próstata utilizando EfficientNet e Aprendizado com Perda Ordinal Focal}
+
+\author{
+	Woshington V. S. Rodrigues\inst{1} \and
+	Armando L. Borges\inst{2} \and \\
+	Jose D. Araújo\inst{2} \and
+	João O. B. Diniz\inst{3} \and	
+	Antonio O. C. Filho\inst{2}
+}
+
+\address{
+	Instituto Federal do Piauí (IFPI) - Picos, PI - Brasil 
+	\nextinstitute
+	Universidade Federal do Piauí (UFPI) - Picos, PI - Brasil	
+	\nextinstitute
+	Instituto Federal do Maranhão (IFMA) - São Luís, MA - Brasil	
+	\\
+}
+
+\begin{document} 
+
+\maketitle
+
+\begin{abstract}
+The manual histopathological evaluation of prostate cancer in WSIs is subject to interobserver and intraobserver variability. To mitigate this issue, this work proposes the automatic classification of ISUP grade groups using Convolutional Neural Networks. The methodology employed the PANDA dataset, applying entropy-based noise reduction and patch extraction. EfficientNet models (B0, B3, and B7) were trained using the Ordinal Focal Loss function to preserve the ordinal progression of the disease and mitigate class imbalance. The best-performing model was EfficientNet-B0, which achieved a quadratic kappa of 0.856 and an accuracy of 66.9\%. The approach preserved the ordinal integrity of the grades, making extreme errors infrequent and demonstrating its potential clinical viability.
+\end{abstract}
+     
+\begin{resumo}
+A avaliação histopatológica manual do câncer de próstata em WSIs está sujeita a variabilidades interobservador e intraobservador. Para mitigar esse problema, este trabalho propõe a classificação automática dos grupos de graus ISUP utilizando Redes Neurais Convolucionais. A metodologia utilizou o dataset PANDA , aplicando a redução de ruído por entropia e a extração de patches. Os modelos EfficientNet (B0, B3 e B7) foram treinados com a função Ordinal Focal Loss para preservar a progressão da doença e mitigar o desbalanceamento das classes. O melhor modelo foi EfficientNet-B0 que alcançou kappa quadrático de 0,856 e acurácia de 66,9\%. A abordagem preservou a integridade ordinal dos graus, tornando pouco frequentes os erros extremos e demonstrando sua viabilidade clínica.
+\end{resumo}
+
+
+\section{Introdução}
+\input{introduction}
+
+\section{Materiais e Método}
+\label{sec:method}
+\input{method}
+
+\section{Resultados}
+\label{sec:results}
+\input{experiments}
+
+\section{Conclusão}
+\input{conclusion}
+
+\bibliographystyle{sbc}
+\bibliography{lib}
+
+\end{document}

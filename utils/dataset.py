@@ -1,4 +1,4 @@
-import kornia.color as kc
+import os
 from typing import Any
 
 from torch.utils.data import Dataset
@@ -53,23 +53,19 @@ class PandasDataset(Dataset):
 class PandasWithMilDataset(Dataset):
     def __init__(
         self,
-        image_dir,
+        patches_dir,
         dataframe,
         transforms=None,
         normalize=False,
-        format="jpg",
         num_classes=5,
-        patch_size=256,
-        grid_size=6
+        max_patches=36,  # 🔥 começa com 36, pode mudar depois
     ):
-        self.image_dir = image_dir
+        self.patches_dir = patches_dir
         self.dataframe = dataframe
         self.transforms = transforms
         self.normalize = normalize
-        self.format = format
         self.num_classes = num_classes
-        self.patch_size = patch_size
-        self.grid_size = grid_size
+        self.max_patches = max_patches
 
     def __len__(self):
         return self.dataframe.shape[0]
@@ -78,36 +74,51 @@ class PandasWithMilDataset(Dataset):
         row = self.dataframe.iloc[index]
         img_id = row.image_id.strip()
 
-        file_path = f"{self.image_dir}/{img_id}.{self.format}"
+        patch_folder = os.path.join(self.patches_dir, img_id)
         try:
-            image = skio.imread(file_path)
+            patch_files = sorted(os.listdir(patch_folder))
+            patch_files = [f for f in patch_files if f.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.tif'))]
+
+            patch_files = patch_files[:self.max_patches]
 
             patches = []
-            for i in range(self.grid_size):
-                for j in range(self.grid_size):
-                    top = i * self.patch_size
-                    left = j * self.patch_size
-                    patch = image[top:top+self.patch_size, left:left+self.patch_size, :]
+            for patch_name in patch_files:
+                patch_path = os.path.join(patch_folder, patch_name)
+                patch = skio.imread(patch_path)
 
-                    if self.transforms is not None:
-                        patch = self.transforms(image=patch)['image']
+                if self.transforms is not None:
+                    patch = self.transforms(image=patch)['image']
 
-                    if self.normalize:
-                        patch = patch.astype(np.float32) / 255.0
+                if self.normalize:
+                    patch = patch.astype(np.float32) / 255.0
 
-                    patch = np.transpose(patch, (2, 0, 1))  # (C, H, W)
-                    patches.append(torch.tensor(patch, dtype=torch.float32))
+                patch = np.transpose(patch, (2, 0, 1))
+                patches.append(torch.tensor(patch, dtype=torch.float32))
 
-            bag = torch.stack(patches)  # (36, C, H, W)
+            num_current = len(patches)
+
+            if num_current == 0:
+                raise RuntimeError(f"No patches found in {patch_folder}")
+
+            if num_current < self.max_patches:
+                c, h, w = patches[0].shape
+                pad = torch.ones((c, h, w), dtype=torch.float32) * 255.0
+
+                for _ in range(self.max_patches - num_current):
+                    patches.append(pad)
+            bag = torch.stack(patches)  # (max_patches, C, H, W)
+
+            # ✅ máscara (fundamental)
+            mask = torch.zeros(self.max_patches)
+            mask[:num_current] = 1
 
             label = np.zeros(self.num_classes).astype(np.float32)
             label[:row.isup_grade] = 1.
 
-            return bag, torch.tensor(label, dtype=torch.float32), img_id
+            return bag, mask, torch.tensor(label, dtype=torch.float32), img_id
 
         except Exception as e:
-            print(f"Erro ao carregar {file_path}: {e}")
-            return None
+            raise RuntimeError(f"Erro ao carregar patches de {img_id}: {e}")
 
 class SicapDataset(Dataset):
     def __init__(
@@ -151,343 +162,6 @@ class SicapDataset(Dataset):
         except:
             pass
 
-
-class RemovePenMarkAlbumentations(ImageOnlyTransform):
-    def __init__(self, is_white=True):
-        super().__init__(p=1)
-        self.is_white = is_white
-
-    @staticmethod
-    def calculate_channel_sums(image):
-        red_sum = np.sum(image[:, :, 0])
-        green_sum = np.sum(image[:, :, 1])
-        blue_sum = np.sum(image[:, :, 2])
-        return red_sum, green_sum, blue_sum
-
-    def analyze_histogram(self, image, threshold):
-        red_sum, green_sum, blue_sum = self.calculate_channel_sums(image)
-
-        green_dominance = green_sum > threshold * red_sum
-        blue_dominance = blue_sum > threshold * red_sum
-
-        return green_dominance or blue_dominance
-
-    def apply(self, img, **params: Any):
-        chip_size = (16, 16)
-        overlap = 0
-
-        height, width = img.shape[:2]
-        chip_h, chip_w = chip_size
-
-        for y in range(0, height, chip_h - overlap):
-            for x in range(0, width, chip_w - overlap):
-                chip = img[y:y + chip_h, x:x + chip_w]
-
-                if chip.shape[0] < chip_h or chip.shape[1] < chip_w:
-                    padded_chip = np.zeros((chip_h, chip_w, img.shape[2]), dtype=img.dtype)
-                    padded_chip[:chip.shape[0], :chip.shape[1]] = chip
-                    chip = padded_chip
-
-                if self.analyze_histogram(chip, threshold=1):
-                    img[y:y + chip_h, x:x + chip_w] = 255 if self.is_white else 0
-
-        return img
-
-
-class RGB2XYZTransform(ImageOnlyTransform):
-    """
-    Convert an RGB image to CIE XYZ color space.
-
-    Args:
-        scale (bool): Whether to scale the output back to [0, 255]. Default: False.
-        p (float): Probability of applying the transform. Default: 1.0.
-    """
-
-    def __init__(self, scale: bool = False, p: float = 1.0):
-        super().__init__(p=p)
-        self.scale = scale
-
-    def apply(self, image, **params):
-        if image.ndim != 3 or image.shape[2] != 3:
-            raise ValueError(f"Expected RGB image with 3 channels, got shape {image.shape}")
-
-        # Convert to float32 range [0, 1] if needed
-        if image.dtype != np.float32:
-            img = image.astype(np.float32) / 255.0
-        else:
-            img = np.clip(image, 0.0, 1.0)
-
-        # Convert to XYZ
-        xyz = color.rgb2xyz(img)
-
-        # Optionally scale back to [0, 255]
-        if self.scale:
-            xyz = np.clip(xyz * 255.0, 0, 255).astype(np.uint8)
-        else:
-            xyz = xyz.astype(np.float32)
-
-        return xyz
-
-
-class RGB2HedTransform(ImageOnlyTransform):
-    def __init__(self, p=1.0):
-        super().__init__(p=p)
-
-    def apply(self, image, **params):
-        image = color.rgb2hed(image)
-        return image
-
-class RGB2HematoxylinTransform(ImageOnlyTransform):
-    def __init__(self, p=1.0):
-        super().__init__(p=p)
-
-    def apply(self, image, **params):
-        img = image.astype(np.float32) / 255.0
-        hed = color.rgb2hed(img)
-        h_channel = hed[:, :, 0]
-        return h_channel.astype(np.float32)
-
-class RGB2LABTransform(ImageOnlyTransform):
-    def __init__(self, p=1.0):
-        super().__init__(p=p)
-
-    def apply(self, image, **params):
-        img = image.astype(np.float32) / 255.0
-        image = color.rgb2lab(img)
-        return image.astype(np.float32)
-
-
-class RGB2LUVTransform(ImageOnlyTransform):
-    def __init__(self, p=1.0):
-        super().__init__(p=p)
-
-    def apply(self, image, **params):
-        img = image.astype(np.float32) / 255.0
-        image = color.rgb2luv(img)
-        return image.astype(np.float32)
-
-
-class RGB2HSVTransform(ImageOnlyTransform):
-    def __init__(self, p=1.0):
-        super().__init__(p=p)
-
-    def apply(self, image, **params):
-        img = image.astype(np.float32) / 255.0
-        image = color.rgb2hsv(img)
-        return image.astype(np.float32)
-
-class MultiColorSpaceTransform(ImageOnlyTransform):
-    def __init__(self, p=1.0):
-        super().__init__(p=p)
-
-    def apply(self, image, **params):
-        img = image.astype(np.float32) / 255.0
-        image_xyz = color.rgb2xyz(img)
-        image_hed = color.rgb2hed(img)
-        image_lab = color.rgb2lab(img)
-        image_luv = color.rgb2luv(img)
-        image_hsv = color.rgb2hsv(img)
-
-        image = np.concatenate((img, image_xyz, image_hed, image_lab, image_luv, image_hsv), axis=-1)
-        return image
-
-class RGB2YHUTransform(ImageOnlyTransform):
-    def __init__(self, p=1.0):
-        super().__init__(p=p)
-
-    def apply(self, image, **params):
-        img = image.astype(np.float32) / 255.0
-
-        image_hed = color.rgb2hed(img)
-        image_xyz = color.rgb2xyz(img)
-        image_luv = color.rgb2luv(img)
-
-        h_channel = image_hed[:, :, 0]  # H do HED
-        y_channel = image_xyz[:, :, 1]  # Y do XYZ
-        u_channel = image_luv[:, :, 1]  # U do LUV
-
-        image = np.stack([h_channel, y_channel, u_channel], axis=-1)
-        return image.astype(np.float32)
-
-
-class RGB2YHVTransform(ImageOnlyTransform):
-    def __init__(self, p=1.0):
-        super().__init__(p=p)
-
-    def apply(self, image, **params):
-        img = image.astype(np.float32) / 255.0  # normaliza RGB para [0,1]
-
-        image_xyz = color.rgb2xyz(img)  # XYZ
-        image_hed = color.rgb2hed(img)  # HED
-        image_luv = color.rgb2luv(img)  # LUV
-
-        # Extrai os canais
-        y_channel = image_xyz[:, :, 1]   # canal Y do XYZ
-        h_channel = image_hed[:, :, 0]   # canal H do HED
-        v_channel = image_luv[:, :, 2]   # canal V do LUV
-
-        # Normaliza Y (luminância) entre 0 e 1 (min-max da imagem)
-        y_min, y_max = y_channel.min(), y_channel.max()
-        y_norm = (y_channel - y_min) / (y_max - y_min + 1e-8)
-
-        # Normaliza H do HED (min-max da imagem)
-        h_min, h_max = h_channel.min(), h_channel.max()
-        h_norm = (h_channel - h_min) / (h_max - h_min + 1e-8)
-
-        # Normaliza V do LUV (min-max da imagem)
-        v_min, v_max = v_channel.min(), v_channel.max()
-        v_norm = (v_channel - v_min) / (v_max - v_min + 1e-8)
-
-        # Empilha na ordem Y, H, V
-        image_out = np.stack([y_norm, h_norm, v_norm], axis=-1).astype(np.float32)
-
-        return image_out
-
-
-
-# class RGB2Fusion(ImageOnlyTransform):
-#     def __init__(self, mode="sum", p=1.0, space_colors=None):
-#         """
-#         mode: 'sum', 'mean', or 'max'
-#         """
-#         super().__init__(p=p)
-#         if space_colors is None:
-#             space_colors = ["rgb", "xyz"]
-#         self.space_colors = space_colors
-#         self.mode = mode
-#
-#     def apply(self, image, **params):
-#         img_rgb = image.astype(np.float32) #/ 255.0
-#         # img_xyz = color.rgb2xyz(img_rgb)
-#
-#         color_map = {
-#             "rgb": img_rgb,
-#             "xyz": color.rgb2xyz(img_rgb),
-#             "hed": color.rgb2hed(img_rgb),
-#             "lab": color.rgb2lab(img_rgb),
-#             "luv": color.rgb2luv(img_rgb),
-#             "hsv": color.rgb2hsv(img_rgb)
-#         }
-#
-#         selected = [color_map[space_color] for space_color in self.space_colors]
-#
-#         # normalized = []
-#         # for img in selected:
-#         #     min_val, max_val = np.min(img), np.max(img)
-#         #     if max_val - min_val > 1e-6:
-#         #         norm_img = (img - min_val) / (max_val - min_val)
-#         #     else:
-#         #         norm_img = img  # já está normalizado
-#         #     normalized.append(norm_img)
-#
-#         if self.mode == "sum":
-#             # if image.max() >= 255:
-#             #     image = image / 255
-#             fused = np.clip(np.sum(selected, axis=0), 0.0, 1.0)
-#         elif self.mode == "mean":
-#             fused = np.mean(selected, axis=0)
-#         elif self.mode == "max":
-#             fused = np.max(selected, axis=0)
-#         else:
-#             raise ValueError(f"Modo inválido: {self.mode}. Escolha 'sum', 'mean' ou 'max'.")
-#
-#         # Converte de volta para uint8 (se necessário)
-#         fused_uint8 = (fused * 255.0).astype(np.uint8)
-#
-#         return fused_uint8
-        # if self.mode == "sum":
-        #     fused = np.clip(
-        #         np.sum([color_map[space_color] for space_color in self.space_colors], axis=0),
-        #         a_min=0.0,
-        #         a_max=1.0
-        #     )
-        #     # fused = np.clip(img_rgb + img_xyz, 0.0, 1.0)
-        # elif self.mode == "mean":
-        #     fused = np.mean([color_map[space_color] for space_color in self.space_colors], axis=0)
-        # elif self.mode == "max":
-        #     fused = np.max([color_map[space_color] for space_color in self.space_colors], axis=0)
-        # else:
-        #     raise ValueError(f"Modo inválido: {self.mode}. Escolha 'sum', 'mean' ou 'max'.")
-        #
-        # return fused
-
-class RGB2Fusion(ImageOnlyTransform):
-    def __init__(self, mode="sum", p=1.0, space_colors=None, normalize_input=True):
-        """
-        mode: 'sum', 'mean', or 'max'
-        normalize_input: Se True, normaliza a imagem de entrada para [0,1]
-        """
-        super().__init__(p=p)
-        if space_colors is None:
-            space_colors = ["rgb", "xyz"]
-        self.space_colors = space_colors
-        self.mode = mode
-        self.normalize_input = normalize_input
-
-    def normalize_color_space(self, img, space_name):
-        """Normaliza cada espaço de cor para [0,1]"""
-        if space_name == "lab":
-            # LAB: L[0,100], a,b[-128,127]
-            normalized = img.copy()
-            normalized[:, :, 0] = img[:, :, 0] / 100.0  # L
-            normalized[:, :, 1] = (img[:, :, 1] + 128) / 255.0  # a
-            normalized[:, :, 2] = (img[:, :, 2] + 128) / 255.0  # b
-            return normalized
-        elif space_name == "hsv":
-            # HSV: H[0,360], S,V[0,1]
-            normalized = img.copy()
-            normalized[:, :, 0] = img[:, :, 0] / 360.0  # H
-            return normalized
-        else:
-            # Para RGB, XYZ, HED, LUV - normalização min-max
-            min_val = np.min(img, axis=(0, 1), keepdims=True)
-            max_val = np.max(img, axis=(0, 1), keepdims=True)
-
-            # Evita divisão por zero
-            range_val = max_val - min_val
-            range_val = np.where(range_val > 1e-6, range_val, 1.0)
-
-            return (img - min_val) / range_val
-
-    def apply(self, image, **params):
-        img_rgb = image.astype(np.float32)
-
-        if self.normalize_input:
-            img_rgb /= 255.0
-
-        color_map = {
-            "rgb": img_rgb,
-            "xyz": color.rgb2xyz(img_rgb),
-            "hed": color.rgb2hed(img_rgb),
-            "lab": color.rgb2lab(img_rgb),
-            "luv": color.rgb2luv(img_rgb),
-            "hsv": color.rgb2hsv(img_rgb)
-        }
-
-        normalized_spaces = []
-        for space_color in self.space_colors:
-            if space_color not in color_map:
-                raise ValueError(f"Espaço de cor '{space_color}' não suportado")
-
-            space_img = color_map[space_color]
-            normalized_img = self.normalize_color_space(space_img, space_color)
-            normalized_spaces.append(normalized_img)
-
-        # Fusão
-        if self.mode == "sum":
-            fused = np.sum(normalized_spaces, axis=0)
-            fused = fused / len(normalized_spaces)
-        elif self.mode == "mean":
-            fused = np.mean(normalized_spaces, axis=0)
-        elif self.mode == "max":
-            fused = np.max(normalized_spaces, axis=0)
-        else:
-            raise ValueError(f"Modo inválido: {self.mode}")
-
-        fused = np.clip(fused, 0.0, 1.0)
-        fused_uint8 = (fused * 255.0).astype(np.uint8)
-
-        return fused_uint8
 
 
 
@@ -579,3 +253,136 @@ class PatchBagDataset(Dataset):
         except Exception as e:
             print(f"Erro ao carregar {file_path}: {e}")
             return None
+
+class PandasOverlapDataset(Dataset):
+    def __init__(
+        self,
+        patches_dir,
+        dataframe,
+        transforms=None,
+        normalize=False,
+        num_classes=5,
+        max_patches=36,
+        grid_size=6,       # 6x6 grid
+        overlap=10,        # overlap em pixels
+    ):
+        self.patches_dir = patches_dir
+        self.dataframe = dataframe
+        self.transforms = transforms
+        self.normalize = normalize
+        self.num_classes = num_classes
+        self.max_patches = max_patches  # deve ser grid_size^2 = 36
+        self.grid_size = grid_size
+        self.overlap = overlap
+
+    def __len__(self):
+        return self.dataframe.shape[0]
+
+    def _build_mosaic(self, patches: tuple[float, list[np.ndarray]]) -> np.ndarray:
+        """
+        Monta um mosaico grid_size x grid_size com overlap entre patches.
+        patches: lista de arrays (H, W, C), todos do mesmo tamanho.
+        Patches faltantes são preenchidos com branco (255).
+        """
+        G = self.grid_size
+        ov = self.overlap
+
+        patches = [patch[1] for patch in patches]
+
+        # Usa o primeiro patch para inferir dimensão
+        h, w, c = patches[0].shape
+
+        # Tamanho total do mosaico levando em conta o overlap
+        mosaic_h = G * h - (G - 1) * ov
+        mosaic_w = G * w - (G - 1) * ov
+
+        mosaic = np.full((mosaic_h, mosaic_w, c), 255, dtype=patches[0].dtype)
+
+        for idx in range(G * G):
+            row = idx // G
+            col = idx % G
+
+            y0 = row * (h - ov)
+            x0 = col * (w - ov)
+
+            if idx < len(patches):
+                patch = patches[idx]
+            else:
+                patch = np.full((h, w, c), 255, dtype=patches[0].dtype)
+
+            # Na região de overlap, faz média simples com o que já está no mosaico
+            region = mosaic[y0:y0 + h, x0:x0 + w]
+            overlap_mask = np.zeros((h, w), dtype=bool)
+
+            if row > 0:
+                overlap_mask[:ov, :] = True   # faixa superior
+            if col > 0:
+                overlap_mask[:, :ov] = True   # faixa esquerda
+
+            blended = patch.copy().astype(np.float32)
+            blended[overlap_mask] = (
+                region[overlap_mask].astype(np.float32) * 0.5 +
+                patch[overlap_mask].astype(np.float32) * 0.5
+            )
+            mosaic[y0:y0 + h, x0:x0 + w] = blended.astype(patches[0].dtype)
+
+        return mosaic
+
+    def tissue_ratio(self, patch, threshold=240):
+        """
+        Retorna a proporção de tecido no patch.
+        Pixels muito claros são considerados fundo.
+        """
+        if patch.ndim == 3:
+            mask = np.mean(patch, axis=2) < threshold
+        else:
+            mask = patch < threshold
+
+        return mask.mean()
+
+    def __getitem__(self, index):
+        row = self.dataframe.iloc[index]
+        img_id = row.image_id.strip()
+
+        patch_folder = os.path.join(self.patches_dir, img_id)
+        try:
+            patch_files = sorted(os.listdir(patch_folder))
+            patch_files = [
+                f for f in patch_files
+                if f.lower().endswith(('.png'))
+            ]
+            patch_files = patch_files[:self.max_patches]
+
+            if len(patch_files) == 0:
+                raise RuntimeError(f"No patches found in {patch_folder}")
+
+            # Lê e aplica transforms em cada patch (ainda em HWC)
+            raw_patches = []
+            for patch_name in patch_files:
+                patch_path = os.path.join(patch_folder, patch_name)
+                patch = skio.imread(patch_path)
+
+                if self.transforms is not None:
+                    patch = self.transforms(image=patch)['image']
+                
+                score = self.tissue_ratio(patch)
+                raw_patches.append((score, patch))  # (score, HWC, uint8 ou float)
+                
+            raw_patches.sort(key=lambda x: x[0], reverse=True)
+            # Monta o mosaico (ainda HWC, antes do normalize)
+            mosaic = self._build_mosaic(raw_patches)  # (mosaic_H, mosaic_W, C)
+
+            if self.normalize:
+                mosaic = mosaic.astype(np.float32) / 255.0
+
+            # CHW para PyTorch
+            mosaic = np.transpose(mosaic, (2, 0, 1))
+            mosaic_tensor = torch.tensor(mosaic, dtype=torch.float32)
+
+            label = np.zeros(self.num_classes, dtype=np.float32)
+            label[:row.isup_grade] = 1.0
+
+            return mosaic_tensor, torch.tensor(label, dtype=torch.float32), img_id
+
+        except Exception as e:
+            raise RuntimeError(f"Erro ao carregar patches de {img_id}: {e}")

@@ -1,0 +1,59 @@
+\chapter{Conclusão}
+\label{cap:conclusao}
+%\phantom{2}
+Este trabalho apresentou uma metodologia robusta para a classificação automática dos graus ISUP em imagens histopatológicas de próstata, abordando desafios críticos como o desbalanceamento de classes, o ruído nos rótulos e a natureza ordinal intrínseca à progressão tumoral. A adoção de uma função de perda híbrida, combinando regressão ordinal e Focal Loss, elevou o índice kappa de 0,826 para 0,856 e a acurácia de 59,2\% para 66,0\%, evidenciando que a modelagem explícita da hierarquia entre os graus aprimora significativamente a coerência das predições. A filtragem de amostras de alta entropia proporcionou maior estabilidade ao treinamento, e o melhor desempenho foi obtido por meio de um ensemble baseado na média das probabilidades dos modelos EfficientNet-B0, B3 e B7, alcançando um kappa de 0,880 e uma acurácia de 69,8\%, superando o baseline em 5,3 e 10,6 pontos percentuais, respectivamente. Observou-se, ainda, que os erros de classificação concentraram-se predominantemente em classes adjacentes, reforçando a capacidade do método de capturar a progressão ordinal dos graus ISUP. Apesar dos excelentes resultados, a principal limitação do estudo reside no uso de um único dataset, ainda que multicêntrico e heterogêneo, o que indica a necessidade de validações futuras em bases de dados externas para comprovar a robustez e a generalização do método.
+
+\section{Contribuições}
+\label{sec:contribuições}
+Finalmente, as principais contribuições do método proposto desenvolvido nesta tese são descritas a seguir:
+
+\begin{enumerate}
+	
+	\item Proposta de uma função de perda híbrida denominada \textit{Ordinal Focal Regression Loss}, que combina regressão ordinal e \textit{focal loss}, explorando explicitamente a natureza hierárquica dos graus ISUP e mitigando o desbalanceamento entre classes no conjunto de dados PANDA;
+	
+	\item Desenvolvimento de um método de filtragem de amostras ruidosas baseado na entropia de Shannon, utilizando um \textit{ensemble} de modelos EfficientNet para identificar e remover instâncias de alta incerteza preditiva do conjunto de treinamento, melhorando a estabilidade e a capacidade de generalização dos modelos;
+	
+	\item Avaliação sistemática das variantes EfficientNet-B0, B3 e B7 na tarefa de classificação dos graus ISUP, demonstrando que arquiteturas mais compactas podem superar modelos de  maior profundidade quando aplicadas a conjuntos de dados histopatológicos com ruído e desbalanceamento;
+	
+	\item Proposta e análise de um \textit{ensemble} de variantes do EfficientNet, com avaliação de três estratégias de combinação (média, máximo e votação majoritária).
+\end{enumerate}
+
+\section{Próximas Atividades}
+\label{sec:trabalhos-futuros}
+
+Como próximas atividades para o desenvolvimento da tese, sugere-se algumas
+atividades:
+
+\begin{itemize}
+	\item Atividade 1: Empregar \textit{frameworks} de otimização bayesiana (\textit{Optuna}, \textit{Ray Tune}) para calibração do fator de ponderação $\lambda$ na função de perda ordinal;
+	\item Atividade 2: Investigar classificadores especialistas para classes intermediárias, visando reduzir erros de confusão;
+	\item Atividade 3: Explorar estratégias de \textit{ensemble}, incluindo métodos baseados em \textit{Oracle}, meta-aprendizado e agregação guiada por incerteza;
+	\item Atividade 4: Avaliar diferentes arquiteturas de \textit{backbone}, como \textit{ConvNeXt} e \textit{EfficientNetV2};
+	\item Atividade 5: Produzir e submeter artigos científicos relacionados ao método proposto;
+	\item Atividade 6: Realizar a redação e defesa da tese.	
+\end{itemize}
+
+A Tabela \ref{tab:cronograma} apresenta o cronograma previsto para as atividades. Para facilitar a visualização, o período de abril de 2026 a janeiro de 2027 foi agrupado em trimestres.
+
+\begin{table}[h]
+	\centering
+	\caption{Cronograma das atividades}
+	\begin{tabular}{cccc}
+		\hline
+		\textbf{Atividade} & \textbf{T1} & \textbf{T2} & \textbf{T3} \\
+		\hline
+		Atividade 1 & X &  &  \\
+		\hline
+		Atividade 2 & X & X &  \\
+		\hline
+		Atividade 3 & X & X &  \\
+		\hline
+		Atividade 4 & X & X &  \\
+		\hline
+		Atividade 5 & X & X & X \\
+		\hline
+		Atividade 6 &  &  & X \\
+		\hline
+	\end{tabular}
+	\label{tab:cronograma}
+\end{table}

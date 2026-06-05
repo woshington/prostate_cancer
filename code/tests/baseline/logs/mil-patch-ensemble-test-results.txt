@@ -1,0 +1,58 @@
+MIL + Patch-Level Ensemble — Test Results
+======================================================================
+
+=== Patch-Only ===
+ACCURACY     Mean: 0.681 | Std: 0.012 | 95% CI: [0.662, 0.700]
+KAPPA        Mean: 0.859 | Std: 0.012 | 95% CI: [0.840, 0.877]
+F1_MACRO     Mean: 0.616 | Std: 0.013 | 95% CI: [0.595, 0.637]
+RECALL_MACRO Mean: 0.613 | Std: 0.013 | 95% CI: [0.592, 0.633]
+PRECISION_MACRO Mean: 0.628 | Std: 0.013 | 95% CI: [0.606, 0.649]
+MEAN_ERROR   Mean: 0.437 | Std: 0.020 | 95% CI: [0.404, 0.470]
+
+=== MIL-Only ===
+ACCURACY     Mean: 0.662 | Std: 0.012 | 95% CI: [0.643, 0.682]
+KAPPA        Mean: 0.845 | Std: 0.012 | 95% CI: [0.824, 0.864]
+F1_MACRO     Mean: 0.605 | Std: 0.013 | 95% CI: [0.584, 0.625]
+RECALL_MACRO Mean: 0.605 | Std: 0.013 | 95% CI: [0.584, 0.626]
+PRECISION_MACRO Mean: 0.613 | Std: 0.013 | 95% CI: [0.592, 0.635]
+MEAN_ERROR   Mean: 0.476 | Std: 0.021 | 95% CI: [0.442, 0.511]
+
+=== Ensemble-Mean ===
+ACCURACY     Mean: 0.699 | Std: 0.012 | 95% CI: [0.681, 0.719]
+KAPPA        Mean: 0.866 | Std: 0.011 | 95% CI: [0.846, 0.884]
+F1_MACRO     Mean: 0.638 | Std: 0.013 | 95% CI: [0.616, 0.660]
+RECALL_MACRO Mean: 0.634 | Std: 0.013 | 95% CI: [0.613, 0.657]
+PRECISION_MACRO Mean: 0.648 | Std: 0.013 | 95% CI: [0.626, 0.670]
+MEAN_ERROR   Mean: 0.412 | Std: 0.020 | 95% CI: [0.379, 0.445]
+
+=== Ensemble-α=0.40 ===
+ACCURACY     Mean: 0.705 | Std: 0.012 | 95% CI: [0.686, 0.725]
+KAPPA        Mean: 0.867 | Std: 0.012 | 95% CI: [0.847, 0.885]
+F1_MACRO     Mean: 0.647 | Std: 0.013 | 95% CI: [0.627, 0.669]
+RECALL_MACRO Mean: 0.643 | Std: 0.013 | 95% CI: [0.622, 0.665]
+PRECISION_MACRO Mean: 0.658 | Std: 0.013 | 95% CI: [0.636, 0.680]
+MEAN_ERROR   Mean: 0.406 | Std: 0.020 | 95% CI: [0.372, 0.439]
+
+Best strategy: Ensemble-α=0.40
+
+Classification Report (best):
+              precision    recall  f1-score   support
+
+      ISUP 0       0.85      0.95      0.90       434
+      ISUP 1       0.78      0.76      0.77       400
+      ISUP 2       0.54      0.53      0.53       200
+      ISUP 3       0.50      0.46      0.48       185
+      ISUP 4       0.51      0.57      0.54       187
+      ISUP 5       0.77      0.59      0.67       184
+
+    accuracy                           0.71      1590
+   macro avg       0.66      0.64      0.65      1590
+weighted avg       0.70      0.71      0.70      1590
+
+Confusion Matrix:
+[[412  18   0   1   2   1]
+ [ 43 302  51   4   0   0]
+ [  3  45 106  38   8   0]
+ [ 10  10  29  85  45   6]
+ [ 11   8  10  25 107  26]
+ [  7   3   1  16  48 109]]
