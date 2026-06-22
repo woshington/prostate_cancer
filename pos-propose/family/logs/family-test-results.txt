@@ -1,0 +1,147 @@
+Avaliacao no conjunto de TESTE do PANDAS (data/test.csv)
+N amostras = 1590   membros = b0+b1+b2+b3+b4
+
+== Desempenho individual ==
+model    qwk  accuracy  macro_f1
+   B0 0.8736    0.7006    0.6596
+   B1 0.8757    0.7082    0.6578
+   B2 0.8749    0.7094    0.6635
+   B3 0.8459    0.6761    0.6286
+   B4 0.8677    0.7044    0.6558
+   B5 0.8318    0.6201    0.5455
+   B6 0.8371    0.6390    0.5693
+   B7 0.8511    0.6585    0.6029
+
+== Estrategias de ensemble (resumo) ==
+                            model    qwk  accuracy  macro_f1
+         ENS-mean(b0+b1+b2+b3+b4) 0.8889    0.7428    0.6990
+ENS-weighted_mean(b0+b1+b2+b3+b4) 0.8886    0.7428    0.6991
+          ENS-max(b0+b1+b2+b3+b4) 0.8490    0.6340    0.5936
+ENS-majority_vote(b0+b1+b2+b3+b4) 0.8914    0.7428    0.6997
+ENS-weighted_vote(b0+b1+b2+b3+b4) 0.8874    0.7440    0.7001
+       ENS-median(b0+b1+b2+b3+b4) 0.8932    0.7403    0.6976
+     ENS-boosting(b0+b1+b2+b3+b4) 0.8819    0.7314    0.6846
+  ENS-stacking_lr(b0+b1+b2+b3+b4) 0.8861    0.7497    0.7074
+
+Melhor estrategia por QWK: median
+
+== mean ==
+QWK=0.8889  Acc=74.28%  MacroF1=0.6990
+              precision    recall  f1-score   support
+
+      ISUP 0     0.8816    0.9263    0.9034       434
+      ISUP 1     0.7743    0.7975    0.7857       400
+      ISUP 2     0.5864    0.5600    0.5729       200
+      ISUP 3     0.5519    0.5459    0.5489       185
+      ISUP 4     0.6071    0.6364    0.6214       187
+      ISUP 5     0.8421    0.6957    0.7619       184
+
+    accuracy                         0.7428      1590
+   macro avg     0.7072    0.6936    0.6990      1590
+weighted avg     0.7423    0.7428    0.7414      1590
+
+== weighted_mean ==
+QWK=0.8886  Acc=74.28%  MacroF1=0.6991
+              precision    recall  f1-score   support
+
+      ISUP 0     0.8816    0.9263    0.9034       434
+      ISUP 1     0.7743    0.7975    0.7857       400
+      ISUP 2     0.5864    0.5600    0.5729       200
+      ISUP 3     0.5489    0.5459    0.5474       185
+      ISUP 4     0.6103    0.6364    0.6230       187
+      ISUP 5     0.8421    0.6957    0.7619       184
+
+    accuracy                         0.7428      1590
+   macro avg     0.7073    0.6936    0.6991      1590
+weighted avg     0.7423    0.7428    0.7414      1590
+
+== max ==
+QWK=0.8490  Acc=63.40%  MacroF1=0.5936
+              precision    recall  f1-score   support
+
+      ISUP 0     0.9290    0.7235    0.8135       434
+      ISUP 1     0.7032    0.6575    0.6796       400
+      ISUP 2     0.4496    0.5350    0.4886       200
+      ISUP 3     0.4051    0.3459    0.3732       185
+      ISUP 4     0.4857    0.5455    0.5139       187
+      ISUP 5     0.5809    0.8587    0.6930       184
+
+    accuracy                         0.6340      1590
+   macro avg     0.5922    0.6110    0.5936      1590
+weighted avg     0.6585    0.6340    0.6385      1590
+
+== majority_vote ==
+QWK=0.8914  Acc=74.28%  MacroF1=0.6997
+              precision    recall  f1-score   support
+
+      ISUP 0     0.8794    0.9240    0.9011       434
+      ISUP 1     0.7724    0.7975    0.7847       400
+      ISUP 2     0.5753    0.5350    0.5544       200
+      ISUP 3     0.5691    0.5568    0.5628       185
+      ISUP 4     0.6095    0.6845    0.6448       187
+      ISUP 5     0.8542    0.6685    0.7500       184
+
+    accuracy                         0.7428      1590
+   macro avg     0.7100    0.6944    0.6997      1590
+weighted avg     0.7435    0.7428    0.7412      1590
+
+== weighted_vote ==
+QWK=0.8874  Acc=74.40%  MacroF1=0.7001
+              precision    recall  f1-score   support
+
+      ISUP 0     0.8726    0.9309    0.9008       434
+      ISUP 1     0.7794    0.7950    0.7871       400
+      ISUP 2     0.5860    0.5450    0.5648       200
+      ISUP 3     0.5635    0.5514    0.5574       185
+      ISUP 4     0.6231    0.6631    0.6425       187
+      ISUP 5     0.8235    0.6848    0.7478       184
+
+    accuracy                         0.7440      1590
+   macro avg     0.7080    0.6950    0.7001      1590
+weighted avg     0.7421    0.7440    0.7419      1590
+
+== median ==
+QWK=0.8932  Acc=74.03%  MacroF1=0.6976
+              precision    recall  f1-score   support
+
+      ISUP 0     0.8847    0.9194    0.9017       434
+      ISUP 1     0.7663    0.7950    0.7804       400
+      ISUP 2     0.5661    0.5350    0.5501       200
+      ISUP 3     0.5652    0.5622    0.5637       185
+      ISUP 4     0.6087    0.6738    0.6396       187
+      ISUP 5     0.8542    0.6685    0.7500       184
+
+    accuracy                         0.7403      1590
+   macro avg     0.7075    0.6923    0.6976      1590
+weighted avg     0.7417    0.7403    0.7392      1590
+
+== boosting ==
+QWK=0.8819  Acc=73.14%  MacroF1=0.6846
+              precision    recall  f1-score   support
+
+      ISUP 0     0.8739    0.9263    0.8993       434
+      ISUP 1     0.7690    0.7825    0.7757       400
+      ISUP 2     0.5522    0.5550    0.5536       200
+      ISUP 3     0.5351    0.5351    0.5351       185
+      ISUP 4     0.6524    0.5722    0.6097       187
+      ISUP 5     0.7572    0.7120    0.7339       184
+
+    accuracy                         0.7314      1590
+   macro avg     0.6900    0.6805    0.6846      1590
+weighted avg     0.7281    0.7314    0.7292      1590
+
+== stacking_lr ==
+QWK=0.8861  Acc=74.97%  MacroF1=0.7074
+              precision    recall  f1-score   support
+
+      ISUP 0     0.8704    0.9286    0.8986       434
+      ISUP 1     0.7767    0.8000    0.7882       400
+      ISUP 2     0.5815    0.5350    0.5573       200
+      ISUP 3     0.5792    0.5730    0.5761       185
+      ISUP 4     0.6705    0.6203    0.6444       187
+      ISUP 5     0.8000    0.7609    0.7799       184
+
+    accuracy                         0.7497      1590
+   macro avg     0.7131    0.7030    0.7074      1590
+weighted avg     0.7450    0.7497    0.7467      1590
+

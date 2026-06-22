@@ -1,0 +1,2 @@
+best trial QWK=0.8277
+  best params: {'lr': 3.240101260738473e-05, 'dropout_rate': 0.3147967143486773, 'focal_gamma': 1.970770305428915, 'focal_alpha': 0.18696718501601983, 'unfreeze_blocks': 5, 'weight_decay': 6.235406164587347e-06, 'batch_size': 2}
