@@ -1,0 +1,39 @@
+EfficientNet-B1 (HED color space) + Ordinal Focal Loss
+======================================================================
+
+Reused best Optuna hyperparameters (from RGB B1 search):
+  lr: 0.00015930522616241006
+  dropout_rate: 0.4540362888980227
+  focal_gamma: 1.0617534828874073
+  focal_alpha: 0.8759278817295955
+  unfreeze_blocks: 5
+  weight_decay: 4.335281794951567e-06
+  batch_size: 8
+  (RGB study best val QWK during HPO: 0.8665)
+
+Validation-set results (bootstrap 1000, 95% CI):
+  Accuracy : 66.50% ± 1.08%  [64.23%-68.53%]
+  QW Kappa : 0.8534 ± 0.0107  [0.8305-0.8726]
+  Macro F1 : 0.6033 ± 0.0120  [0.5774-0.6251]
+
+Classification Report:
+              precision    recall  f1-score   support
+
+      ISUP 0     0.7953    0.9052    0.8467       485
+      ISUP 1     0.7091    0.7327    0.7207       449
+      ISUP 2     0.5114    0.3947    0.4455       228
+      ISUP 3     0.4530    0.4020    0.4260       204
+      ISUP 4     0.5079    0.4660    0.4861       206
+      ISUP 5     0.6780    0.7128    0.6950       195
+
+    accuracy                         0.6650      1767
+   macro avg     0.6091    0.6022    0.6033      1767
+weighted avg     0.6508    0.6650    0.6556      1767
+
+Confusion Matrix:
+[[439  38   5   2   1   0]
+ [ 72 329  37   7   4   0]
+ [ 13  71  90  42   9   3]
+ [ 10  12  30  82  49  21]
+ [  7  11  12  38  96  42]
+ [ 11   3   2  10  30 139]]

@@ -1,0 +1,40 @@
+Swin-SMALL + Ordinal Focal Loss (Optuna HPO)
+======================================================================
+
+Best Optuna hyperparameters:
+  use_ordinal_loss: False
+  lr: 0.000462258900102083
+  dropout_rate: 0.20616955533913808
+  focal_gamma: 1.5454749016213019
+  focal_alpha: 0.24672360788274705
+  unfreeze_blocks: 2
+  weight_decay: 3.752055855124284e-05
+  batch_size: 8
+  (study best val QWK during HPO: 0.6862)
+
+Validation-set results (bootstrap 1000, 95% CI):
+  Accuracy : 51.39% ± 1.12%  [49.12%-53.54%]
+  QW Kappa : 0.7546 ± 0.0136  [0.7268-0.7812]
+  Macro F1 : 0.4573 ± 0.0119  [0.4336-0.4804]
+
+Classification Report:
+              precision    recall  f1-score   support
+
+      ISUP 0     0.7177    0.7443    0.7308       485
+      ISUP 1     0.5358    0.5835    0.5586       449
+      ISUP 2     0.3240    0.3553    0.3389       228
+      ISUP 3     0.2960    0.3235    0.3091       204
+      ISUP 4     0.3351    0.3107    0.3224       206
+      ISUP 5     0.6667    0.3795    0.4837       195
+
+    accuracy                         0.5139      1767
+   macro avg     0.4792    0.4495    0.4573      1767
+weighted avg     0.5217    0.5139    0.5129      1767
+
+Confusion Matrix:
+[[361  99   9  12   3   1]
+ [ 93 262  67  24   3   0]
+ [ 17  78  81  36  15   1]
+ [ 14  24  52  66  39   9]
+ [ 10  14  33  59  64  26]
+ [  8  12   8  26  67  74]]

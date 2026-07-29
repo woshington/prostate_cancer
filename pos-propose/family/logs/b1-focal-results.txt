@@ -1,0 +1,38 @@
+EfficientNet-B1 + Focal Loss (no ordinal)
+======================================================================
+
+Reused best Optuna hyperparameters (B1):
+  lr: 0.00015930522616241006
+  dropout_rate: 0.4540362888980227
+  focal_gamma: 1.0617534828874073
+  focal_alpha: 0.8759278817295955
+  unfreeze_blocks: 5
+  weight_decay: 4.335281794951567e-06
+  batch_size: 8
+
+Validation-set results (bootstrap 1000, 95% CI):
+  Accuracy : 72.84% ± 1.04%  [70.74%-74.76%]
+  QW Kappa : 0.8717 ± 0.0101  [0.8519-0.8897]
+  Macro F1 : 0.6715 ± 0.0122  [0.6458-0.6934]
+
+Classification Report:
+              precision    recall  f1-score   support
+
+      ISUP 0     0.8492    0.9402    0.8924       485
+      ISUP 1     0.7741    0.8241    0.7983       449
+      ISUP 2     0.6375    0.4474    0.5258       228
+      ISUP 3     0.5232    0.6078    0.5624       204
+      ISUP 4     0.5781    0.5388    0.5578       206
+      ISUP 5     0.7607    0.6359    0.6927       195
+
+    accuracy                         0.7284      1767
+   macro avg     0.6871    0.6657    0.6715      1767
+weighted avg     0.7238    0.7284    0.7220      1767
+
+Confusion Matrix:
+[[456  19   2   5   2   1]
+ [ 52 370  17   6   3   1]
+ [ 12  70 102  32   7   5]
+ [  4   8  27 124  32   9]
+ [  4  10   8  50 111  23]
+ [  9   1   4  20  37 124]]

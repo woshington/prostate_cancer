@@ -117,6 +117,22 @@ analyse/                 # GradCAM, FiftyOne visualization, color analysis
 
 Training logs and confusion matrices are saved under `code/tests/baseline/logs/`.
 
+### `pos-propose/` — Post-Proposal Experiments (current active track)
+
+The newest research, run **independently of the `utils/` library**. These notebooks are self-contained: they use **torchvision** EfficientNet directly (not the `EfficientNetApi`/`efficientnet_pytorch` wrappers) and define their own training loops, losses, and augmentation inline.
+
+```
+pos-propose/family/     # EfficientNet family (b0–b7) sweep: Optuna HPO + Ordinal Focal Loss
+pos-propose/            # compare-datasets, gradcam-b0 top-level analyses
+```
+
+Key differences from the `code/` notebooks:
+- **`OrdinalFocalLoss`** (defined inline, not in `utils/`) — focal BCE over the ordinal thresholds plus a soft penalty on expected-class distance; tunable `alpha`, `gamma`, `ordinal_weight`.
+- **Optuna TPE HPO** per backbone — tunes `lr`, `dropout`, `focal_gamma`/`focal_alpha`, `unfreeze_blocks`, `weight_decay`, `batch_size` against validation QWK on a short proxy run, then trains fully (AMP, warmup + cosine, early stopping).
+- **Entropy noise cleaning** — drops the noisiest ~20% of images by `difficulty_score` from `entropy.csv` before training.
+- Backbones are toggled via `EFFICIENTNET_REGISTRY` (comment/uncomment `b0`…`b7`); trained weights land in `pos-propose/family/models/`, logs/CSVs in `pos-propose/family/logs/`.
+- Family-level ensemble comparison, `double-fault-tsne.ipynb` (model-diversity analysis), and `compare-datasets.ipynb` live here too.
+
 ## Experiment Dashboard
 
 `experiment-dashboard/` — React + Vite + TypeScript app for visualizing experiment results. Currently at scaffold stage (default Vite template). Run with:

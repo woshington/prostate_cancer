@@ -1,0 +1,5 @@
+Best trial: 12. Best value: 0.843116: 100%|██████████| 20/20 [25:14:39<00:00, 4543.99s/it]  
+  [OOM] b7 trial pruned (batch_size=4)         
+  best trial QWK=0.8431
+  best params: {'use_ordinal_loss': True, 'lr': 3.4196538382062763e-05, 'dropout_rate': 0.44664201871762094, 'focal_gamma': 2.8498251054807544, 'focal_alpha': 0.6267520599865202, 'unfreeze_blocks': 4, 'weight_decay': 6.659703893931952e-06, 'batch_size': 2, 'ordinal_weight': 0.08022729644102494}
+  

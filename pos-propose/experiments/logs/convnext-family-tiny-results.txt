@@ -1,0 +1,41 @@
+ConvNeXt-TINY + Ordinal Focal Loss (Optuna HPO)
+======================================================================
+
+Best Optuna hyperparameters:
+  use_ordinal_loss: True
+  lr: 0.00012172847081122418
+  dropout_rate: 0.17046211248738133
+  focal_gamma: 3.406590942262119
+  focal_alpha: 0.15964051494381667
+  unfreeze_blocks: 6
+  weight_decay: 0.00020736445177905034
+  batch_size: 8
+  ordinal_weight: 0.7839152856093508
+  (study best val QWK during HPO: 0.8445)
+
+Validation-set results (bootstrap 1000, 95% CI):
+  Accuracy : 70.01% ± 1.02%  [67.86%-71.87%]
+  QW Kappa : 0.8794 ± 0.0095  [0.8597-0.8965]
+  Macro F1 : 0.6415 ± 0.0115  [0.6172-0.6624]
+
+Classification Report:
+              precision    recall  f1-score   support
+
+      ISUP 0     0.8552    0.9258    0.8891       485
+      ISUP 1     0.7614    0.7461    0.7537       449
+      ISUP 2     0.5142    0.4781    0.4955       228
+      ISUP 3     0.5077    0.4853    0.4962       204
+      ISUP 4     0.5455    0.4369    0.4852       206
+      ISUP 5     0.6739    0.7949    0.7294       195
+
+    accuracy                         0.7001      1767
+   macro avg     0.6430    0.6445    0.6415      1767
+weighted avg     0.6911    0.7001    0.6938      1767
+
+Confusion Matrix:
+[[449  29   3   1   2   1]
+ [ 48 335  53  12   1   0]
+ [  8  63 109  39   6   3]
+ [  7   6  27  99  48  17]
+ [  6   4  16  36  90  54]
+ [  7   3   4   8  18 155]]

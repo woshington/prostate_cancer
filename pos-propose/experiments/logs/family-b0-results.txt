@@ -1,0 +1,41 @@
+EfficientNet-B0 + Ordinal Focal Loss (Optuna HPO)
+======================================================================
+
+Best Optuna hyperparameters:
+  use_ordinal_loss: True
+  lr: 0.00010869797004677294
+  dropout_rate: 0.10528859252483509
+  focal_gamma: 3.0235490879690055
+  focal_alpha: 0.1126045253361395
+  unfreeze_blocks: 5
+  weight_decay: 0.0009483004018338738
+  batch_size: 8
+  ordinal_weight: 0.07329726162959471
+  (study best val QWK during HPO: 0.8475)
+
+Validation-set results (bootstrap 1000, 95% CI):
+  Accuracy : 73.57% ± 1.02%  [71.53%-75.55%]
+  QW Kappa : 0.8821 ± 0.0103  [0.8622-0.9010]
+  Macro F1 : 0.6889 ± 0.0115  [0.6653-0.7105]
+
+Classification Report:
+              precision    recall  f1-score   support
+
+      ISUP 0     0.8536    0.9258    0.8882       485
+      ISUP 1     0.7914    0.7773    0.7843       449
+      ISUP 2     0.6243    0.5175    0.5659       228
+      ISUP 3     0.5654    0.5294    0.5468       204
+      ISUP 4     0.5708    0.5874    0.5789       206
+      ISUP 5     0.7452    0.7949    0.7692       195
+
+    accuracy                         0.7357      1767
+   macro avg     0.6918    0.6887    0.6889      1767
+weighted avg     0.7300    0.7357    0.7316      1767
+
+Confusion Matrix:
+[[449  25   1   2   7   1]
+ [ 52 349  37   7   4   0]
+ [  6  57 118  32  13   2]
+ [  4   6  24 108  48  14]
+ [  6   1   9  33 121  36]
+ [  9   3   0   9  19 155]]

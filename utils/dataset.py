@@ -288,9 +288,8 @@ class PandasOverlapDataset(Dataset):
         ov = self.overlap
 
         patches = [patch[1] for patch in patches]
-
         # Usa o primeiro patch para inferir dimensão
-        h, w, c = patches[0].shape
+        h, w, c = patches[0].shape       
 
         # Tamanho total do mosaico levando em conta o overlap
         mosaic_h = G * h - (G - 1) * ov
@@ -367,9 +366,9 @@ class PandasOverlapDataset(Dataset):
                 
                 score = self.tissue_ratio(patch)
                 raw_patches.append((score, patch))  # (score, HWC, uint8 ou float)
-                
+            
             raw_patches.sort(key=lambda x: x[0], reverse=True)
-            # Monta o mosaico (ainda HWC, antes do normalize)
+
             mosaic = self._build_mosaic(raw_patches)  # (mosaic_H, mosaic_W, C)
 
             if self.normalize:
