@@ -512,7 +512,7 @@ def save_model_artifacts(name, history, best_epoch, res, best_params, study_best
 
         plt.suptitle(f'EfficientNet-{name.upper()} — Ordinal Focal Loss (Optuna)', y=1.01)
         plt.tight_layout()
-        plt.savefig(os.path.join(LOG_DIR, f'overlap-{name}-training.png'), dpi=200, bbox_inches='tight')
+        plt.savefig(os.path.join(LOG_DIR, f'eff-net-49-{name}-training.png'), dpi=200, bbox_inches='tight')
         plt.show()
 
     # ── confusion matrix ─────────────────────────────────────────────
@@ -527,11 +527,11 @@ def save_model_artifacts(name, history, best_epoch, res, best_params, study_best
     axes[1].set_title('Confusion (normalized)'); axes[1].set_ylabel('True'); axes[1].set_xlabel('Pred')
     plt.suptitle(f'EfficientNet-{name.upper()} — Validation', y=1.02)
     plt.tight_layout()
-    plt.savefig(os.path.join(LOG_DIR, f'overlap-{name}-confusion-matrix.png'), dpi=200, bbox_inches='tight')
+    plt.savefig(os.path.join(LOG_DIR, f'eff-net-49-{name}-confusion-matrix.png'), dpi=200, bbox_inches='tight')
     plt.show()
 
     # ── results txt ──────────────────────────────────────────────────
-    with open(os.path.join(LOG_DIR, f'overlap-{name}-results.txt'), 'w') as f:
+    with open(os.path.join(LOG_DIR, f'eff-net-49-{name}-results.txt'), 'w') as f:
         f.write(f'EfficientNet-{name.upper()} + Ordinal Focal Loss (Optuna HPO)\n')
         f.write('=' * 70 + '\n\nBest Optuna hyperparameters:\n')
         for k, v in best_params.items():
@@ -551,127 +551,64 @@ def save_model_artifacts(name, history, best_epoch, res, best_params, study_best
         f.write('\nConfusion Matrix:\n' + str(cm) + '\n')
 
 # %% [markdown]
-# ## Run the Full Sweep — Optuna + Training + Evaluation for every backbone
+# ## Train (or load) + Evaluate — single backbone (EfficientNet-B1)
 #
-# This is the heavy cell. It iterates over `MODELS_TO_RUN`. For each backbone:
-# - if a checkpoint already exists on disk, it is **loaded and evaluated** (no retraining);
-# - otherwise, the full Optuna-tuned training + evaluation runs as before.
-# In both cases the model ends up in `summary`, which the comparison and test-set
-# sections further down depend on.
+# Only one backbone is used (`b1`), so there's no need for a multi-model
+# sweep/comparison: this cell just trains-or-loads B1 and evaluates it on
+# the validation set.
+# - If a checkpoint already exists on disk, it is **loaded and evaluated**
+#   (no retraining).
+# - Otherwise, the full Optuna-tuned training + evaluation runs.
 
 # %%
-summary = {}
+NAME = 'b1'
 
-for name in MODELS_TO_RUN:
-    model_path = os.path.join(MODEL_DIR, f'overlap-{name}.pth')
-    log_path   = os.path.join(LOG_DIR,   f'overlap-{name}.txt')
+model_path = os.path.join(MODEL_DIR, f'eff-net-49-{NAME}.pth')
+log_path   = os.path.join(LOG_DIR,   f'eff-net-49-{NAME}.txt')
 
-    best_params = {
-        "use_ordinal_loss": True,
-        "lr": 0.00010869797004677294,
-        "dropout_rate": 0.10528859252483509,
-        "focal_gamma": 3.0235490879690055,
-        "focal_alpha": 0.1126045253361395,
-        "unfreeze_blocks": 5,
-        "weight_decay": 0.0009483004018338738,
-        "batch_size": 4,
-        "ordinal_weight": 0.07329726162959471
-    }
+best_params = {
+    "use_ordinal_loss": True,
+    "lr": 0.00010869797004677294,
+    "dropout_rate": 0.10528859252483509,
+    "focal_gamma": 3.0235490879690055,
+    "focal_alpha": 0.1126045253361395,
+    "unfreeze_blocks": 5,
+    "weight_decay": 0.0009483004018338738,
+    "batch_size": 4,
+    "ordinal_weight": 0.07329726162959471
+}
 
-    if os.path.exists(model_path):
-        # --- Modelo já treinado: apenas carrega e avalia ---
-        print(f"EfficientNet-{name.upper()} já treinada. Carregando checkpoint para avaliação...")
+if os.path.exists(model_path):
+    # --- Modelo já treinado: apenas carrega e avalia ---
+    print(f"EfficientNet-{NAME.upper()} já treinada. Carregando checkpoint para avaliação...")
 
-        res = evaluate_on_val(name, model_path, best_params)
-        print(f'  >>> VAL  QWK={res["kappa"]:.4f}  acc={res["acc"]*100:.2f}%  macroF1={res["f1"]:.4f}')
-
-        summary[name] = dict(
-            best_params=best_params, best_epoch=None,
-            acc=res['acc'], kappa=res['kappa'], f1=res['f1'],
-            acc_ci=res['acc_ci'], kappa_ci=res['kappa_ci'], f1_ci=res['f1_ci'],
-            acc_std=res['acc_std'], kappa_std=res['kappa_std'], f1_std=res['f1_std'],
-        )
-
-        # sem histórico de treino (não treinamos agora), mas ainda salvamos
-        # matriz de confusão + resultados a partir da avaliação carregada
-        save_model_artifacts(name, history=None, best_epoch=None, res=res,
-                              best_params=best_params, study_best=None)
-        free_vram()
-        continue
-
-    print('\n' + '#' * 72)
-    print(f'#  EfficientNet-{name.upper()}  —  Optuna HPO + full training + validation eval')
-    print('#' * 72)
-
-    # 2) full training (checkpoints the best val-QWK weights)
-    history, best_val_kappa, best_epoch = run_full_training(name, best_params, log_path, model_path)
-
-    # 3) evaluation on the validation set (bootstrap CIs)
-    res = evaluate_on_val(name, model_path, best_params)
+    res = evaluate_on_val(NAME, model_path, best_params)
     print(f'  >>> VAL  QWK={res["kappa"]:.4f}  acc={res["acc"]*100:.2f}%  macroF1={res["f1"]:.4f}')
 
-    summary[name] = dict(
-        best_params=best_params, best_epoch=best_epoch,
-        acc=res['acc'], kappa=res['kappa'], f1=res['f1'],
-        acc_ci=res['acc_ci'], kappa_ci=res['kappa_ci'], f1_ci=res['f1_ci'],
-        acc_std=res['acc_std'], kappa_std=res['kappa_std'], f1_std=res['f1_std'],
-    )
+    save_model_artifacts(NAME, history=None, best_epoch=None, res=res,
+                          best_params=best_params, study_best=None)
+    free_vram()
+else:
+    print('\n' + '#' * 72)
+    print(f'#  EfficientNet-{NAME.upper()}  —  Optuna HPO + full training + validation eval')
+    print('#' * 72)
 
-    save_model_artifacts(name, history, best_epoch, res, best_params, study_best=best_val_kappa)
+    # full training (checkpoints the best val-QWK weights)
+    history, best_val_kappa, best_epoch = run_full_training(NAME, best_params, log_path, model_path)
+
+    # evaluation on the validation set (bootstrap CIs)
+    res = evaluate_on_val(NAME, model_path, best_params)
+    print(f'  >>> VAL  QWK={res["kappa"]:.4f}  acc={res["acc"]*100:.2f}%  macroF1={res["f1"]:.4f}')
+
+    save_model_artifacts(NAME, history, best_epoch, res, best_params, study_best=best_val_kappa)
     free_vram()
 
-print('\nSweep complete.')
-
-# %% [markdown]
-# ## Final Comparison — all EfficientNet b0–b7 on the validation set
+print('\nDone.')
 
 # %%
-rows = []
-for name, s in summary.items():
-    rows.append(dict(
-        model=f'EfficientNet-{name}',
-        qwk=s['kappa'], acc=s['acc'], macro_f1=s['f1'],
-        qwk_lo=s['kappa_ci'][0], qwk_hi=s['kappa_ci'][1],
-        best_epoch=s['best_epoch'],
-    ))
-
-df_summary = pd.DataFrame(rows).sort_values('qwk', ascending=False).reset_index(drop=True)
-df_summary.to_csv(os.path.join(LOG_DIR, 'family-summary.csv'), index=False)
-display(df_summary)
-
-best_row = df_summary.iloc[0]
-print(f'\nBest model on validation: {best_row["model"]}  '
-      f'(QWK={best_row["qwk"]:.4f}, acc={best_row["acc"]*100:.2f}%, macroF1={best_row["macro_f1"]:.4f})')
-
-# bar chart of validation QWK with 95% CI
-order = df_summary.sort_values('qwk')
-yerr  = np.vstack([order['qwk'] - order['qwk_lo'], order['qwk_hi'] - order['qwk']])
-fig, ax = plt.subplots(figsize=(10, 5))
-ax.barh(order['model'], order['qwk'], xerr=yerr, color='steelblue', alpha=0.85, capsize=4)
-ax.set_xlabel('Validation QWK')
-ax.set_title('EfficientNet b0-b7 — Validation QWK (Ordinal Focal Loss + Optuna)')
-ax.grid(True, axis='x', alpha=0.3)
-plt.tight_layout()
-plt.savefig(os.path.join(LOG_DIR, 'overlap-comparison.png'), dpi=200, bbox_inches='tight')
-plt.show()
-
-# combined text summary + best params per model
-with open(os.path.join(LOG_DIR, 'overlap-summary.txt'), 'w') as f:
-    f.write('EfficientNet family (b0-b7) — Ordinal Focal Loss + Optuna HPO\n')
-    f.write('Validation-set comparison (noise-cleaned, entropy filter '
-            f'{ENTROPY_DROP_FRAC:.0%})\n')
-    f.write('=' * 72 + '\n\n')
-    f.write(df_summary.to_string(index=False) + '\n\n')
-    f.write('Best hyperparameters per model:\n')
-    for name, s in summary.items():
-        f.write(f'  {name}: {json.dumps(s["best_params"])}\n')
-
-print('\nSaved: logs/overlap-summary.csv, logs/overlap-summary.txt, logs/overlap-comparison.png')
-
-# %%
-# --- Test Set Evaluation & Ensemble ---
+# --- Test Set Evaluation ---
 print('\n' + '=' * 72)
-print('=' * 20 + ' TEST SET EVALUATION & ENSEMBLE ' + '=' * 20)
+print('=' * 25 + ' TEST SET EVALUATION ' + '=' * 25)
 print('=' * 72)
 
 df_test = pd.read_csv(os.path.join(DATA_DIR, 'test.csv'))
@@ -682,84 +619,35 @@ print(f'Test records: {len(df_test)}')
 test_ds = PandasOverlapDataset(IMAGES_DIR, df_test, transforms=None, overlap=0)
 test_loader = DataLoader(test_ds, batch_size=2, shuffle=False, num_workers=NUM_WORKERS, pin_memory=True)
 
-test_gts = []
-all_test_logits = {name: [] for name in summary.keys()}
+print(f'\nEvaluating EfficientNet-{NAME.upper()} on Test Set...')
 
-for name in summary.keys():
-    print(f'\nEvaluating EfficientNet-{name.upper()} on Test Set...')
-    best_params = summary[name]['best_params']
+free_vram()
+model = build_model(NAME, best_params['dropout_rate'], best_params['unfreeze_blocks'])
+model.load_state_dict(torch.load(model_path, weights_only=True))
+model.eval()
 
-    free_vram()
-    model = build_model(name, best_params['dropout_rate'], best_params['unfreeze_blocks'])
-    # usa o mesmo nome de checkpoint gerado/lido no sweep acima (overlap-{name}.pth)
-    model_path = os.path.join(MODEL_DIR, f'overlap-{name}.pth')
-    model.load_state_dict(torch.load(model_path, weights_only=True))
-    model.eval()
+preds_list, gts_list = [], []
 
-    preds, logits_list = [], []
-    gts = []
+with torch.no_grad():
+    for imgs, targets, _ in tqdm(test_loader, desc=f'Test {NAME}', leave=False):
+        imgs = imgs.to(device, non_blocking=True)
+        with autocast(device_type='cuda', enabled=USE_AMP, dtype=torch.float16):
+            logits = model(imgs)
+        preds_list.append(decode_ordinal_predictions(logits).cpu())
+        gts_list.append(targets.sum(1).long().cpu())
 
-    with torch.no_grad():
-        for imgs, targets, _ in tqdm(test_loader, desc=f'Test {name}', leave=False):
-            imgs = imgs.to(device, non_blocking=True)
-            with autocast(device_type='cuda', enabled=USE_AMP, dtype=torch.float16):
-                logits = model(imgs)
-            logits_list.append(logits.float().cpu())
-            preds.append(decode_ordinal_predictions(logits).cpu())
+preds = torch.cat(preds_list).numpy()
+gts   = torch.cat(gts_list).numpy()
 
-            if name == list(summary.keys())[0]:
-                gts.append(targets.sum(1).long().cpu())
+test_acc   = accuracy_score(gts, preds)
+test_kappa = cohen_kappa_score(gts, preds, weights='quadratic')
+test_f1    = f1_score(gts, preds, average='macro', zero_division=0)
 
-    preds = torch.cat(preds).numpy()
-    if name == list(summary.keys())[0]:
-        test_gts = torch.cat(gts).numpy()
+print(f'  >>> TEST  EfficientNet-{NAME.upper()}  QWK={test_kappa:.4f}  acc={test_acc*100:.2f}%  macroF1={test_f1:.4f}')
 
-    all_test_logits[name] = torch.cat(logits_list)
+free_vram(model)
 
-    acc = accuracy_score(test_gts, preds)
-    kappa = cohen_kappa_score(test_gts, preds, weights='quadratic')
-    f1 = f1_score(test_gts, preds, average='macro', zero_division=0)
-
-    print(f'  >>> TEST  EfficientNet-{name.upper()}  QWK={kappa:.4f}  acc={acc*100:.2f}%  macroF1={f1:.4f}')
-
-print('\n' + '-' * 72)
-print('--- Ensemble Evaluation ---')
-
-# Average logits
-ensemble_logits = torch.zeros_like(all_test_logits[list(summary.keys())[0]])
-for name in summary.keys():
-    ensemble_logits += all_test_logits[name]
-ensemble_logits /= len(summary.keys())
-
-# Average Probs
-ensemble_probs = torch.zeros_like(all_test_logits[list(summary.keys())[0]])
-for name in summary.keys():
-    ensemble_probs += torch.sigmoid(all_test_logits[name])
-ensemble_probs /= len(summary.keys())
-
-ensemble_preds_logits = decode_ordinal_predictions(ensemble_logits).numpy()
-ensemble_preds_probs = (ensemble_probs > 0.5).sum(dim=1).numpy()
-
-acc_ens = accuracy_score(test_gts, ensemble_preds_logits)
-kappa_ens = cohen_kappa_score(test_gts, ensemble_preds_logits, weights='quadratic')
-f1_ens = f1_score(test_gts, ensemble_preds_logits, average='macro', zero_division=0)
-print(f'  >>> TEST ENSEMBLE (Mean Logits) QWK={kappa_ens:.4f}  acc={acc_ens*100:.2f}%  macroF1={f1_ens:.4f}')
-
-acc_ens_p = accuracy_score(test_gts, ensemble_preds_probs)
-kappa_ens_p = cohen_kappa_score(test_gts, ensemble_preds_probs, weights='quadratic')
-f1_ens_p = f1_score(test_gts, ensemble_preds_probs, average='macro', zero_division=0)
-print(f'  >>> TEST ENSEMBLE (Mean Probs)  QWK={kappa_ens_p:.4f}  acc={acc_ens_p*100:.2f}%  macroF1={f1_ens_p:.4f}')
-
-with open(os.path.join(LOG_DIR, 'overlap-test-results.txt'), 'w') as f:
+with open(os.path.join(LOG_DIR, 'eff-net-49-test-results.txt'), 'w') as f:
     f.write('Test Set Results\n')
     f.write('=' * 50 + '\n')
-    for name in summary.keys():
-        preds = decode_ordinal_predictions(all_test_logits[name]).numpy()
-        k = cohen_kappa_score(test_gts, preds, weights='quadratic')
-        a = accuracy_score(test_gts, preds)
-        f1_sc = f1_score(test_gts, preds, average='macro', zero_division=0)
-        f.write(f'EfficientNet-{name.upper()}: QWK={k:.4f}, Acc={a*100:.2f}%, F1={f1_sc:.4f}\n')
-
-    f.write('-' * 50 + '\n')
-    f.write(f'Ensemble (Mean Logits): QWK={kappa_ens:.4f}, Acc={acc_ens*100:.2f}%, F1={f1_ens:.4f}\n')
-    f.write(f'Ensemble (Mean Probs):  QWK={kappa_ens_p:.4f}, Acc={acc_ens_p*100:.2f}%, F1={f1_ens_p:.4f}\n')
+    f.write(f'EfficientNet-{NAME.upper()}: QWK={test_kappa:.4f}, Acc={test_acc*100:.2f}%, F1={test_f1:.4f}\n')

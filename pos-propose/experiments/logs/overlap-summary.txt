@@ -1,0 +1,9 @@
+EfficientNet family (b0-b7) — Ordinal Focal Loss + Optuna HPO
+Validation-set comparison (noise-cleaned, entropy filter 20%)
+========================================================================
+
+          model      qwk      acc  macro_f1   qwk_lo   qwk_hi best_epoch
+EfficientNet-b1 0.869936 0.685279  0.631653 0.847011 0.890728       None
+
+Best hyperparameters per model:
+  b1: {"use_ordinal_loss": true, "lr": 0.00010869797004677294, "dropout_rate": 0.10528859252483509, "focal_gamma": 3.0235490879690055, "focal_alpha": 0.1126045253361395, "unfreeze_blocks": 5, "weight_decay": 0.0009483004018338738, "batch_size": 4, "ordinal_weight": 0.07329726162959471}
